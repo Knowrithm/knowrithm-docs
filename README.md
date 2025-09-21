@@ -208,10 +208,10 @@ graph TD
 
 Ready to build your first AI agent? Check out our guides:
 
-- {% page-ref page="getting-started/installation.md" %} - Set up your development environment
-- {% page-ref page="tutorials/building-first-agent.md" %} - Create and train your first agent
-- {% page-ref page="integrations/website-widget.md" %} - Add a chatbot to your website
-- {% page-ref page="tutorials/advanced-analytics.md" %} - Track performance and conversions
+- Set up your development environment
+- Create and train your first agent
+- Add a chatbot to your website
+- Track performance and conversions
 
 ---
 

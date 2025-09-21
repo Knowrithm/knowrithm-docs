@@ -141,8 +141,8 @@ Security and data isolation are achieved through a strict multi-tenancy model.
 ## Next Steps
 
 - **Deployment Guide**: Learn how to deploy this architecture.
-  {% content-ref url="deployment.md" %}
+  Deployment Guide
 - **Security Guide**: Understand the security measures in place.
-  {% content-ref url="security.md" %}
+  Security Guide
 - **Monitoring Guide**: Learn how to monitor the health and performance of the platform.
-  {% content-ref url="monitoring.md" %}
+  Monitoring Guide

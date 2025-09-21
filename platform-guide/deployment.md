@@ -274,6 +274,6 @@ kubectl exec -it <your-app-pod-name> -- flask db upgrade
 ## Next Steps
 
 - **Configure Security**: Secure your deployment with best practices.
-  {% content-ref url="security.md" %}
+  Security Guide
 - **Set Up Monitoring**: Implement monitoring and alerting for your platform.
-  {% content-ref url="monitoring.md" %}
+  Monitoring Guide

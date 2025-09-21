@@ -269,6 +269,6 @@ def generate_weekly_report(client, agent_id):
 ## Next Steps
 
 - **Explore Tutorials**: See how to apply these analytics in real-world scenarios.
-  {% content-ref url="../tutorials/advanced-analytics.md" %}
+  [Advanced Analytics Tutorial](../tutorials/advanced-analytics.md)
 - **Manage Leads**: Learn how to track and convert leads.
-  {% content-ref url="leads.md" %}
+  [Lead Management Guide](leads.md)

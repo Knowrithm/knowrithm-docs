@@ -275,6 +275,6 @@ def document_lifecycle_example(client: KnowrithmClient, agent_id: str):
 ## Next Steps
 
 - **Explore Conversations**: Learn how to chat with your newly trained agent.
-  {% content-ref url="conversations.md" %}
+  [Conversation Management Guide](conversations.md)
 - **Connect a Database**: Enhance your agent's knowledge with live data.
-  {% content-ref url="../tutorials/database-integration.md" %}
+  [Database Integration Tutorial](../tutorials/database-integration.md)

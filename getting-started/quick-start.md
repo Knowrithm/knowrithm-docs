@@ -475,21 +475,18 @@ def interactive_chat():
 ## What's Next?
 
 Now that you have a working agent, explore these features:
-
 ### Immediate Next Steps
-- {% page-ref page="../python-sdk/documents.md" %} - Upload more document types
-- {% page-ref page="../python-sdk/conversations.md" %} - Advanced conversation handling
-- {% page-ref page="../integrations/website-widget.md" %} - Add to your website
-
+- Upload more document types
+- Advanced conversation handling
+- Add to your website
 ### Advanced Features
-- {% page-ref page="../tutorials/database-integration.md" %} - Connect databases
-- {% page-ref page="../python-sdk/analytics.md" %} - Detailed analytics
-- {% page-ref page="../python-sdk/leads.md" %} - Lead management system
-
+- Connect databases
+- Detailed analytics
+- Lead management system
 ### Production Ready
-- {% page-ref page="../platform-guide/security.md" %} - Security best practices
-- {% page-ref page="../platform-guide/deployment.md" %} - Production deployment
-- {% page-ref page="../platform-guide/monitoring.md" %} - Monitoring and alerts
+- Security best practices
+- Production deployment
+- Monitoring and alerts
 
 {% hint style="success" %}
 **🎉 Congratulations!** You've successfully created your first AI agent with Knowrithm. Your agent can now answer questions based on the documents you uploaded.

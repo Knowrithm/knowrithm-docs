@@ -127,9 +127,7 @@ All sensitive data stored in our databases and object storage is encrypted using
 
 Our `EncryptionManager` class demonstrates how we apply field-level encryption for sensitive database columns.
 
-{% content-ref url="README.md" %}
-Data Encryption Code Example
-{% endcontent-ref %}
+See the Data Encryption Code Example in the Platform Guide overview.
 
 ### Encryption in Transit
 
@@ -197,8 +195,8 @@ To maximize the security of your Knowrithm account, we recommend the following:
 ## Next Steps
 
 - **Review Deployment Guide**: Learn how to deploy the platform securely.
-  {% content-ref url="deployment.md" %}
+  Deployment Guide
 - **Set Up Monitoring**: Configure monitoring and alerting for security events.
-  {% content-ref url="monitoring.md" %}
+  Monitoring Guide
 - **API Authentication**: Dive deeper into API key management.
-  {% content-ref url="../api-reference/authentication.md" %}
+  API Authentication Guide

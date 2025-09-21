@@ -101,9 +101,7 @@ We are constantly expanding our integration ecosystem. Here are some of the plat
 
 Don't see the integration you need? Our **REST API** and **Python SDK** provide all the tools necessary to build a custom connection to any third-party service.
 
-{% content-ref url="../python-sdk/" %}
-../python-sdk/
-{% endcontent-ref %}
+See the Python SDK Overview for more details.
 
 <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 24px; border-radius: 12px; color: white; text-align: center; margin: 32px 0;">
 

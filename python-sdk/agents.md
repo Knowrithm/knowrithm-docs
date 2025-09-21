@@ -157,17 +157,13 @@ doc = document_service.upload(
 print(f"Document '{doc['filename']}' is now being processed for agent {agent_id}.")
 ```
 
-{% content-ref url="documents.md" %}
-documents.md
-{% endcontent-ref %}
+See the Document Processing Guide for more details.
 
 ### Training with Databases
 
 Connect external databases to allow agents to query for real-time information.
 
-{% content-ref url="../tutorials/database-integration.md" %}
-database-integration.md
-{% endcontent-ref %}
+See the Database Integration Tutorial.
 
 ---
 

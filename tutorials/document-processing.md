@@ -200,6 +200,6 @@ You have successfully trained an agent on multiple, distinct data sources! You'v
 ## Next Steps
 
 -   **Connect a Live Database**: Instead of a static CSV, connect a live database for real-time data.
-    {% content-ref url="database-integration.md" %}
+    Database Integration Tutorial
 -   **Explore Search**: Use the `document_service.search()` method to perform targeted semantic searches against your knowledge base outside of a conversation.
 -   **Use Metadata**: Try searching with the metadata filters you added, e.g., `filters={"document_type": "catalog"}`.

@@ -21,9 +21,7 @@ Before you start, ensure you have the following:
 - Python 3.8+ installed on your machine.
 - The Knowrithm Python SDK installed (`pip install knowrithm-py`).
 
-{% content-ref url="../getting-started/installation.md" %}
-installation.md
-{% endcontent-ref %}
+For more details, see the Installation Guide.
 
 ---
 
@@ -245,13 +243,13 @@ You've successfully built and trained your first AI agent! You now have a workin
 Now that you have a basic agent, you can explore more advanced features:
 
 - **Train with More Data**: Upload more complex documents like PDFs or connect a database.
-  {% page-ref page="document-processing.md" %}
+  Document Processing Tutorial
 - **Integrate with Your Website**: Add your new agent to your website with a simple chat widget.
-  {% page-ref page="../integrations/website-widget.md" %}
+  Website Widget Guide
 - **Track Performance**: Dive into the analytics dashboard to see how your agent is performing.
-  {% page-ref page="advanced-analytics.md" %}
+  Advanced Analytics Tutorial
 - **Manage Leads**: Configure your agent to capture and qualify leads.
-  {% page-ref page="../python-sdk/leads.md" %}
+  Lead Management Guide
 
 <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 24px; border-radius: 12px; color: white; text-align: center; margin: 32px 0;">
 

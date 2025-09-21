@@ -158,8 +158,8 @@ Content-Security-Policy:
 ## Next Steps
 
 - **Explore Agent Management**: Fine-tune your agent's personality and knowledge.
-  {% content-ref url="../python-sdk/agents.md" %}
+  Agent Management Guide
 - **Set Up Webhooks**: Receive real-time notifications from your agent's conversations.
-  {% content-ref url="../api-reference/#webhooks" %}
+  Webhooks API Reference
 - **Analyze Performance**: Track how users are interacting with your widget.
-  {% content-ref url="../python-sdk/analytics.md" %}
+  Analytics Guide
