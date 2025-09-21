@@ -1,10 +1,10 @@
-# Authentication API 🔐
+# Authentication API
 
 This guide covers all endpoints related to user authentication, user management, and API key management.
 
 ---
 
-## 🎯 Authentication Methods
+## Authentication Methods
 
 The Knowrithm API supports two primary methods of authentication for different use cases.
 
@@ -29,7 +29,7 @@ Authorization: Bearer <your-jwt-token>
 
 ---
 
-## 🔑 API Key Management
+## API Key Management
 
 These endpoints allow you to programmatically manage your API keys.
 
@@ -83,7 +83,7 @@ Validates the current API Key and Secret, returning information about the associ
 
 ---
 
-## 👥 User & Session Management
+## User & Session Management
 
 These endpoints are for managing user accounts and sessions, typically used by a client application like the Knowrithm dashboard.
 
@@ -132,7 +132,7 @@ Invalidates the user's current session tokens.
 
 ---
 
-## 👤 User Profile Management
+## User Profile Management
 
 ### Get User Profile
 

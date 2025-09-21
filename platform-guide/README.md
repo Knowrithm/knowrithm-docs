@@ -1,18 +1,18 @@
-# Platform Guide 🏗️
+# ⨁ Platform Guide
 
 Welcome to the Knowrithm Platform Guide! This resource covers everything you need to know about deploying, scaling, and maintaining Knowrithm in production environments.
 
 ---
 
-## 🎯 Platform Overview
+## ◎ Platform Overview
 
-Knowrithm is built as an enterprise-grade, multi-tenant AI platform designed for:
+Knowrithm is an enterprise-grade, multi-tenant AI platform designed for:
 
-- **🏢 Enterprise Scale**: Handle thousands of concurrent conversations
-- **🔐 Security First**: Enterprise security with complete data isolation
-- **⚡ High Performance**: Optimized for low-latency, high-throughput scenarios
-- **🌍 Global Deployment**: Multi-region support for global availability
-- **📊 Observable**: Comprehensive monitoring and analytics built-in
+- **⨁ Enterprise Scale**: Handle thousands of concurrent conversations
+- **⚿ Security First**: Enterprise security with complete data isolation
+- **○ High Performance**: Optimized for low-latency, high-throughput scenarios
+- **Global Deployment**: Multi-region support for global availability
+- **▤ Observable**: Comprehensive monitoring and analytics built-in
 
 {{ hint style="info" }}
 **Production Ready**: Knowrithm powers AI agents for Fortune 500 companies, processing millions of conversations daily with 99.9% uptime.
@@ -195,7 +195,7 @@ volumes:
 
 ---
 
-## 📊 Performance & Scalability
+## ○ Performance & Scalability
 
 ### Performance Benchmarks
 
@@ -335,7 +335,7 @@ def create_agent(agent_data):
 
 ---
 
-## 🔒 Security Architecture
+## ⛨ Security Architecture
 
 ### Multi-Layer Security
 
@@ -576,7 +576,7 @@ class Lead(db.Model):
 
 ---
 
-## 📊 Monitoring & Observability
+## Monitoring & Observability
 
 ### Comprehensive Monitoring Stack
 
@@ -961,7 +961,7 @@ async def health_check():
 
 ---
 
-## 🔄 Disaster Recovery & Backup
+## Disaster Recovery & Backup
 
 ### Backup Strategy
 
@@ -1159,7 +1159,7 @@ celery_app.conf.beat_schedule = {
 
 ---
 
-## 📚 Additional Resources
+## ≡ Additional Resources
 
 ### Documentation Links
 - **[System Architecture](architecture.md)** - Detailed technical architecture
@@ -1176,38 +1176,37 @@ celery_app.conf.beat_schedule = {
 
 ---
 
-## 🤝 Enterprise Support
+## Enterprise Support
 
 ### Professional Services
-- **🏗️ Architecture Review** - Expert review of your deployment architecture
-- **⚡ Performance Optimization** - Optimization for high-scale deployments
-- **🔒 Security Audit** - Comprehensive security assessment
-- **📊 Custom Monitoring** - Tailored monitoring and alerting setup
+- **Architecture Review** - Expert review of your deployment architecture
+- **Performance Optimization** - Optimization for high-scale deployments
+- **Security Audit** - Comprehensive security assessment
+- **Custom Monitoring** - Tailored monitoring and alerting setup
 
 ### Support Channels
-- **📞 Enterprise Support** - 24/7 phone and email# Platform Guide 🏗️
-
-Welcome to the Knowrithm Platform Guide! This comprehensive resource covers everything you need to know about deploying, scaling, and maintaining Knowrithm in production environments.
+- **Enterprise Support** - 24/7 phone and email# Platform Guide 🏗️
+Welcome to the Knowrithm Platform Guide! This guide covers everything you need to know about deploying, scaling, and maintaining Knowrithm in production environments.
 
 ---
 
-## 🎯 Platform Overview
+## Platform Overview
 
 Knowrithm is built as an enterprise-grade, multi-tenant AI platform designed for:
 
-- **🏢 Enterprise Scale**: Handle thousands of concurrent conversations
-- **🔐 Security First**: Enterprise security with complete data isolation
-- **⚡ High Performance**: Optimized for low-latency, high-throughput scenarios
-- **🌍 Global Deployment**: Multi-region support with edge computing capabilities
-- **📊 Observable**: Comprehensive monitoring and analytics built-in
-
+- **Enterprise Scale**: Handle thousands of concurrent conversations
+- **Security First**: Enterprise security with complete data isolation
+- **High Performance**: Optimized for low-latency, high-throughput scenarios
+- **Global Deployment**: Multi-region support with edge computing capabilities
+- **Observable**: Comprehensive monitoring and analytics built-in
+ 
 {{ hint style="info" }}
 **Production Ready**: Knowrithm powers AI agents for Fortune 500 companies, processing millions of conversations daily with 99.9% uptime.
 {{ endhint }}
 
 ---
 
-## 🏛️ Architecture Overview
+## ⨁ Architecture Overview
 
 ### System Components
 
@@ -1298,7 +1297,7 @@ graph LR
 
 ---
 
-## 🚀 Deployment Options
+## Deployment Options
 
 ### 1. Cloud Deployment (Recommended)
 
@@ -1312,17 +1311,17 @@ graph LR
   </thead>
   <tbody>
     <tr>
-      <td><strong>☁️ SaaS (Hosted)</strong></td>
+      <td><strong>SaaS (Hosted)</strong></td>
       <td>Fully managed service with automatic scaling and maintenance</td>
       <td><a href="deployment.md#saas-deployment">deployment.md</a></td>
     </tr>
     <tr>
-      <td><strong>🐳 Docker Container</strong></td>
+      <td><strong>Docker Container</strong></td>
       <td>Container-based deployment with orchestration support</td>
       <td><a href="deployment.md#docker-deployment">deployment.md</a></td>
     </tr>
     <tr>
-      <td><strong>☸️ Kubernetes</strong></td>
+      <td><strong>Kubernetes</strong></td>
       <td>Enterprise-grade orchestration with auto-scaling and high availability</td>
       <td><a href="deployment.md#kubernetes-deployment">deployment.md</a></td>
     </tr>
@@ -1385,7 +1384,7 @@ volumes:
 
 ---
 
-## 📊 Performance & Scalability
+## Performance & Scalability
 
 ### Performance Benchmarks
 

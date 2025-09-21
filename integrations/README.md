@@ -1,10 +1,10 @@
-# Integrations 🔌
+# Integrations
 
 Connect Knowrithm to your existing workflows, websites, and applications. This section provides guides for integrating your AI agents seamlessly into your business ecosystem.
 
 ---
 
-## 🎯 Integration Capabilities
+## Integration Capabilities
 
 Knowrithm is designed to be highly extensible, allowing you to:
 
@@ -15,7 +15,7 @@ Knowrithm is designed to be highly extensible, allowing you to:
 
 ---
 
-## 🚀 Core Integrations
+## Core Integrations
 
 <table data-card-size="large" data-view="cards">
   <thead>
@@ -27,17 +27,17 @@ Knowrithm is designed to be highly extensible, allowing you to:
   </thead>
   <tbody>
     <tr>
-      <td><strong>🌐 Website Chat Widget</strong></td>
+      <td><strong>Website Chat Widget</strong></td>
       <td>The fastest way to deploy your AI agent. Add a customizable chat widget to your website with a single HTML snippet.</td>
       <td><a href="website-widget.md">website-widget.md</a></td>
     </tr>
     <tr>
-      <td><strong>🪝 Webhooks</strong></td>
+      <td><strong>Webhooks</strong></td>
       <td>Get real-time, event-driven notifications pushed to your services when key actions occur, such as a new lead being created or a conversation starting.</td>
       <td><a href="../api-reference/#webhooks">../api-reference/#webhooks</a></td>
     </tr>
     <tr>
-      <td><strong>📡 REST API</strong></td>
+      <td><strong>REST API</strong></td>
       <td>For full control and custom integrations, use our comprehensive REST API to build agents, manage conversations, and pull analytics from your own backend.</td>
       <td><a href="../api-reference/">../api-reference/</a></td>
     </tr>
@@ -46,7 +46,7 @@ Knowrithm is designed to be highly extensible, allowing you to:
 
 ---
 
-## 💡 Integration Patterns
+## Integration Patterns
 
 ### Customer Support Automation
 
@@ -85,7 +85,7 @@ graph TD
 
 ---
 
-## 🔮 Coming Soon
+## Coming Soon
 
 We are constantly expanding our integration ecosystem. Here are some of the platforms we're working on native integrations for:
 
@@ -97,7 +97,7 @@ We are constantly expanding our integration ecosystem. Here are some of the plat
 
 ---
 
-## 🤝 Custom Integrations
+## Custom Integrations
 
 Don't see the integration you need? Our **REST API** and **Python SDK** provide all the tools necessary to build a custom connection to any third-party service.
 

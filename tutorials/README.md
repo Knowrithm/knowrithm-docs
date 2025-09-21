@@ -1,18 +1,18 @@
-# Tutorials & Guides 📚
+# Tutorials & Guides
 
 Welcome to the Knowrithm tutorials section! Here you'll find step-by-step guides, real-world examples, and best practices for building intelligent AI agents that transform your business.
 
 ---
 
-## 🎯 What You'll Learn
+## What You'll Learn
 
 Our tutorials cover everything from basic setup to advanced enterprise deployments:
 
-- **🏃‍♂️ Quick Start**: Get your first agent running in 10 minutes
-- **📚 Document Processing**: Train agents on your knowledge base
-- **🗄️ Database Integration**: Connect agents to live data sources
-- **📊 Analytics & Insights**: Monitor performance and optimize results
-- **🔧 Production Deployment**: Scale to enterprise-grade solutions
+- **Quick Start**: Get your first agent running in 10 minutes
+- **Document Processing**: Train agents on your knowledge base
+- **Database Integration**: Connect agents to live data sources
+- **Analytics & Insights**: Monitor performance and optimize results
+- **Production Deployment**: Scale to enterprise-grade solutions
 
 {{ hint style="info" }}
 **New to AI chatbots?** Start with our [Building Your First Agent](building-first-agent.md) tutorial. It covers all the fundamentals you need to know.
@@ -20,7 +20,7 @@ Our tutorials cover everything from basic setup to advanced enterprise deploymen
 
 ---
 
-## 🚀 Quick Start Tutorials
+## Quick Start Tutorials
 
 <table data-card-size="large" data-view="cards">
   <thead>
@@ -32,22 +32,22 @@ Our tutorials cover everything from basic setup to advanced enterprise deploymen
   </thead>
   <tbody>
     <tr>
-      <td><strong>🤖 Building Your First Agent</strong></td>
+      <td><strong>Create Your First Agent</strong></td>
       <td>Create a customer service bot from scratch in under 15 minutes</td>
       <td><a href="building-first-agent.md">building-first-agent.md</a></td>
     </tr>
     <tr>
-      <td><strong>📄 Document Processing</strong></td>
+      <td><strong>Document Processing</strong></td>
       <td>Upload PDFs, train your agent, and enable intelligent document search</td>
       <td><a href="document-processing.md">document-processing.md</a></td>
     </tr>
     <tr>
-      <td><strong>🗄️ Database Integration</strong></td>
+      <td><strong>Database Integration</strong></td>
       <td>Connect your database and let agents answer questions with live data</td>
       <td><a href="database-integration.md">database-integration.md</a></td>
     </tr>
     <tr>
-      <td><strong>📊 Advanced Analytics</strong></td>
+      <td><strong>Advanced Analytics</strong></td>
       <td>Set up dashboards, track performance, and optimize agent responses</td>
       <td><a href="advanced-analytics.md">advanced-analytics.md</a></td>
     </tr>
@@ -56,9 +56,9 @@ Our tutorials cover everything from basic setup to advanced enterprise deploymen
 
 ---
 
-## 🏢 Industry-Specific Guides
+## Industry-Specific Guides
 
-### 🛒 E-commerce Solutions
+### E-commerce Solutions
 
 Learn to build agents that drive sales and improve customer experience:
 
@@ -88,7 +88,7 @@ agent = client.agents.create({
 - Inventory management integration
 - Sales analytics and conversion tracking
 
-### 🏥 Healthcare Applications
+### Healthcare Applications
 
 Build HIPAA-compliant agents for healthcare organizations:
 
@@ -118,7 +118,7 @@ agent = client.agents.create({
 - Secure messaging compliance
 - Medical record integration
 
-### 💰 Financial Services
+### Financial Services
 
 Create secure financial advisors and support agents:
 
@@ -141,7 +141,7 @@ agent = client.agents.create({
 })
 ```
 
-### 🏠 Real Estate Solutions
+### Real Estate Solutions
 
 Build agents that qualify leads and showcase properties:
 
@@ -166,35 +166,35 @@ agent = client.agents.create({
 
 ---
 
-## 📋 Tutorial Difficulty Levels
+## Tutorial Difficulty Levels
 
-### 🟢 Beginner (15-30 minutes)
+### Beginner (15-30 minutes)
 Perfect for developers new to Knowrithm or AI chatbots:
 
 - [Building Your First Agent](building-first-agent.md)
-- [Basic Document Upload](document-processing.md#basic-upload)
-- [Simple Conversation Flow](building-first-agent.md#conversation-flow)
+- [Basic Document Upload](document-processing.md)
+- [Simple Conversation Flow](building-first-agent.md)
 - [Widget Integration](../integrations/website-widget.md)
 
-### 🟡 Intermediate (30-60 minutes)
+### ntermediate (30-60 minutes)
 For developers with basic experience looking to add advanced features:
 
-- [Multi-Document Training](document-processing.md#advanced-training)
+- [Multi-Document Training](document-processing.md)
 - [Database Integration](database-integration.md)
 - [Custom Analytics Dashboard](advanced-analytics.md)
-- [Lead Scoring System](building-first-agent.md#lead-management)
+- [Lead Scoring System](building-first-agent.md)
 
-### 🔴 Advanced (1-2 hours)
+### Advanced (1-2 hours)
 Enterprise-level implementations with complex requirements:
 
-- [Multi-Agent Orchestration](advanced-analytics.md#multi-agent-setup)
-- [Custom Model Fine-tuning](document-processing.md#custom-models)
+- [Multi-Agent Orchestration](advanced-analytics.md)
+- [Custom Model Fine-tuning](document-processing.md)
 - [Production Deployment](../platform-guide/deployment.md)
 - [Enterprise Security Setup](../platform-guide/security.md)
 
 ---
 
-## 🎨 Code Examples by Language
+## Code Examples by Language
 
 ### Python Examples
 
@@ -231,21 +231,21 @@ def create_support_agent():
         for doc_path in documents:
             if os.path.exists(doc_path):
                 client.documents.upload(doc_path, agent['id'])
-                print(f"✅ Uploaded: {doc_path}")
+                print(f"Uploaded: {doc_path}")
         
         return agent
         
     except KnowrithmAPIError as e:
-        print(f"❌ API Error: {e}")
+        print(f"API Error: {e}")
         return None
     except Exception as e:
-        print(f"❌ Unexpected error: {e}")
+        print(f"Unexpected error: {e}")
         return None
 
 # Usage
 agent = create_support_agent()
 if agent:
-    print(f"🤖 Agent created successfully: {agent['name']}")
+    print(f"Agent created successfully: {agent['name']}")
 ```
 
 ### JavaScript/Node.js Examples
@@ -276,13 +276,13 @@ async function createSalesAgent() {
             entityType: 'LEAD'
         });
         
-        console.log(`🤖 Agent created: ${agent.name}`);
-        console.log(`💬 Conversation started: ${conversation.id}`);
+        console.log(`Agent created: ${agent.name}`);
+        console.log(`Conversation started: ${conversation.id}`);
         
         return { agent, conversation };
         
     } catch (error) {
-        console.error('❌ Error creating agent:', error.message);
+        console.error('Error creating agent:', error.message);
         throw error;
     }
 }
@@ -290,10 +290,10 @@ async function createSalesAgent() {
 // Usage
 createSalesAgent()
     .then(({ agent, conversation }) => {
-        console.log('✅ Setup complete!');
+        console.log('Setup complete!');
     })
     .catch(error => {
-        console.error('❌ Setup failed:', error);
+        console.error('Setup failed:', error);
     });
 ```
 
@@ -336,20 +336,20 @@ upload_document() {
 }
 
 # Create and setup agent
-echo "🤖 Creating support agent..."
+echo "Creating support agent..."
 AGENT_RESPONSE=$(create_agent "Support Bot" "helpful and professional")
 AGENT_ID=$(echo $AGENT_RESPONSE | jq -r '.data.id')
 
-echo "📚 Uploading training documents..."
+echo "Uploading training documents..."
 upload_document "./faq.pdf" $AGENT_ID
 upload_document "./manual.pdf" $AGENT_ID
 
-echo "✅ Agent setup complete! Agent ID: $AGENT_ID"
+echo "Agent setup complete! Agent ID: $AGENT_ID"
 ```
 
 ---
 
-## 🔧 Advanced Integration Patterns
+## Advanced Integration Patterns
 
 ### Microservices Architecture
 
@@ -490,7 +490,7 @@ async def handle_new_lead(event):
 
 ---
 
-## 📊 Performance Monitoring
+## Performance Monitoring
 
 ### Agent Performance Tracking
 
@@ -588,12 +588,12 @@ health_data = monitor.get_agent_health_score("agent_123")
 
 print(f"Agent Health Score: {health_data['overall_score']}/100")
 for recommendation in health_data['recommendations']:
-    print(f"💡 {recommendation}")
+    print(f"{recommendation}")
 ```
 
 ---
 
-## 🎓 Learning Path
+## Learning Path
 
 ### Week 1: Foundations
 - [x] [Installation and Setup](../getting-started/installation.md)
@@ -602,47 +602,47 @@ for recommendation in health_data['recommendations']:
 - [x] [Simple Conversations](building-first-agent.md)
 
 ### Week 2: Data Integration  
-- [ ] [Advanced Document Processing](document-processing.md)
-- [ ] [Database Connections](database-integration.md)
-- [ ] [Search and Retrieval](document-processing.md)
-- [ ] [Data Security Best Practices](../platform-guide/security.md)
+- [x] [Advanced Document Processing](document-processing.md)
+- [x] [Database Connections](database-integration.md)
+- [x] [Search and Retrieval](document-processing.md)
+- [x] [Data Security Best Practices](../platform-guide/security.md)
 
 ### Week 3: Analytics and Optimization
-- [ ] [Analytics Dashboard](advanced-analytics.md)
-- [ ] [Performance Monitoring](advanced-analytics.md)
-- [ ] [A/B Testing](advanced-analytics.md)
-- [ ] [Lead Conversion Tracking](building-first-agent.md)
+- [x] [Analytics Dashboard](advanced-analytics.md)
+- [x] [Performance Monitoring](advanced-analytics.md)
+- [x] [A/B Testing](advanced-analytics.md)
+- [x] [Lead Conversion Tracking](building-first-agent.md)
 
 ### Week 4: Production Deployment
-- [ ] [Scaling Strategies](../platform-guide/deployment.md)
-- [ ] [Security Implementation](../platform-guide/security.md)
-- [ ] [Monitoring and Alerts](../platform-guide/monitoring.md)
-- [ ] [Backup and Recovery](../platform-guide/deployment.md)
+- [x] [Scaling Strategies](../platform-guide/deployment.md)
+- [x] [Security Implementation](../platform-guide/security.md)
+- [x] [Monitoring and Alerts](../platform-guide/monitoring.md)
+- [x] [Backup and Recovery](../platform-guide/deployment.md)
 
 ---
 
-## 📚 Additional Resources
+## Additional Resources
 
 ### Video Tutorials
-- 🎥 **[Agent Setup Walkthrough](https://youtube.com/knowrithm)** (15 minutes)
-- 🎥 **[Document Training Deep Dive](https://youtube.com/knowrithm)** (25 minutes)
-- 🎥 **[Analytics Dashboard Tour](https://youtube.com/knowrithm)** (20 minutes)
-- 🎥 **[Production Deployment Guide](https://youtube.com/knowrithm)** (45 minutes)
+- **[Agent Setup Walkthrough](https://youtube.com/knowrithm)** (15 minutes)
+- **[Document Training Deep Dive](https://youtube.com/knowrithm)** (25 minutes)
+- **[Analytics Dashboard Tour](https://youtube.com/knowrithm)** (20 minutes)
+- **[Production Deployment Guide](https://youtube.com/knowrithm)** (45 minutes)
 
 ### Community Examples
-- 📂 **[GitHub Examples Repository](https://github.com/Knowrithm/examples)**
-- 💬 **[Discord Community](https://discord.gg/cHHWfghJrR)** - Share your implementations
-- 📝 **[Community Blog](https://blog.knowrithm.org)** - Real-world case studies
+- **[GitHub Examples Repository](https://github.com/Knowrithm/examples)**
+- **[Discord Community](https://discord.gg/cHHWfghJrR)** - Share your implementations
+- **[Community Blog](https://blog.knowrithm.org)** - Real-world case studies
 
 ### Documentation Links
-- 📖 **[Python SDK Reference](../python-sdk/)** - Complete SDK documentation
-- 🔌 **[API Reference](../api-reference/)** - REST API endpoints
-- 🏗️ **[Platform Guide](../platform-guide/)** - Architecture and deployment
-- 🔗 **[Integrations](../integrations/)** - Third-party connections
+- **[Python SDK Reference](../python-sdk/)** - Complete SDK documentation
+- **[API Reference](../api-reference/)** - REST API endpoints
+- **[Platform Guide](../platform-guide/)** - Architecture and deployment
+- **[Integrations](../integrations/)** - Third-party connections
 
 ---
 
-## 🤝 Community and Support
+## Community and Support
 
 ### Getting Help
 1. **Search Documentation**: Most questions are answered in our guides

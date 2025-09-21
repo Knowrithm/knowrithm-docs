@@ -1,4 +1,4 @@
-# Agents API 🤖
+# Agents API
 
 The Agents API allows you to create, configure, and manage your AI agents.
 

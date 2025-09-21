@@ -1,10 +1,10 @@
-# 🤖 Building Your First AI Agent
+# Create Your First AI Agent
 
 Welcome to your first Knowrithm tutorial! In the next 15 minutes, you'll build a complete customer support agent from scratch, train it with a knowledge base, and have your first conversation.
 
 ---
 
-## 🎯 What You'll Build
+## What You'll Build
 
 By the end of this tutorial, you will have:
 - A fully configured AI agent with a unique personality.
@@ -14,7 +14,7 @@ By the end of this tutorial, you will have:
 
 ---
 
-## 📋 Prerequisites
+## Prerequisites
 
 Before you start, ensure you have the following:
 - A Knowrithm account and your API credentials.
@@ -25,7 +25,7 @@ For more details, see the Installation Guide.
 
 ---
 
-## 🛠️ Step 1: Project Setup
+## Step 1: Project Setup
 
 First, let's set up your project directory and Python environment.
 
@@ -55,7 +55,7 @@ First, let's set up your project directory and Python environment.
 
 ---
 
-## 🐍 Step 2: Initialize the Client
+## Step 2: Initialize the Client
 
 Create a Python file named `support_bot.py`. This will be our main script.
 
@@ -75,15 +75,15 @@ try:
         api_key=os.getenv("KNOWRITHM_API_KEY"),
         api_secret=os.getenv("KNOWRITHM_API_SECRET"),
     )
-    print("✅ Client initialized successfully!")
+    print("Client initialized successfully!")
 except ValueError as e:
-    print(f"❌ Error: {e}. Make sure your API credentials are in the .env file.")
+    print(f"Error: {e}. Make sure your API credentials are in the .env file.")
     exit()
 ```
 
 ---
 
-## 🤖 Step 3: Create Your Agent
+## Step 3: Create Your Agent
 
 Now, let's define and create the customer support agent. Add the following to `support_bot.py`.
 
@@ -104,15 +104,15 @@ agent_config = {
 try:
     agent = agent_service.create(agent_config)
     agent_id = agent['id']
-    print(f"✅ Agent '{agent['name']}' created with ID: {agent_id}")
+    print(f"Agent '{agent['name']}' created with ID: {agent_id}")
 except Exception as e:
-    print(f"❌ Failed to create agent: {e}")
+    print(f"Failed to create agent: {e}")
     exit()
 ```
 
 ---
 
-## 📚 Step 4: Train Your Agent
+## Step 4: Train Your Agent
 
 An agent is only as smart as its data. Let's create a simple FAQ document to train it.
 
@@ -146,26 +146,26 @@ An agent is only as smart as its data. Let's create a simple FAQ document to tra
 
     try:
         doc = document_service.upload(file_path="faq.txt", agent_id=agent_id)
-        print(f"✅ Document 'faq.txt' uploaded. Processing has started.")
+        print(f"Document 'faq.txt' uploaded. Processing has started.")
         
         # Wait a few seconds for processing to complete for this small file
-        print("⏳ Waiting for processing...")
+        print("Waiting for processing...")
         time.sleep(10)
         
         status = document_service.get_processing_status(doc['id'])
         if status.get('status') == 'completed':
-            print("✅ Document processing complete!")
+            print("Document processing complete!")
         else:
-            print("⚠️ Document is still processing. Answers may not be available yet.")
+            print("Document is still processing. Answers may not be available yet.")
             
     except Exception as e:
-        print(f"❌ Failed to upload document: {e}")
+        print(f"Failed to upload document: {e}")
         exit()
     ```
 
 ---
 
-## 💬 Step 5: Chat with Your Agent
+## Step 5: Chat with the Agent
 
 It's time to test your agent! Let's create a conversation and ask it some questions.
 
@@ -187,18 +187,18 @@ test_questions = [
 ]
 
 for question in test_questions:
-    print(f"\n👤 You: {question}")
+    print(f"\nYou: {question}")
     response = message_service.send_message(
         conversation_id=conversation_id,
         content=question,
         role="user"
     )
-    print(f"🤖 Agent: {response['content']}")
+    print(f"Agent: {response['content']}")
 ```
 
 ---
 
-## 🚀 Run Your Script
+## Run Your Script
 
 Save your `support_bot.py` file and run it from your terminal:
 
@@ -210,46 +210,46 @@ You should see output similar to this:
 
 ```
 1. Initializing Knowrithm client...
-✅ Client initialized successfully!
+Client initialized successfully!
 
 2. Creating the Customer Support Agent...
-✅ Agent 'Friendly Support Bot' created with ID: agent_...
+Agent 'Friendly Support Bot' created with ID: agent_...
 
 3. Preparing and uploading training data...
-✅ Document 'faq.txt' uploaded. Processing has started.
-⏳ Waiting for processing...
-✅ Document processing complete!
+Document 'faq.txt' uploaded. Processing has started.
+Waiting for processing...
+Document processing complete!
 
 4. Starting a conversation...
 
-👤 You: What is your refund policy?
-🤖 Agent: We offer a 30-day, no-questions-asked money-back guarantee on all our plans.
+You: What is your refund policy?
+Agent: We offer a 30-day, no-questions-asked money-back guarantee on all our plans.
 
-👤 You: When are you open?
-🤖 Agent: Our support team is available 24/7 via chat. Our business offices are open from 9 AM to 6 PM, Monday to Friday.
+You: When are you open?
+Agent: Our support team is available 24/7 via chat. Our business offices are open from 9 AM to 6 PM, Monday to Friday.
 
-👤 You: How can I change my plan?
-🤖 Agent: You can upgrade your plan at any time from your account dashboard under the 'Billing' section.
+You: How can I change my plan?
+Agent: You can upgrade your plan at any time from your account dashboard under the 'Billing' section.
 ```
 
 ---
 
-## 🎉 Congratulations!
+## Congratulations!
 
 You've successfully built and trained your first AI agent! You now have a working chatbot that can answer questions based on the knowledge you provided.
 
-## 下一步
+## Next Steps
 
 Now that you have a basic agent, you can explore more advanced features:
 
 - **Train with More Data**: Upload more complex documents like PDFs or connect a database.
-  Document Processing Tutorial
+  [Document Processing Tutorial](document-processing.md)
 - **Integrate with Your Website**: Add your new agent to your website with a simple chat widget.
-  Website Widget Guide
+  [Website Widget Guide](../integrations/website-widget.md)
 - **Track Performance**: Dive into the analytics dashboard to see how your agent is performing.
-  Advanced Analytics Tutorial
+  [Advanced Analytics Tutorial](advanced-analytics.md)
 - **Manage Leads**: Configure your agent to capture and qualify leads.
-  Lead Management Guide
+  [Lead Management Guide](../python-sdk/leads.md)
 
 <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 24px; border-radius: 12px; color: white; text-align: center; margin: 32px 0;">
 

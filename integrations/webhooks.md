@@ -1,10 +1,10 @@
-# Webhooks 🪝
+# Webhooks
 
 Webhooks allow you to receive real-time notifications about events that happen in your Knowrithm account. By subscribing to events, you can build powerful integrations that connect your AI agents to your other business systems.
 
 ---
 
-## 🎯 What are Webhooks?
+## What are Webhooks?
 
 A webhook is an automated message sent from an app when something happens. It's a simple `POST` request sent to a unique URL you provide, containing a payload of data about the event.
 
@@ -16,7 +16,7 @@ A webhook is an automated message sent from an app when something happens. It's 
 
 ---
 
-## 🛠️ Setting Up a Webhook
+## Setting Up a Webhook
 
 1.  **Create an Endpoint**: First, you need a publicly accessible URL on your server that can receive `POST` requests. This is your webhook listener.
 
@@ -29,7 +29,7 @@ A webhook is an automated message sent from an app when something happens. It's 
 
 ---
 
-## 📦 Event Types & Payloads
+## Event Types & Payloads
 
 You can subscribe to various events. All payloads follow a standard structure.
 
@@ -66,7 +66,7 @@ You can subscribe to various events. All payloads follow a standard structure.
 
 ---
 
-## 🔒 Verifying Signatures (Crucial for Security)
+## Verifying Signatures (Crucial for Security)
 
 To ensure that incoming webhook requests are genuinely from Knowrithm and not from a malicious third party, you **must** verify the request's signature.
 
@@ -110,14 +110,14 @@ def handle_webhook():
 
     # Verify the signature
     if not verify_signature(payload, signature):
-        print("⚠️ Invalid signature. Aborting.")
-        abort(403) # Forbidden
+        print("Invalid signature. Aborting.")
+        abort(403)  # Forbidden
 
     # If the signature is valid, process the event
     event_data = request.json
     event_type = event_data.get('event')
 
-    print(f"✅ Received valid webhook event: {event_type}")
+    print(f"Received valid webhook event: {event_type}")
 
     if event_type == 'lead.created':
         lead = event_data['data']
@@ -138,7 +138,7 @@ if __name__ == '__main__':
 
 ---
 
-## ✨ Best Practices
+## Best Practices
 
 -   **Always Verify Signatures**: This is the most important step to secure your webhook endpoint.
 -   **Respond Quickly**: Your endpoint should respond with a `200 OK` status as quickly as possible. Offload any long-running tasks (like calling other APIs) to a background job queue (e.g., Celery, RQ) to avoid timeouts.
@@ -147,7 +147,7 @@ if __name__ == '__main__':
 
 ---
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
 -   **403 Forbidden Errors**: If your handler is returning 403, it's almost always due to a signature verification failure. Double-check that you are using the correct webhook secret and that you are using the raw request body to generate the signature.
 -   **Firewall Issues**: Ensure your server's firewall allows incoming `POST` requests from Knowrithm's IP addresses.

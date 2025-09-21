@@ -1,6 +1,6 @@
 # Welcome to Knowrithm Documentation
 
-🚀 **Build, train, and deploy intelligent AI agents with advanced analytics capabilities.**
+**Build, train, and deploy intelligent AI agents with advanced analytics capabilities.**
 
 Knowrithm is a comprehensive platform for creating custom chatbots and virtual assistants that can be seamlessly integrated into websites, manage leads, process documents, and provide detailed performance analytics.
 
@@ -27,32 +27,32 @@ Knowrithm enables businesses to create specialized AI agents that can:
   </thead>
   <tbody>
     <tr>
-      <td><strong>🚀 Getting Started</strong></td>
+      <td><strong>Getting Started</strong></td>
       <td>Install the SDK and create your first agent</td>
       <td><a href="getting-started/">getting-started</a></td>
     </tr>
     <tr>
-      <td><strong>🐍 Python SDK</strong></td>
+      <td><strong>Python SDK</strong></td>
       <td>Complete Python SDK reference and examples.</td>
       <td><a href="python-sdk/">python-sdk</a></td>
     </tr>
     <tr>
-      <td><strong>📡 API Reference</strong></td>
+      <td><strong>API Reference</strong></td>
       <td>Complete REST API documentation</td>
       <td><a href="api-reference/">api-reference</a></td>
     </tr>
     <tr>
-      <td><strong>🏗️ Platform Guide</strong></td>
+      <td><strong>Platform Guide</strong></td>
       <td>Architecture, deployment, and administration.</td>
       <td><a href="platform-guide/">platform-guide</a></td>
     </tr>
     <tr>
-      <td><strong>🔌 Integrations</strong></td>
+      <td><strong>Integrations</strong></td>
       <td>Website widgets, webhooks, and third-party tools.</td>
       <td><a href="integrations/">integrations</a></td>
     </tr>
     <tr>
-      <td><strong>📚 Tutorials</strong></td>
+      <td><strong>Tutorials</strong></td>
       <td>Step-by-step guides and real-world examples.</td>
       <td><a href="tutorials/">tutorials</a></td>
     </tr>
@@ -61,28 +61,28 @@ Knowrithm enables businesses to create specialized AI agents that can:
 
 ## Core Features
 
-### 🤖 **Multi-Agent Management**  
+### Multi-Agent Management  
 Create specialized chatbots for different business functions - customer support, sales, technical assistance, and more.
 
-### 📚 **Advanced Data Integration**
+### Advanced Data Integration
 - **Documents**: Upload PDFs, Word docs, text files, and more
 - **Databases**: Connect PostgreSQL, MySQL, SQLite, MongoDB
 - **Websites**: Train agents on your website content
 - **OCR**: Extract text from scanned documents and images.
 
-### 💼 **Lead Management & Analytics**
+### Lead Management & Analytics
 - Track customer inquiries and conversions
 - Comprehensive CRM integration
 - Detailed performance metrics
 - Export data in JSON/CSV formats
 
-### 🔐 **Enterprise Security**  
+### Enterprise Security  
 - Multi-tenant architecture with complete data isolation
 - JWT-based authentication
 - Role-based access control
 - Audit logging and compliance features.
 
-### 📊 **Real-time Analytics**
+### Real-time Analytics
 - Agent performance monitoring
 - Conversation analytics
 - Lead conversion tracking
@@ -182,22 +182,22 @@ graph TD
   </thead>
   <tbody>
     <tr>
-      <td><strong>💬 Discord</strong></td>
+      <td><strong>Discord</strong></td>
       <td>Join our community for discussions and support</td>
       <td><a href="https://discord.gg/cHHWfghJrR">https://discord.gg/cHHWfghJrR</a></td>
     </tr>
     <tr>
-      <td><strong>📧 Email Support</strong></td>
+      <td><strong>Email Support</strong></td>
       <td>Get direct help from our team</td>
       <td><a href="mailto:support@knowrithm.org">support@knowrithm.org</a></td>
     </tr>
     <tr>
-      <td><strong>🐛 GitHub Issues</strong></td>
+      <td><strong>GitHub Issues</strong></td>
       <td>Report bugs and request features</td>
       <td><a href="https://github.com/Knowrithm/knowrithm-py/issues">GitHub Issues</a></td>
     </tr>
     <tr>
-      <td><strong>❓ FAQ</strong></td>
+      <td><strong>FAQ</strong></td>
       <td>Find answers to common questions</td>
       <td><a href="resources/faq.md">faq.md</a></td>
     </tr>

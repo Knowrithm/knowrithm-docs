@@ -785,14 +785,13 @@ def test_client_rate_limiting(client):
 ## Next Steps
 
 Now that you have your client configured:
-
-1. **Create Agents**: {{ page-ref page="agents.md" }} - Set up your AI agents
-2. **Handle Conversations**: {{ page-ref page="conversations.md" }} - Manage chat interactions  
-3. **Process Documents**: {{ page-ref page="documents.md" }} - Upload and train with documents
-4. **Monitor Performance**: {{ page-ref page="analytics.md" }} - Track metrics and analytics
+1. **Create Agents**: [Set up your AI agents](agents.md)
+2. **Handle Conversations**: [Manage chat interactions](conversations.md)
+3. **Process Documents**: [Upload and train with documents](documents.md)
+4. **Monitor Performance**: [Track metrics and analytics](analytics.md)
 
 {{ hint style="success" }}
-**Client Ready!** 🚀 Your Knowrithm client is properly configured with error handling, monitoring, and production-ready settings.
+**Client Ready!** Your Knowrithm client is properly configured with error handling, monitoring, and production-ready settings.
 {{ endhint }}
 
 {{ hint style="tip" }}

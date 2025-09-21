@@ -1,3 +1,5 @@
+-- a/home/steven/Desktop/docs/getting-started/quick-start.md
+++ b/home/steven/Desktop/docs/getting-started/quick-start.md
 # Quick Start Guide
 
 Get up and running with Knowrithm in under 10 minutes! This guide will walk you through creating your first AI agent, training it with documents, and having your first conversation.
@@ -6,17 +8,17 @@ Get up and running with Knowrithm in under 10 minutes! This guide will walk you 
 
 By the end of this guide, you'll have:
 
-- ✅ A functional AI agent
-- ✅ Document-trained knowledge base
-- ✅ Working conversation system
-- ✅ Basic analytics setup
+- A functional AI agent
+- Document-trained knowledge base
+- Working conversation system
+- Basic analytics setup
 
 ## Prerequisites
 
 Make sure you have completed:
 
-- [ ] [Installation](installation.md) - SDK installed
-- [ ] [Authentication](authentication.md) - API credentials ready
+- [Installation](installation.md) - SDK installed
+- [Authentication](authentication.md) - API credentials ready
 
 ## Step 1: Initialize the Client
 
@@ -34,7 +36,7 @@ client = KnowrithmClient(
     base_url="https://app.knowrithm.org"
 )
 
-print("✅ Client initialized successfully!") 
+print("Client initialized successfully!") 
 ```
 
 ## Step 2: Create Your First Agent
@@ -55,13 +57,13 @@ agent_data = {
 }
 
 agent = agent_service.create(agent_data)
-print(f"✅ Agent created with ID: {agent['id']}")
-print(f"📝 Agent name: {agent['name']}")
+print(f"Agent created with ID: {agent['id']}")
+print(f"Agent name: {agent['name']}")
 ```
 
 ## Step 3: Upload Training Documents
 
-Create a sample FAQ file or use your own document:
+Create a sample FAQ file or use your own document.
 
 ```python
 from knowrithm_py.services.document import DocumentService
@@ -83,7 +85,7 @@ Q: Do you offer refunds?
 A: Yes, we offer full refunds within 30 days of purchase.
 
 Q: How can I contact support?
-A: You can reach us at support@example.com or call 1-800-SUPPORT.
+A: You can reach us at support@knowrithm.org or call 1-800-SUPPORT.
 """
 
 # Save to file
@@ -96,8 +98,8 @@ doc_response = document_service.upload(
     agent_id=agent['id']
 )
 
-print(f"✅ Document uploaded with ID: {doc_response['id']}")
-print(f"📄 Processing status: {doc_response.get('status', 'processing')}")
+print(f"Document uploaded with ID: {doc_response['id']}")
+print(f"Processing status: {doc_response.get('status', 'processing')}")
 ```
 
 ## Step 4: Wait for Processing (Optional Check)
@@ -112,16 +114,16 @@ def wait_for_processing(document_id, max_wait=60):
         status = status_response.get('status', 'processing')
         
         if status == 'completed':
-            print("✅ Document processing completed!")
+            print("Document processing completed!")
             return True
         elif status == 'failed':
-            print("❌ Document processing failed!")
+            print("Document processing failed!")
             return False
         
-        print(f"⏳ Processing... ({i+1}s)")
+        print(f"Processing... ({i+1}s)")
         time.sleep(1)
     
-    print("⚠️ Processing timeout, but continuing...")
+    print("Processing timeout, but continuing...")
     return False
 
 # Wait for processing to complete
@@ -143,7 +145,7 @@ conversation = conversation_service.create(
     entity_type="USER"
 )
 
-print(f"✅ Conversation created with ID: {conversation['id']}")
+print(f"Conversation created with ID: {conversation['id']}")
 ```
 
 ## Step 6: Chat with Your Agent
@@ -169,12 +171,12 @@ test_questions = [
     "How can I contact support?"
 ]
 
-print("\n🤖 Starting conversation with your AI agent")
+print("\nStarting conversation with your AI agent...")
 
 for question in test_questions:
-    print(f"\n👤 You: {question}")
+    print(f"\nYou: {question}")
     response = chat_with_agent(conversation['id'], question)
-    print(f"🤖 Agent: {response}")
+    print(f"Agent: {response}")
     print("-" * 50)
 ```
 
@@ -189,7 +191,7 @@ analytics_service = AnalyticsService(client)
 # Get dashboard overview
 try:
     dashboard = analytics_service.get_dashboard()
-    print("\n📊 Dashboard Analytics:")
+    print("\nDashboard Analytics:")
     print(f"Total agents: {dashboard.get('agents', {}).get('total', 0)}")
     print(f"Active conversations: {dashboard.get('conversations', {}).get('active', 0)}")
     print(f"Total messages today: {dashboard.get('messages', {}).get('today', 0)}")
@@ -203,7 +205,7 @@ try:
         start_date="2024-01-01T00:00:00Z",
         end_date="2024-12-31T23:59:59Z"
     )
-    print(f"\n🎯 Agent Performance:")
+    print(f"\nAgent Performance:")
     print(f"Total conversations: {agent_metrics.get('conversation_metrics', {}).get('total_conversations', 0)}")
     print(f"Average response time: {agent_metrics.get('performance_metrics', {}).get('avg_response_time_seconds', 0):.2f}s")
 except Exception as e:
@@ -230,30 +232,30 @@ from knowrithm_py.services.conversation import ConversationService, MessageServi
 from knowrithm_py.services.analytics import AnalyticsService
 
 def main():
-    print("🚀 Knowrithm Quick Start Guide")
+    print("Knowrithm Quick Start Guide")
     print("=" * 50)
     
     # Step 1: Initialize Client
-    print("\n1️⃣ Initializing client...")
+    print("\n1. Initializing client...")
     client = KnowrithmClient(
         api_key=os.getenv('KNOWRITHM_API_KEY'),
         api_secret=os.getenv('KNOWRITHM_API_SECRET'),
         base_url="https://app.knowrithm.org"
     )
-    print("✅ Client initialized!")
+    print("Client initialized!")
     
     # Step 2: Create Agent
-    print("\n2️⃣ Creating your AI agent...")
+    print("\n2. Creating your AI agent...")
     agent_service = AgentService(client)
     agent = agent_service.create({
         "name": "Quick Start Assistant",
         "description": "My first Knowrithm AI agent",
         "personality": "helpful, friendly, and knowledgeable"
     })
-    print(f"✅ Agent '{agent['name']}' created with ID: {agent['id']}")
+    print(f"Agent '{agent['name']}' created with ID: {agent['id']}")
     
     # Step 3: Upload Document
-    print("\n3️⃣ Creating and uploading training document...")
+    print("\n3. Creating and uploading training document...")
     
     # Create sample FAQ
     faq_content = """
@@ -269,7 +271,7 @@ Q: Do you offer refunds?
 A: Yes, we offer full refunds within 30 days of purchase with proof of purchase.
 
 Q: How can I contact support?
-A: Email us at support@example.com or call 1-800-SUPPORT during business hours.
+A: Email us at support@knowrithm.org or call 1-800-SUPPORT during business hours.
 
 Q: What payment methods do you accept?
 A: We accept all major credit cards, PayPal, and bank transfers.
@@ -284,15 +286,15 @@ A: We accept all major credit cards, PayPal, and bank transfers.
         file_path="quick_start_faq.txt",
         agent_id=agent['id']
     )
-    print(f"✅ Document uploaded and processing...")
+    print(f"Document uploaded and processing...")
     
     # Step 4: Wait for processing
-    print("\n4️⃣ Waiting for document processing...")
+    print("\n4. Waiting for document processing...")
     time.sleep(3)  # Brief wait for processing
-    print("✅ Ready to chat!")
+    print("Ready to chat!")
     
     # Step 5: Create Conversation
-    print("\n5️⃣ Starting conversation...")
+    print("\n5. Starting conversation...")
     conversation_service = ConversationService(client)
     message_service = MessageService(client)
     
@@ -300,10 +302,10 @@ A: We accept all major credit cards, PayPal, and bank transfers.
         agent_id=agent['id'],
         entity_type="USER"
     )
-    print(f"✅ Conversation started!")
+    print(f"Conversation started!")
     
     # Step 6: Chat with Agent
-    print("\n6️⃣ Testing your AI agent...")
+    print("\n6. Testing your AI agent...")
     
     def ask_question(question):
         try:
@@ -325,41 +327,41 @@ A: We accept all major credit cards, PayPal, and bank transfers.
     
     for i, question in enumerate(test_questions, 1):
         print(f"\n  Test {i}/3:")
-        print(f"  👤 Question: {question}")
+        print(f"Question: {question}")
         response = ask_question(question)
-        print(f"  🤖 Response: {response}")
+        print(f" Response: {response}")
         print("  " + "─" * 60)
     
     # Step 7: Show Analytics
-    print("\n7️⃣ Checking analytics...")
+    print("\n7. Checking analytics...")
     try:
         analytics_service = AnalyticsService(client)
         dashboard = analytics_service.get_dashboard()
-        print(f"✅ Total agents in your account: {dashboard.get('agents', {}).get('total', 1)}")
-        print(f"✅ Messages sent today: {dashboard.get('messages', {}).get('today', 0)}")
+        print(f"Total agents in your account: {dashboard.get('agents', {}).get('total', 1)}")
+        print(f"Messages sent today: {dashboard.get('messages', {}).get('today', 0)}")
     except Exception as e:
-        print(f"⚠️ Analytics will be available shortly after more usage")
+        print(f"Analytics will be available shortly after more usage")
     
     # Success!
-    print("\n🎉 Congratulations! Your AI agent is ready!")
-    print("\n📋 What you've accomplished:")
-    print("   ✅ Created and configured an AI agent")
-    print("   ✅ Uploaded and processed training documents")
-    print("   ✅ Successfully tested conversations")
-    print("   ✅ Accessed basic analytics")
+    print("\nCongratulations! Your AI agent is ready!")
+    print("\nWhat you've accomplished:")
+    print("Created and configured an AI agent")
+    print("Uploaded and processed training documents")
+    print("Successfully tested conversations")
+    print("Accessed basic analytics")
     
-    print(f"\n🔗 Your agent ID: {agent['id']}")
-    print(f"🔗 Conversation ID: {conversation['id']}")
+    print(f"\nYour agent ID: {agent['id']}")
+    print(f"Conversation ID: {conversation['id']}")
     
-    print("\n🚀 Next steps:")
-    print("   • Add more training documents")
-    print("   • Integrate with your website")
-    print("   • Set up lead management")
-    print("   • Explore advanced analytics")
+    print("\nNext steps:")
+    print("• Add more training documents")
+    print("• Integrate with your website")
+    print("• Set up lead management")
+    print("• Explore advanced analytics")
     
     # Clean up
     os.remove("quick_start_faq.txt")
-    print("\n✨ Quick start complete!")
+    print("\nQuick start complete!")
 
 if __name__ == "__main__":
     main()
@@ -380,32 +382,32 @@ if __name__ == "__main__":
 
 3. **Expected output**:
    ```
-   🚀 Knowrithm Quick Start Guide
+   Knowrithm Quick Start Guide
    ==================================================
    
-   1️⃣ Initializing client...
-   ✅ Client initialized!
+   1. Initializing client...
+   Client initialized!
    
-   2️⃣ Creating your AI agent...
-   ✅ Agent 'Quick Start Assistant' created with ID: agent_123
+   2. Creating your AI agent...
+   Agent 'Quick Start Assistant' created with ID: agent_123
    
-   3️⃣ Creating and uploading training document...
-   ✅ Document uploaded and processing...
+   3. Creating and uploading training document...
+   Document uploaded and processing...
    
-   4️⃣ Waiting for document processing...
-   ✅ Ready to chat!
+   4. Waiting for document processing...
+   Ready to chat!
    
-   5️⃣ Starting conversation...
-   ✅ Conversation started!
+   5. Starting conversation...
+   Conversation started!
    
-   6️⃣ Testing your AI agent...
+   6. Testing your AI agent...
    
      Test 1/3:
-     👤 Question: What are your business hours?
-     🤖 Response: We are open Monday through Friday, 9 AM to 5 PM EST.
+     Question: What are your business hours?
+     Response: We are open Monday through Friday, 9 AM to 5 PM EST.
      ────────────────────────────────────────────────────────────
    
-   🎉 Congratulations! Your AI agent is ready!
+   Congratulations! Your AI agent is ready!
    ```
 
 ## Interactive Testing
@@ -415,15 +417,15 @@ Want to chat interactively? Add this to the end of your script:
 ```python
 def interactive_chat():
     """Start an interactive chat session"""
-    print("\n💬 Interactive Chat Mode (type 'quit' to exit)")
+    print("\nInteractive Chat Mode (type 'quit' to exit)")
     print("─" * 50)
     
     while True:
         try:
-            user_input = input("\n👤 You: ").strip()
+            user_input = input("\nYou: ").strip()
             
             if user_input.lower() in ['quit', 'exit', 'bye']:
-                print("🤖 Goodbye! Thanks for chatting!")
+                print("Goodbye! Thanks for chatting!")
                 break
                 
             if not user_input:
@@ -435,13 +437,13 @@ def interactive_chat():
                 role="user"
             )
             
-            print(f"🤖 Agent: {response.get('content', 'Sorry, I had trouble processing that.')}")
+            print(f"Agent: {response.get('content', 'Sorry, I had trouble processing that.')}")
             
         except KeyboardInterrupt:
-            print("\n\n🤖 Chat session ended. Goodbye!")
+            print("\n\nChat session ended. Goodbye!")
             break
         except Exception as e:
-            print(f"❌ Error: {e}")
+            print(f"Error: {e}")
 
 # Add this call to main() if you want interactive mode
 # interactive_chat()
@@ -489,7 +491,7 @@ Now that you have a working agent, explore these features:
 - Monitoring and alerts
 
 {{ hint style="success" }}
-**🎉 Congratulations!** You've successfully created your first AI agent with Knowrithm. Your agent can now answer questions based on the documents you uploaded.
+**Congratulations!** You've successfully created your first AI agent with Knowrithm. Your agent can now answer questions based on the documents you uploaded.
 {{ endhint }}
 
 {{ hint style="info" }}

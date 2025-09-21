@@ -1,10 +1,10 @@
-# Tutorial: Advanced Document Processing 📄
+# Tutorial: Advanced Document Processing
 
 This tutorial will guide you through training your AI agent with various document types, including PDFs and structured data like CSV files. You'll learn how to upload documents, monitor their processing, and use them to answer complex questions.
 
 ---
 
-## 🎯 What You'll Learn
+## What You'll Learn
 
 - How to upload different file formats (PDF, TXT, CSV) to train an agent.
 - How to monitor the asynchronous document processing task.
@@ -13,7 +13,7 @@ This tutorial will guide you through training your AI agent with various documen
 
 ---
 
-## 📋 Prerequisites
+## Prerequisites
 
 Before you begin, ensure you have:
 - Completed the [Building Your First Agent](building-first-agent.md) tutorial.
@@ -22,7 +22,7 @@ Before you begin, ensure you have:
 
 ---
 
-## 🛠️ Step 1: Project Setup
+## Step 1: Project Setup
 
 Let's create a new script for this tutorial.
 
@@ -57,12 +57,12 @@ Let's create a new script for this tutorial.
         "description": "An agent trained on multiple document types."
     })
     agent_id = agent['id']
-    print(f"✅ Using Agent ID: {agent_id}")
+    print(f"Using Agent ID: {agent_id}")
     ```
 
 ---
 
-## 📄 Step 2: Uploading Unstructured Data (PDF/TXT)
+## Step 2: Uploading Unstructured Data (PDF/TXT)
 
 Unstructured data like PDFs and text files are perfect for knowledge bases, FAQs, and manuals.
 
@@ -87,15 +87,15 @@ Unstructured data like PDFs and text files are perfect for knowledge bases, FAQs
             agent_id=agent_id,
             metadata={"document_type": "policy", "version": "1.3"}
         )
-        print(f"✅ 'company_policy.txt' uploaded with ID: {policy_doc['id']}")
+        print(f"'company_policy.txt' uploaded with ID: {policy_doc['id']}")
     except Exception as e:
-        print(f"❌ Error uploading policy document: {e}")
+        print(f"Error uploading policy document: {e}")
         exit()
     ```
 
 ---
 
-## 📊 Step 3: Uploading Structured Data (CSV)
+## Step 3: Uploading Structured Data (CSV)
 
 Knowrithm can also process structured data. Each row in a CSV is treated as a distinct piece of information, which is great for product catalogs, user lists, or pricing tables.
 
@@ -119,15 +119,15 @@ Knowrithm can also process structured data. Each row in a CSV is treated as a di
             agent_id=agent_id,
             metadata={"document_type": "catalog"}
         )
-        print(f"✅ 'products.csv' uploaded with ID: {products_doc['id']}")
+        print(f"'products.csv' uploaded with ID: {products_doc['id']}")
     except Exception as e:
-        print(f"❌ Error uploading product catalog: {e}")
+        print(f"Error uploading product catalog: {e}")
         exit()
     ```
 
 ---
 
-## ⚙️ Step 4: Monitor Processing
+## Step 4: Monitor Processing
 
 Since processing is asynchronous, it's good practice to wait for it to complete before querying the agent.
 
@@ -138,13 +138,13 @@ def wait_for_processing(doc_id, timeout=120):
     while time.time() - start_time < timeout:
         status = document_service.get_processing_status(doc_id)
         if status.get('status') == 'completed':
-            print(f"✅ Document {doc_id} processed successfully.")
+            print(f"Document {doc_id} processed successfully.")
             return True
         if status.get('status') == 'failed':
-            print(f"❌ Document {doc_id} failed processing.")
+            print(f"Document {doc_id} failed processing.")
             return False
         time.sleep(5)
-    print("⌛️ Processing timed out.")
+    print("Processing timed out.")
     return False
 
 wait_for_processing(policy_doc['id'])
@@ -153,7 +153,7 @@ wait_for_processing(products_doc['id'])
 
 ---
 
-## 💬 Step 5: Chat with Your Newly Trained Agent
+## Step 5: Chat with the Agent
 
 Now that the agent has been trained on both documents, let's ask it questions that require information from each.
 
@@ -171,13 +171,13 @@ questions = [
 ]
 
 for question in questions:
-    print(f"\n👤 You: {question}")
+    print(f"\nYou: {question}")
     response = message_service.send_message(
         conversation_id=conversation['id'],
         content=question,
         role="user"
     )
-    print(f"🤖 Agent: {response['content']}")
+    print(f"Agent: {response['content']}")
 ```
 
 ### Expected Output
@@ -190,7 +190,7 @@ Your agent should now be able to answer questions by combining information from 
 
 ---
 
-## 🎉 Congratulations!
+## Congratulations!
 
 You have successfully trained an agent on multiple, distinct data sources! You've learned how to:
 - Upload both unstructured (TXT) and structured (CSV) data.
@@ -200,6 +200,6 @@ You have successfully trained an agent on multiple, distinct data sources! You'v
 ## Next Steps
 
 -   **Connect a Live Database**: Instead of a static CSV, connect a live database for real-time data.
-    Database Integration Tutorial
+    [Database Integration Tutorial](database-integration.md)
 -   **Explore Search**: Use the `document_service.search()` method to perform targeted semantic searches against your knowledge base outside of a conversation.
 -   **Use Metadata**: Try searching with the metadata filters you added, e.g., `filters={"document_type": "catalog"}`.

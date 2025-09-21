@@ -1,4 +1,4 @@
-# Frequently Asked Questions (FAQ) ❓
+# Frequently Asked Questions (FAQ)
 
 Find answers to common questions about Knowrithm, our services, and the platform.
 

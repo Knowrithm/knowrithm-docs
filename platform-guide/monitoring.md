@@ -1,10 +1,10 @@
-# Monitoring & Observability 📈
+# Monitoring & Observability
 
 This guide covers best practices and tools for monitoring the health, performance, and security of your Knowrithm platform deployment.
 
 ---
 
-## 🎯 Monitoring Philosophy
+## Monitoring Philosophy
 
 Effective monitoring is key to maintaining a reliable and performant platform. Our approach focuses on the "Three Pillars of Observability":
 
@@ -14,7 +14,7 @@ Effective monitoring is key to maintaining a reliable and performant platform. O
 
 ---
 
-## 🩺 Health Checks
+## Health Checks
 
 The platform includes a built-in health check endpoint to quickly assess the status of the core services.
 
@@ -44,7 +44,7 @@ This endpoint is ideal for use with Kubernetes readiness/liveness probes or othe
 
 ---
 
-## 📊 Key Metrics to Monitor
+## Key Metrics to Monitor
 
 We recommend monitoring the following key performance indicators (KPIs).
 
@@ -66,7 +66,7 @@ We recommend monitoring the following key performance indicators (KPIs).
 
 ---
 
-## 🪵 Logging
+## Logging
 
 The platform uses structured logging (JSON format) to make logs easy to parse, search, and analyze.
 
@@ -94,7 +94,7 @@ We recommend shipping your logs to a centralized logging platform like the **ELK
 
 ---
 
-## 🔔 Alerting
+## Alerting
 
 Set up alerts to be notified proactively when issues arise.
 
@@ -112,7 +112,7 @@ Set up alerts to be notified proactively when issues arise.
 
 ---
 
-## 🛠️ Recommended Tooling
+## Recommended Tooling
 
 For a robust monitoring setup, we recommend the following open-source tools:
 
@@ -131,8 +131,7 @@ For a robust monitoring setup, we recommend the following open-source tools:
 ---
 
 ## Next Steps
-
 - **Deployment Guide**: Learn how to deploy the platform and its dependencies.
-  {{ content-ref url="deployment.md" }}
+  [Deployment Guide](deployment.md)
 - **Security Guide**: Review security best practices for your deployment.
-  {{ content-ref url="security.md" }}
+  [Security Guide](security.md)

@@ -1,8 +1,8 @@
-# Agent Management 🤖
+# Agent Management
 
 This guide provides a comprehensive overview of how to create, configure, and manage your AI agents using the Knowrithm Python SDK. Agents are the core of the Knowrithm platform, acting as specialized AI assistants trained on your data.
 
-## 🎯 What is an Agent?
+## What is an Agent?
 
 An agent is an AI entity with a distinct personality, knowledge base, and configuration. Each agent can be tailored for a specific purpose, such as customer support, sales, or internal helpdesks.
 
@@ -14,7 +14,7 @@ An agent is an AI entity with a distinct personality, knowledge base, and config
 
 ---
 
-## 🚀 Creating an Agent
+## Creating an Agent
 
 Use the `AgentService` to create and manage agents.
 
@@ -33,7 +33,7 @@ agent = agent_service.create({
     "description": "Assists employees with internal company questions."
 })
 
-print(f"✅ Agent created with ID: {agent['id']}")
+print(f"Agent created with ID: {agent['id']}")
 ```
 
 ### Advanced Agent Creation
@@ -57,12 +57,12 @@ agent_config = {
 }
 
 advanced_agent = agent_service.create(agent_config)
-print(f"✅ Advanced agent '{advanced_agent['name']}' created successfully!")
+print(f"Advanced agent '{advanced_agent['name']}' created successfully!")
 ```
 
 ---
 
-## ⚙️ Managing Agents
+## Managing Agents
 
 Once an agent is created, you can list, update, or delete it.
 
@@ -116,7 +116,7 @@ update_data = {
 }
 
 updated_agent = agent_service.update(agent_id, update_data)
-print(f"✅ Agent '{updated_agent['name']}' updated successfully.")
+print(f"Agent '{updated_agent['name']}' updated successfully.")
 ```
 
 ### Deleting and Restoring Agents
@@ -135,7 +135,7 @@ print(f"Agent {agent_id} has been restored.")
 
 ---
 
-## 🧠 Agent Training
+## Agent Training
 
 An agent's intelligence comes from the data it's trained on. Training is accomplished by associating data sources with an agent.
 
@@ -167,7 +167,7 @@ See the Database Integration Tutorial.
 
 ---
 
-## 📊 Monitoring Agent Performance
+## Monitoring Agent Performance
 
 Use the `AnalyticsService` to track how well your agents are performing.
 
@@ -194,7 +194,7 @@ analytics.md
 
 ---
 
-## ✨ Best Practices
+## ◇ Best Practices
 
 - **One Agent, One Purpose**: Create separate agents for distinct tasks (e.g., Sales vs. Support) to improve accuracy and maintainability.
 - **Be Specific with Personality**: A detailed personality and system prompt dramatically improve response quality. Instead of "helpful," try "a cheerful and patient support expert who uses emojis and explains technical concepts in simple terms."
@@ -203,7 +203,7 @@ analytics.md
 
 ---
 
-## 💡 Full Example
+## ⚙ Full Example
 
 This script demonstrates the complete lifecycle of an agent.
 

@@ -1,10 +1,10 @@
-# Knowrithm Python SDK 🐍 [![Python Version](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/downloads/) [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE) [![PyPI version](https://badge.fury.io/py/knowrithm-py.svg)](https://badge.fury.io/py/knowrithm-py)
+# Knowrithm Python SDK
 
 The Knowrithm Python SDK provides a comprehensive interface for building, training, and deploying intelligent AI agents. This powerful SDK enables you to create custom chatbots, process documents, manage conversations, and access detailed analytics—all with just a few lines of Python code.
 
 ---
 
-## 🎯 SDK Overview
+## SDK Overview
 
 Knowrithm enables businesses to:
 
@@ -15,12 +15,12 @@ Knowrithm enables businesses to:
 - **Scale Operations**: Handle multiple conversations simultaneously with detailed monitoring
 
 {{ hint style="success" }}
-**Perfect for:** Developers, data scientists, and businesses looking to integrate AI agents into their applications with minimal setup time.
+**Ideal for:** Developers, data scientists, and businesses looking to integrate AI agents into their applications with minimal setup.
 {{ endhint }}
 
 ---
 
-## 📦 Installation
+## Installation
 
 {{ tabs }}
 {{ tab title="pip (Recommended)" }}
@@ -56,7 +56,7 @@ conda install -c conda-forge knowrithm-py
 
 ---
 
-## ⚡ Quick Start
+## Quick Start
 
 Get up and running in under 2 minutes:
 
@@ -97,7 +97,7 @@ print(f"Agent response: {response['content']}")
 
 ---
 
-## 🏗️ SDK Architecture
+## SDK Architecture
 
 The SDK is organized into logical service modules:
 
@@ -118,9 +118,9 @@ client.companies      # Company management
 
 ---
 
-## 🔧 Core Services
+## Core Services
 
-### 🤖 Agent Management
+### Agent Management
 
 Create and manage intelligent AI agents:
 
@@ -148,7 +148,7 @@ agent_service.update(agent['id'], {
 })
 ```
 
-### 💬 Conversation Management
+### Conversation Management
 
 Handle real-time conversations with context awareness:
 
@@ -182,7 +182,7 @@ conv_service.end_conversation(
 )
 ```
 
-### 📚 Document Processing
+### Document Processing
 
 Upload, process, and search through various document types:
 
@@ -211,7 +211,7 @@ search_results = doc_service.search(
 documents = doc_service.list(agent_id=agent['id'])
 ```
 
-### 📊 Analytics & Monitoring
+### Analytics & Monitoring
 
 Access comprehensive analytics and performance metrics:
 
@@ -243,7 +243,7 @@ export_data = analytics.export_analytics_data({
 })
 ```
 
-### 👥 Lead Management
+### Lead Management
 
 Track and convert leads through intelligent conversations:
 
@@ -307,7 +307,7 @@ search_results = db_service.search(
 
 ---
 
-## 🔐 Authentication & Security
+## Authentication & Security
 
 ### API Key Management
 
@@ -346,7 +346,7 @@ client = KnowrithmClient(
 
 ---
 
-## 🛡️ Error Handling
+## Error Handling
 
 The SDK provides comprehensive error handling:
 
@@ -361,13 +361,13 @@ from knowrithm_py.exceptions import (
 try:
     agent = client.agents.create(agent_data)
 except AuthenticationError:
-    print("❌ Invalid API credentials")
+    print("Invalid API credentials")
 except ValidationError as e:
-    print(f"❌ Validation error: {e.message}")
+    print(f"Validation error: {e.message}")
 except RateLimitError:
-    print("⏳ Rate limit exceeded, please retry later")
+    print("Rate limit exceeded, please retry later")
 except KnowrithmAPIError as e:
-    print(f"❌ API error: {e.message}")
+    print(f"API error: {e.message}")
 ```
 
 ### Retry Logic with Exponential Backoff
@@ -397,7 +397,7 @@ def safe_api_call(func, *args, max_retries=3, **kwargs) -> Dict[str, Any]:
 
 ---
 
-## 📊 Advanced Features
+## Advanced Features
 
 ### Batch Operations
 
@@ -483,7 +483,7 @@ def verify_webhook_signature(payload, signature, secret):
 
 ---
 
-## 🔧 Configuration Options
+## Configuration Options
 
 ### Client Configuration
 
@@ -522,7 +522,7 @@ agent = client.agents.create(agent_config)
 
 ---
 
-## 📋 SDK Reference
+## SDK Reference
 
 ### Complete Service List
 
@@ -540,7 +540,7 @@ agent = client.agents.create(agent_config)
 
 ---
 
-## 🚀 Best Practices
+## Best Practices
 
 ### 1. Environment Management
 
@@ -636,7 +636,7 @@ with conversation_context(agent['id']) as conv:
 
 ---
 
-## 📚 Related Documentation
+## Related Documentation
 
 - **[Client Setup Guide](client-setup.md)** - Detailed client configuration
 - **[Agent Management](agents.md)** - Complete agent operations
@@ -647,18 +647,18 @@ with conversation_context(agent['id']) as conv:
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
 We welcome contributions to the Knowrithm Python SDK! See our [Contributing Guide](https://github.com/Knowrithm/knowrithm-py/blob/main/CONTRIBUTING.md) for details.
 
 ---
 
-## 📞 Support
+## Support
 
-- 📚 **Documentation**: [docs.knowrithm.org](https://docs.knowrithm.org)
-- 💬 **Discord**: [Join our community](https://discord.gg/cHHWfghJrR)
-- 📧 **Email**: support@knowrithm.org
-- 🐛 **Issues**: [GitHub Issues](https://github.com/Knowrithm/knowrithm-py/issues)
+- **Documentation**: [docs.knowrithm.org](https://docs.knowrithm.org)
+- **Discord**: [Join our community](https://discord.gg/cHHWfghJrR)
+- **Email**: support@knowrithm.org
+- **Issues**: [GitHub Issues](https://github.com/Knowrithm/knowrithm-py/issues)
 
 ---
 

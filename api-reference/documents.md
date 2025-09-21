@@ -1,4 +1,4 @@
-# Documents API 📚
+# Documents API
 
 The Documents API is used to upload, manage, and search the knowledge base content that trains your AI agents.
 

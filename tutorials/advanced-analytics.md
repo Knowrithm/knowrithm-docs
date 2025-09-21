@@ -1,10 +1,10 @@
-# Tutorial: Advanced Analytics & Reporting 📊
+# Advanced Analytics & Reporting
 
 This tutorial goes beyond the basics to show you how to leverage the `AnalyticsService` for deep performance insights, agent A/B testing, and custom reporting.
 
 ---
 
-## 🎯 What You'll Learn
+## What You'll Learn
 
 - How to create a custom, multi-agent performance dashboard.
 - How to compare two agents head-to-head (A/B testing).
@@ -13,7 +13,7 @@ This tutorial goes beyond the basics to show you how to leverage the `AnalyticsS
 
 ---
 
-## 📋 Prerequisites
+## Prerequisites
 
 - A Knowrithm account with several active agents and a history of conversations.
 - The Knowrithm Python SDK installed and configured.
@@ -21,7 +21,7 @@ This tutorial goes beyond the basics to show you how to leverage the `AnalyticsS
 
 ---
 
-## 🛠️ Step 1: Setting Up for the Tutorial
+## Step 1: Setting Up for the Tutorial
 
 Create a new Python script named `advanced_analytics_tutorial.py` and set up your client. For this tutorial, we'll assume you have at least two agents to compare.
 
@@ -48,7 +48,7 @@ agent_service = AgentService(client)
 all_agents = agent_service.list()
 
 if len(all_agents) < 2:
-    print("❌ This tutorial requires at least two agents to compare. Please create more agents.")
+    print("This tutorial requires at least two agents to compare. Please create more agents.")
     exit()
 
 agent_a_id = all_agents[0]['id']
@@ -58,7 +58,7 @@ print(f"Comparing Agent A ({all_agents[0]['name']}) and Agent B ({all_agents[1][
 
 ---
 
-## 📈 Step 2: Building a Custom Performance Dashboard
+## Step 2: Building a Custom Performance Dashboard
 
 Let's create a function that generates a performance summary for a list of agents, allowing you to see a high-level comparison.
 
@@ -68,7 +68,7 @@ analytics_service = AnalyticsService(client)
 def create_performance_dashboard(agent_ids: list):
     """Fetches key metrics for a list of agents and prints a dashboard."""
     
-    print("\n--- 📊 Custom Performance Dashboard ---")
+    print("\n--- Custom Performance Dashboard ---")
     print(f"{'Agent Name':<25} | {'Total Convos':<15} | {'Avg. Rating':<15} | {'Avg. Response (s)':<20}")
     print("-" * 80)
 
@@ -104,7 +104,7 @@ create_performance_dashboard([agent_a_id, agent_b_id])
 
 ---
 
-## ⚔️ Step 3: A/B Testing Agents
+## Step 3: A/B Testing Agents
 
 The `get_agent_performance_comparison` endpoint is perfect for A/B testing. Let's compare our two agents directly against the company average.
 
@@ -137,7 +137,7 @@ This helps you quickly identify which agent personality, model, or training data
 
 ---
 
-## 🔍 Step 4: Exporting Data for Deep Analysis
+## Step 4: Exporting Data for Deep Analysis
 
 Sometimes you need to go deeper than the pre-built metrics. Exporting raw conversation data allows you to perform custom analysis, such as topic modeling or sentiment analysis, in external tools.
 
@@ -162,12 +162,12 @@ def export_conversations_to_csv(agent_id: str, filename: str):
             # The 'data' key contains the full CSV content as a string
             with open(filename, "w", newline="", encoding="utf-8") as f:
                 f.write(response['data'])
-            print(f"✅ Successfully exported {response.get('count', 0)} conversations.")
+            print(f"Successfully exported {response.get('count', 0)} conversations.")
         else:
-            print("⚠️ No data returned for the specified period.")
+            print("No data returned for the specified period.")
 
     except Exception as e:
-        print(f"❌ Export failed: {e}")
+        print(f"Export failed: {e}")
 
 # Run the export
 export_conversations_to_csv(agent_a_id, f"agent_{agent_a_id}_conversations.csv")
@@ -205,14 +205,14 @@ def analyze_exported_csv(filename: str):
 
 ---
 
-## 🎉 Congratulations!
+## Congratulations!
 
 You've now mastered the advanced capabilities of the Knowrithm Analytics Service. You can:
 - Build custom reports to monitor your entire fleet of agents.
 - Objectively compare agents to find the most effective configurations.
 - Export raw data for unlimited flexibility in your analysis.
 
-Using these techniques, you can move from simply having AI agents to having a fully optimized, data-driven conversational AI strategy.
+Using these techniques, you can create a fully optimized, data-driven conversational AI strategy.
 
 ## Next Steps
 

@@ -1,4 +1,4 @@
-# Conversations API 💬
+# Conversations API
 
 The Conversations API is used to manage chat sessions and the messages within them.
 

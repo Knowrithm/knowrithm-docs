@@ -1,4 +1,4 @@
-# Companies API 🏢
+# Companies API
 
 The Companies API provides endpoints for creating and managing company accounts within the Knowrithm platform. These endpoints are typically restricted to super administrators.
 
@@ -66,7 +66,7 @@ Soft-deletes a company. The company can be recovered using the restore endpoint.
 
 ---
 
-## 📊 Company Statistics
+## Company Statistics
 
 ### Get Company Statistics
 

@@ -1,10 +1,10 @@
-# Analytics API 📊
+# Analytics API
 
 The Analytics API provides access to a wide range of metrics for monitoring performance, engagement, and usage across the platform.
 
 ---
 
-## 🎯 Key Endpoints
+## Key Endpoints
 
 Most analytics endpoints accept `start_date` and `end_date` query parameters in ISO 8601 format (e.g., `2024-01-01T00:00:00Z`) to define the reporting period.
 

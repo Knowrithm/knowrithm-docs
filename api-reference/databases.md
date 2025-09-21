@@ -1,4 +1,4 @@
-# Databases API 🗄️
+# Databases API
 
 The Databases API allows you to connect external databases to your agents, enabling them to query for real-time information.
 

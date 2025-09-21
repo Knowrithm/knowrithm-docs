@@ -1,10 +1,10 @@
-# Security Guide 🔒
+# Security Guide
 
 This guide provides a comprehensive overview of the security features, architecture, and best practices for deploying and managing the Knowrithm platform securely.
 
 ---
 
-## 🎯 Security Philosophy
+## Security Philosophy
 
 Security is a core principle at Knowrithm. Our platform is designed with a multi-layered, defense-in-depth strategy to protect your data and ensure the integrity of your AI agents.
 
@@ -15,7 +15,7 @@ Security is a core principle at Knowrithm. Our platform is designed with a multi
 
 ---
 
-## 🏛️ Security Architecture
+## Security Architecture
 
 Our security model is built on multiple layers of protection.
 
@@ -51,7 +51,7 @@ graph TD
 
 ---
 
-## 🔐 Authentication & Authorization
+## Authentication & Authorization
 
 Secure access to the platform is managed through a robust authentication and authorization system.
 
@@ -113,7 +113,7 @@ class SecurityManager:
 
 ---
 
-## 🛡️ Data Protection
+## Data Protection
 
 Protecting your data is our top priority.
 
@@ -151,7 +151,7 @@ Uploaded documents are stored in a secure, private object storage bucket (like A
 
 ---
 
-## 📋 Compliance & Auditing
+## Compliance & Auditing
 
 - **Audit Logs**: All significant actions taken by users and agents are logged for security and compliance auditing. This includes logins, agent creation, data deletion, and more.
 - **GDPR & CCPA**: The platform provides tools for data export and deletion to help you comply with data privacy regulations like GDPR and CCPA.
@@ -159,7 +159,7 @@ Uploaded documents are stored in a secure, private object storage bucket (like A
 
 ---
 
-## ✨ Security Best Practices for Users
+## Security Best Practices for Users
 
 To maximize the security of your Knowrithm account, we recommend the following:
 

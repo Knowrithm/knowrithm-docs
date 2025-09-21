@@ -1,4 +1,4 @@
-# Changelog 📝
+# Changelog
 
 All notable changes to the Knowrithm platform and Python SDK will be documented in this file.
 

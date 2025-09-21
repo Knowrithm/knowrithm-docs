@@ -1,10 +1,10 @@
-# Tutorial: Database Integration 🗄️
+# Tutorial: Database Integration
 
 This tutorial will guide you through connecting a live database to your Knowrithm agent, enabling it to answer questions with real-time data.
 
 ---
 
-## 🎯 What You'll Learn
+## What You'll Learn
 
 - How to create a sample local database using SQLite.
 - How to connect your database to the Knowrithm platform.
@@ -13,7 +13,7 @@ This tutorial will guide you through connecting a live database to your Knowrith
 
 ---
 
-## 📋 Prerequisites
+## Prerequisites
 
 - A Knowrithm account and API credentials.
 - Python 3.8+ and the Knowrithm SDK installed.
@@ -21,7 +21,7 @@ This tutorial will guide you through connecting a live database to your Knowrith
 
 ---
 
-## 🛠️ Step 1: Create a Sample Database
+## Step 1: Create a Sample Database
 
 For this tutorial, we'll use Python's built-in `sqlite3` library to create a simple local database. This simulates connecting to a real production database.
 
@@ -77,7 +77,7 @@ def setup_database():
 
     conn.commit()
     conn.close()
-    print(f"✅ Database '{db_file}' created and populated.")
+    print(f"Database '{db_file}' created and populated.")
 
 if __name__ == "__main__":
     setup_database()
@@ -87,7 +87,7 @@ Run this script once to create your database file: `python db_setup.py`.
 
 ---
 
-## 🐍 Step 2: Connect to the Database
+## Step 2: Connect to the Database
 
 Now, let's write a new script, `db_agent_tutorial.py`, to connect this database to Knowrithm.
 
@@ -110,7 +110,7 @@ client = KnowrithmClient(
 agent_service = AgentService(client)
 agent = agent_service.create({"name": "Database Query Agent"})
 agent_id = agent['id']
-print(f"✅ Using Agent ID: {agent_id}")
+print(f"Using Agent ID: {agent_id}")
 
 db_service = DatabaseService(client)
 
@@ -122,15 +122,15 @@ try:
         "database": "company.db" # Path to the SQLite file
     })
     connection_id = db_connection['id']
-    print(f"✅ Database connection created with ID: {connection_id}")
+    print(f"Database connection created with ID: {connection_id}")
 except Exception as e:
-    print(f"❌ Error creating connection: {e}")
+    print(f"Error creating connection: {e}")
     exit()
 ```
 
 ---
 
-## ⚙️ Step 3: Test and Analyze the Connection
+## Step 3: Test and Analyze the Connection
 
 Before the agent can use the database, we need to test the connection and ask Knowrithm to analyze its schema.
 
@@ -140,19 +140,19 @@ print("\nTesting and analyzing the database connection...")
 # Test the connection
 test_result = db_service.test_connection(connection_id)
 if test_result.get('status') != 'connected':
-    print(f"❌ Connection test failed: {test_result.get('message')}")
+    print(f"Connection test failed: {test_result.get('message')}")
     exit()
-print("✅ Connection test successful.")
+print("Connection test successful.")
 
 # Analyze the schema (this is an async process)
 analyze_result = db_service.analyze(connection_id)
-print("⏳ Database schema analysis has started.")
+print("Database schema analysis has started.")
 # In a real application, you would poll for completion status.
 ```
 
 ---
 
-## 💬 Step 4: Query the Database with Natural Language
+## Step 4: Query with Natural Language
 
 Once the schema is analyzed, your agent can translate natural language questions into SQL queries.
 
@@ -164,7 +164,7 @@ print("\nQuerying the database using natural language...")
 
 query = "How many orders has John Doe placed?"
 
-print(f"❓ Query: {query}")
+print(f"Query: {query}")
 
 try:
     # Use the database search endpoint
@@ -174,11 +174,11 @@ try:
     )
     
     # The result contains the natural language answer and the generated SQL
-    print(f"🤖 Answer: {search_results['answer']}")
-    print(f"🔍 Generated SQL: {search_results['sql_query']}")
+    print(f"Answer: {search_results['answer']}")
+    print(f"Generated SQL: {search_results['sql_query']}")
 
 except Exception as e:
-    print(f"❌ Error during search: {e}")
+    print(f"Error during search: {e}")
 ```
 
 ### Expected Output
@@ -189,7 +189,7 @@ except Exception as e:
 
 ---
 
-## 🎉 Congratulations!
+## Congratulations!
 
 You've successfully connected a live database to your AI agent! It can now answer questions using up-to-the-minute data, making it incredibly powerful for internal tools, real-time reporting, and dynamic customer support.
 

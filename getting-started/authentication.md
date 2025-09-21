@@ -137,7 +137,7 @@ def validate_credentials():
         validation = auth_service.validate_credentials()
         
         if validation.get('valid'):
-            print("✅ Authentication successful!")
+            print("Authentication successful!")
             print(f"User: {validation.get('user', {}).get('email')}")
             print(f"Company: {validation.get('company', {}).get('name')}")
             return True
@@ -146,7 +146,7 @@ def validate_credentials():
             return False
             
     except Exception as e:
-        print(f"❌ Authentication error: {e}")
+        print(f"Authentication error: {e}")
         return False
 
 # Validate before using other services
@@ -380,20 +380,20 @@ def handle_auth_errors():
         
     except AuthenticationError as e:
         if "invalid_api_key" in str(e):
-            print("❌ Invalid API key - check your credentials")
+            print("Invalid API key - check your credentials")
         elif "expired" in str(e):
-            print("❌ API key has expired - generate a new one")
+            print("API key has expired - generate a new one")
         elif "revoked" in str(e):
-            print("❌ API key has been revoked")
+            print("API key has been revoked")
         else:
-            print(f"❌ Authentication failed: {e}")
+            print(f"Authentication failed: {e}")
             
     except AuthorizationError as e:
-        print(f"❌ Insufficient permissions: {e}")
-        print("💡 Check your API key permissions in the dashboard")
+        print(f"Insufficient permissions: {e}")
+        print("Check your API key permissions in the dashboard")
         
     except Exception as e:
-        print(f"❌ Unexpected error: {e}")
+        print(f"Unexpected error: {e}")
 
 # Use it
 handle_auth_errors()
@@ -509,7 +509,7 @@ def test_end_to_end_authentication():
     agents = agent_service.list()
     assert isinstance(agents, list), "Should return list of agents"
     
-    print("✅ End-to-end authentication test passed")
+    print("End-to-end authentication test passed")
 
 # Run the test
 test_end_to_end_authentication()

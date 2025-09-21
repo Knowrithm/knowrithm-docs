@@ -1,18 +1,18 @@
-# Knowrithm API Reference 🔌
+# API Reference
 
 Welcome to the Knowrithm REST API documentation. Our API provides direct access to all platform features, enabling you to build custom integrations, mobile applications, and enterprise solutions.
 
 ---
 
-## 🎯 API Overview
+## API Overview
 
 The Knowrithm API is a RESTful service that provides:
 
-- **🔐 Secure Authentication** - JWT-based security with API keys
-- **📊 Comprehensive Endpoints** - Full platform functionality access
-- **⚡ High Performance** - Optimized for production workloads
-- **🌍 Global Availability** - CDN-powered for low-latency worldwide access
-- **📈 Rate Limited** - Fair usage policies with generous limits
+- **Secure Authentication** - JWT-based security with API keys
+- **Comprehensive Endpoints** - Full platform functionality access
+- **High Performance** - Optimized for production workloads
+- **Global Availability** - CDN-powered for low-latency worldwide access
+- **Rate Limited** - Fair usage policies with generous limits
 
 {{ hint style="info" }}
 **Base URL**: `https://app.knowrithm.org/api/v1`
@@ -22,7 +22,7 @@ The Knowrithm API is a RESTful service that provides:
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### 1. Get Your API Credentials
 
@@ -57,7 +57,7 @@ curl -X POST "https://app.knowrithm.org/api/v1/agent" \
 
 ---
 
-## 🔐 Authentication
+## Authentication
 
 The Knowrithm API uses multiple authentication methods:
 
@@ -90,9 +90,9 @@ Authorization: Basic <base64-encoded-credentials>
 
 ---
 
-## 📋 Core Endpoints
+## Core Endpoints
 
-### 🏢 Company Management
+### Company Management
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
@@ -103,7 +103,7 @@ Authorization: Basic <base64-encoded-credentials>
 | `DELETE` | `/company/{id}` | Delete company |
 | `GET` | `/company/{id}/statistics` | Get company metrics |
 
-### 🤖 Agent Management
+### Agent Management
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
@@ -114,7 +114,7 @@ Authorization: Basic <base64-encoded-credentials>
 | `DELETE` | `/agent/{id}` | Delete agent |
 | `PATCH` | `/agent/{id}/restore` | Restore deleted agent |
 
-### 💬 Conversation Management
+### Conversation Management
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
@@ -124,7 +124,7 @@ Authorization: Basic <base64-encoded-credentials>
 | `POST` | `/conversation/{id}/chat` | Send message to agent |
 | `DELETE` | `/conversation/{id}` | Delete conversation |
 
-### 📚 Document Processing
+### Document Processing
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
@@ -134,7 +134,7 @@ Authorization: Basic <base64-encoded-credentials>
 | `DELETE` | `/document/{id}` | Delete document |
 | `PATCH` | `/document/{id}/restore` | Restore document |
 
-### 👥 Lead Management
+### Lead Management
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
@@ -144,7 +144,7 @@ Authorization: Basic <base64-encoded-credentials>
 | `PUT` | `/lead/{id}` | Update lead |
 | `GET` | `/lead/company` | Get company leads |
 
-### 🗄️ Database Integration
+### Database Integration
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
@@ -154,7 +154,7 @@ Authorization: Basic <base64-encoded-credentials>
 | `POST` | `/search/database` | Search across databases |
 | `DELETE` | `/database-connection/{id}` | Delete connection |
 
-### 📊 Analytics
+### Analytics
 
 | Method | Endpoint | Description |
 |--------|----------|-------------|
@@ -165,7 +165,7 @@ Authorization: Basic <base64-encoded-credentials>
 
 ---
 
-## 📊 Response Format
+## Response Format
 
 All API responses follow a consistent JSON structure:
 
@@ -221,7 +221,7 @@ All API responses follow a consistent JSON structure:
 
 ---
 
-## 🎯 Request Examples
+## Request Examples
 
 ### Creating an Agent
 
@@ -304,7 +304,7 @@ Content-Type: application/json
 
 ---
 
-## 🔄 Rate Limiting
+## Rate Limiting
 
 The API implements rate limiting to ensure fair usage:
 
@@ -341,7 +341,7 @@ async function makeAPIRequest(endpoint, options) {
 
 ---
 
-## 📝 Data Models
+## Data Models
 
 ### Agent Model
 
@@ -422,7 +422,7 @@ async function makeAPIRequest(endpoint, options) {
 
 ---
 
-## 🔍 Search and Filtering
+## Search and Filtering
 
 ### Query Parameters
 
@@ -449,7 +449,7 @@ X-API-Secret: your-api-secret
 
 ---
 
-## 🔧 Webhooks
+## Webhooks
 
 Set up webhooks to receive real-time notifications:
 
@@ -502,7 +502,7 @@ def verify_webhook(payload, signature, secret):
 
 ---
 
-## 🚨 Error Codes
+## Error Codes
 
 | Code | HTTP Status | Description |
 |------|------------|-------------|
@@ -516,7 +516,7 @@ def verify_webhook(payload, signature, secret):
 
 ---
 
-## 📚 SDK and Libraries
+## SDK and Libraries
 
 ### Official SDKs
 
@@ -533,7 +533,7 @@ def verify_webhook(payload, signature, secret):
 
 ---
 
-## 🔧 Testing
+## Testing
 
 ### Test Endpoints
 
@@ -599,7 +599,7 @@ curl -X POST "$BASE_URL/conversation" \
 
 ---
 
-## 🌐 Environments
+## Environments
 
 ### Production Environment
 - **Base URL**: `https://app.knowrithm.org/api/v1`
@@ -621,7 +621,7 @@ curl -X POST "$BASE_URL/conversation" \
 
 ---
 
-## 📊 Performance Optimization
+## Performance Optimization
 
 ### Request Optimization
 
@@ -702,16 +702,16 @@ async def get_all_agents():
 
 ---
 
-## 🔐 Security Best Practices
+## Security Best Practices
 
 ### API Key Security
 
 ```python
-# ✅ Good: Environment variables
+# Good: Environment variables
 import os
 api_key = os.getenv('KNOWRITHM_API_KEY')
 
-# ❌ Bad: Hardcoded in source
+# Bad: Hardcoded in source
 api_key = "ka_1234567890abcdef"  # Never do this!
 ```
 
@@ -763,7 +763,7 @@ function validateAgentData(agentData) {
 
 ---
 
-## 🔄 API Versioning
+## API Versioning
 
 ### Version Strategy
 
@@ -793,7 +793,7 @@ When migrating between versions:
 
 ---
 
-## 📈 Analytics and Monitoring
+## Analytics and Monitoring
 
 ### API Usage Analytics
 
@@ -836,7 +836,7 @@ curl -X GET "https://app.knowrithm.org/api/v1/error-analysis" \
 
 ---
 
-## 🚀 Advanced Features
+## Advanced Features
 
 ### Streaming Responses
 
@@ -915,7 +915,7 @@ curl -X POST "https://app.knowrithm.org/api/v1/document/bulk-upload" \
 
 ---
 
-## 📚 Integration Examples
+## Integration Examples
 
 ### Website Integration
 
@@ -980,7 +980,7 @@ class KnowrithmAPI {
 
 ---
 
-## 📋 API Endpoints Summary
+## API Endpoints Summary
 
 For detailed documentation of each endpoint, visit the specific sections:
 
@@ -994,7 +994,7 @@ For detailed documentation of each endpoint, visit the specific sections:
 
 ---
 
-## 🤝 Community and Support
+## Community and Support
 
 ### Getting Help
 
@@ -1015,7 +1015,7 @@ We welcome API feedback and contributions:
 
 ---
 
-## 📚 Additional Resources
+## Additional Resources
 
 - **[OpenAPI Specification](https://app.knowrithm.org/api/openapi.json)** - Machine-readable API spec
 - **[Postman Collection](https://api.knowrithm.org/postman/collection.json)** - Ready-to-use API tests

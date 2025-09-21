@@ -1,10 +1,10 @@
-# Lead Management 👥
+# Lead Management
 
 This guide covers how to use the `LeadService` to capture, track, and manage potential customers who interact with your AI agents.
 
 ---
 
-## 🎯 What is a Lead?
+## What is a Lead?
 
 In Knowrithm, a lead is a specific type of entity representing a potential customer or prospect. By identifying a user as a lead, you can unlock powerful CRM-like features, including status tracking, conversion analytics, and targeted follow-ups.
 
@@ -27,7 +27,7 @@ In Knowrithm, a lead is a specific type of entity representing a potential custo
 
 ---
 
-## 🚀 Core Lead Operations
+## Core Lead Operations
 
 All lead management functions are accessed through the `LeadService`.
 
@@ -53,9 +53,9 @@ lead_data = {
 try:
     new_lead = lead_service.create(lead_data)
     lead_id = new_lead['id']
-    print(f"✅ Lead '{new_lead['first_name']}' created with ID: {lead_id}")
+    print(f"Lead '{new_lead['first_name']}' created with ID: {lead_id}")
 except Exception as e:
-    print(f"❌ Error creating lead: {e}")
+    print(f"Error creating lead: {e}")
 ```
 
 ### Listing and Filtering Leads
@@ -96,7 +96,7 @@ lead_service.add_notes(
     notes="Follow-up call scheduled for Friday at 10 AM."
 )
 
-print(f"✅ Lead {lead_id} status updated and notes added.")
+print(f"Lead {lead_id} status updated and notes added.")
 ```
 
 ### Getting and Updating Lead Details
@@ -117,7 +117,7 @@ updated_lead = lead_service.update(
 
 ---
 
-## 💬 Connecting Leads to Conversations
+## Connecting Leads to Conversations
 
 To get the most out of lead management, associate conversations with a lead record. This allows you to track the full interaction history.
 
@@ -133,12 +133,12 @@ lead_conversation = conversation_service.create(
     entity_id=lead_id # Associate with the existing lead
 )
 
-print(f"✅ New conversation {lead_conversation['id']} started for lead {lead_id}.")
+print(f"New conversation {lead_conversation['id']} started for lead {lead_id}.")
 ```
 
 ---
 
-## 📊 Lead Analytics
+## Lead Analytics
 
 Use the `AnalyticsService` to measure the effectiveness of your lead generation and conversion efforts.
 
@@ -163,7 +163,7 @@ print(f"Overall Conversion Rate: {funnel['overall_conversion_rate_percent']:.2f}
 
 ---
 
-## ✨ Best Practices
+## Best Practices
 
 -   **Use Webhooks for CRM Sync**: Set up a webhook for the `lead.created` and `lead.status.updated` events to automatically sync lead data with your primary CRM (like Salesforce or HubSpot) in real-time.
 -   **Define a Clear Funnel**: Standardize the `status` values you use (e.g., `new`, `contacted`, `demo-scheduled`, `qualified`, `converted`) to ensure your analytics are consistent and meaningful.

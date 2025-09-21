@@ -1,10 +1,10 @@
-# 🌐 Website Chat Widget
+# Website Chat Widget
 
 Deploy your AI agent to any website in minutes with a simple, customizable chat widget. This no-code solution is the fastest way to start engaging with your users.
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 To add the chat widget to your website, copy the following HTML snippet and paste it into the `<head>` section of your HTML file.
 
@@ -27,7 +27,7 @@ To add the chat widget to your website, copy the following HTML snippet and past
 
 ---
 
-## 🔧 Customization Options
+## Customization Options
 
 You can customize the widget's appearance and behavior using `data-*` attributes in the `<script>` tag.
 
@@ -60,7 +60,7 @@ You can customize the widget's appearance and behavior using `data-*` attributes
 
 ---
 
-## ✨ Advanced Configuration
+## Advanced Configuration
 
 You can interact with the widget programmatically using JavaScript events and functions.
 
@@ -118,7 +118,7 @@ window.addEventListener('knowrithm:widget.opened', () => {
 
 ---
 
-## 🔒 Security Considerations
+## Security Considerations
 
 ### Domain Whitelisting
 
@@ -138,7 +138,7 @@ Content-Security-Policy:
 
 ---
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
 ### Widget Not Appearing
 

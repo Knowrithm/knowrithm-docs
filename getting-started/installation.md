@@ -1,10 +1,10 @@
 # Installation Guide
 
-Get Knowrithm up and running in your environment with our comprehensive installation guide. We support multiple deployment options to fit your development workflow and production requirements.
+Get Knowrithm up and running in your environment with our installation guide. We support multiple deployment options to fit your development workflow and production requirements.
 
 ---
 
-## 🎯 Before You Begin
+## Before You Begin
 
 ### System Requirements
 
@@ -42,7 +42,7 @@ The fastest way to get started with Knowrithm:
 pip install knowrithm-py
 
 # Verify installation
-python -c "import knowrithm_py; print('✅ Knowrithm installed successfully!')"
+python -c "import knowrithm_py; print('Knowrithm installed successfully!')"
 ```
 
 ### Option 2: Using conda
@@ -371,7 +371,7 @@ Create `.vscode/settings.json`:
 
 ---
 
-## 🌍 Environment Configuration
+## ⚙️ Environment Configuration
 
 ### Environment Variables
 
@@ -444,7 +444,7 @@ class Config:
 
 ---
 
-## ✅ Installation Verification
+## Installation Verification
 
 ### Basic Verification
 
@@ -457,7 +457,7 @@ def test_installation():
     """Test basic Knowrithm installation"""
     try:
         # Test import
-        print("✅ Knowrithm SDK imported successfully")
+        print("Knowrithm SDK imported successfully")
         
         # Test client initialization
         client = KnowrithmClient(
@@ -465,7 +465,7 @@ def test_installation():
             api_secret="test-secret",
             base_url="https://app.knowrithm.org"
         )
-        print("✅ Client initialized successfully")
+        print("Client initialized successfully")
         
         # Test with real credentials (if available)
         if os.getenv('KNOWRITHM_API_KEY'):
@@ -476,17 +476,17 @@ def test_installation():
             
             # Test API connection
             profile = real_client.auth.get_profile()
-            print(f"✅ API connection successful! User: {profile.get('first_name', 'Unknown')}")
+            print(f"API connection successful! User: {profile.get('first_name', 'Unknown')}")
         else:
             print("ℹ️  Set KNOWRITHM_API_KEY and KNOWRITHM_API_SECRET to test API connection")
         
         return True
         
     except ImportError as e:
-        print(f"❌ Import failed: {e}")
+        print(f"Import failed: {e}")
         return False
     except Exception as e:
-        print(f"❌ Test failed: {e}")
+        print(f"Test failed: {e}")
         return False
 
 if __name__ == "__main__":
@@ -513,10 +513,10 @@ def check_python_version():
     """Check Python version compatibility"""
     version = sys.version_info
     if version >= (3, 8):
-        print(f"✅ Python {version.major}.{version.minor}.{version.micro} (compatible)")
+        print(f"Python {version.major}.{version.minor}.{version.micro} (compatible)")
         return True
     else:
-        print(f"❌ Python {version.major}.{version.minor}.{version.micro} (requires 3.8+)")
+        print(f"Python {version.major}.{version.minor}.{version.micro} (requires 3.8+)")
         return False
 
 def check_dependencies():
@@ -533,9 +533,9 @@ def check_dependencies():
     for package in required_packages:
         try:
             importlib.import_module(package.replace('-', '_'))
-            print(f"✅ {package} installed")
+            print(f"{package} installed")
         except ImportError:
-            print(f"❌ {package} missing")
+            print(f"{package} missing")
             missing.append(package)
     
     return len(missing) == 0
@@ -547,9 +547,9 @@ def check_environment():
     for dir_path in required_dirs:
         path = Path(dir_path)
         if path.exists():
-            print(f"✅ Directory {dir_path} exists")
+            print(f"Directory {dir_path} exists")
         else:
-            print(f"ℹ️  Creating directory {dir_path}")
+            print(f"ℹCreating directory {dir_path}")
             path.mkdir(parents=True, exist_ok=True)
     
     return True
@@ -560,18 +560,18 @@ def check_network():
         import requests
         response = requests.get('https://app.knowrithm.org/health', timeout=10)
         if response.status_code == 200:
-            print("✅ Network connectivity to Knowrithm API")
+            print("Network connectivity to Knowrithm API")
             return True
         else:
-            print(f"⚠️  Knowrithm API returned status {response.status_code}")
+            print(f"Knowrithm API returned status {response.status_code}")
             return False
     except requests.RequestException as e:
-        print(f"❌ Network connectivity failed: {e}")
+        print(f"Network connectivity failed: {e}")
         return False
 
 def main():
     """Run complete system check"""
-    print("🔍 Running Knowrithm system check...\n")
+    print("Running Knowrithm system check...\n")
     
     checks = [
         ("Python Version", check_python_version),
@@ -582,16 +582,16 @@ def main():
     
     results = []
     for name, check_func in checks:
-        print(f"\n📋 Checking {name}:")
+        print(f"\nChecking {name}:")
         result = check_func()
         results.append(result)
     
     print("\n" + "="*50)
     if all(results):
-        print("🎉 All checks passed! Knowrithm is ready to use.")
+        print("All checks passed! Knowrithm is ready to use.")
         return 0
     else:
-        print("⚠️  Some checks failed. Please review the output above.")
+        print("Some checks failed. Please review the output above.")
         return 1
 
 if __name__ == "__main__":
@@ -600,7 +600,7 @@ if __name__ == "__main__":
 
 ---
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
@@ -677,7 +677,7 @@ no-cache-dir = false
     with open(config_dir / 'pip.conf', 'w') as f:
         f.write(pip_config)
     
-    print("✅ pip configuration optimized")
+    print("pip configuration optimized")
 
 def set_environment_vars():
     """Set optimal environment variables"""
@@ -691,7 +691,7 @@ def set_environment_vars():
     
     for var, value in optimal_vars.items():
         os.environ[var] = value
-        print(f"✅ Set {var}={value}")
+        print(f"Set {var}={value}")
 
 if __name__ == "__main__":
     optimize_pip()
@@ -700,7 +700,7 @@ if __name__ == "__main__":
 
 ---
 
-## 📚 Next Steps
+## Next Steps
 
 After successful installation:
 
@@ -711,7 +711,7 @@ After successful installation:
 
 ---
 
-## 🆘 Getting Help
+## Getting Help
 
 If you encounter issues during installation:
 
@@ -721,14 +721,14 @@ If you encounter issues during installation:
 - Verify system requirements above
 
 ### Community Support
-- 💬 **Discord**: [Join our community](https://discord.gg/cHHWfghJrR)
-- 📧 **Email**: support@knowrithm.org
-- 🐛 **GitHub Issues**: [Report bugs](https://github.com/Knowrithm/knowrithm-py/issues)
+- **Discord**: [Join our community](https://discord.gg/cHHWfghJrR)
+- **Email**: support@knowrithm.org
+- **GitHub Issues**: [Report bugs](https://github.com/Knowrithm/knowrithm-py/issues)
 
 ### Enterprise Support
-- 📞 **Phone Support**: Available for enterprise customers
-- 🎯 **Priority Support**: Guaranteed response times
-- 👨‍💻 **Technical Account Manager**: Dedicated technical contact
+- **Phone Support**: Available for enterprise customers
+- **Priority Support**: Guaranteed response times
+- **Technical Account Manager**: Dedicated technical contact
 
 ---
 

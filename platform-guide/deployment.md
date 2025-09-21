@@ -1,10 +1,10 @@
-# Deployment Guide 🚀
+# Deployment Guide
 
 This guide provides comprehensive instructions for deploying the Knowrithm platform in various environments, from local development with Docker to scalable production clusters with Kubernetes.
 
 ---
 
-## 🎯 Deployment Options
+## Deployment Options
 
 Knowrithm offers flexible deployment options to suit your infrastructure needs.
 
@@ -16,7 +16,7 @@ Knowrithm offers flexible deployment options to suit your infrastructure needs.
 
 ---
 
-## ☁️ SaaS (Hosted) Deployment
+## SaaS Deployment (Hosted)
 
 The simplest way to use Knowrithm is through our fully managed SaaS offering.
 
@@ -28,7 +28,7 @@ To get started, simply [sign up for an account](https://app.knowrithm.org/regist
 
 ---
 
-## 🐳 Docker Deployment
+## Docker Deployment
 
 Deploying with Docker is ideal for creating a consistent environment for development and staging.
 
@@ -127,7 +127,7 @@ docker-compose down
 
 ---
 
-## ☸️ Kubernetes Deployment
+## Kubernetes Deployment
 
 For production workloads, Kubernetes provides scalability, resilience, and high availability.
 
@@ -197,7 +197,7 @@ Use the Kubernetes manifests provided in the Platform Guide README as a starting
 
 ---
 
-## 🔄 CI/CD Pipeline
+## CI/CD Pipeline
 
 Automate your deployment process with a CI/CD pipeline.
 
@@ -257,7 +257,7 @@ jobs:
 
 ---
 
-## 🗄️ Database Migrations
+## Database Migrations
 
 When deploying updates, you may need to run database migrations.
 

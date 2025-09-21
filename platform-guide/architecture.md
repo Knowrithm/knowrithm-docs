@@ -1,10 +1,10 @@
-# System Architecture 🏛️
+# System Architecture
 
 This document provides a detailed overview of the Knowrithm platform's technical architecture, including its components, data flow, and technology stack.
 
 ---
 
-## 🎯 Architectural Goals
+## Architectural Goals
 
 The Knowrithm platform is designed with the following key principles in mind:
 
@@ -15,7 +15,7 @@ The Knowrithm platform is designed with the following key principles in mind:
 
 ---
 
-## 🏗️ System Components
+## System Components
 
 The platform is composed of several interconnected microservices and components, each with a specific responsibility.
 
@@ -75,7 +75,7 @@ graph TD
 
 ---
 
-## 🌊 Data Flow
+## Data Flow
 
 ### Document Processing Flow
 
@@ -100,7 +100,7 @@ graph TD
 
 ---
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 | Category | Technology | Purpose |
 |---|---|---|
@@ -116,7 +116,7 @@ graph TD
 
 ---
 
-## 📈 Scalability & Performance
+## Scalability & Performance
 
 The platform is designed to scale horizontally to meet demand.
 
@@ -128,7 +128,7 @@ The platform is designed to scale horizontally to meet demand.
 
 ---
 
-## 🏢 Multi-Tenancy
+## Multi-Tenancy
 
 Security and data isolation are achieved through a strict multi-tenancy model.
 

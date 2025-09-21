@@ -1,10 +1,10 @@
-# Third-Party Integrations 🤝
+# Third-Party Integrations
 
 Connect Knowrithm to the tools you already use. This guide covers how to integrate with third-party applications using webhooks and our API.
 
 ---
 
-## 🔮 Native Integrations (Coming Soon)
+## Native Integrations (Coming Soon)
 
 We are actively working on building seamless, one-click integrations for popular platforms. Our roadmap includes:
 
@@ -18,7 +18,7 @@ Have a specific integration you'd like to see? [Let us know!](mailto:support@kno
 
 ---
 
-## 🛠️ Building Custom Integrations Today
+## Building Custom Integrations Today
 
 You don't have to wait for native integrations! You can connect Knowrithm to almost any service today using our powerful webhooks and APIs.
 
@@ -121,7 +121,7 @@ def sync_daily_ratings():
     
     db_conn.commit()
     db_conn.close()
-    print(f"✅ Synced {len(conversations)} conversations.")
+    print(f"Synced {len(conversations)} conversations.")
 
 if __name__ == "__main__":
     sync_daily_ratings()

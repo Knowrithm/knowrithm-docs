@@ -1,8 +1,8 @@
-# Document Processing 📚
+# Document Processing
 
 This guide covers how to use the `DocumentService` to upload, manage, and search through documents, which form the core knowledge base for your AI agents.
 
-## 🎯 What is Document Processing?
+## What is Document Processing?
 
 Document processing is the mechanism by which Knowrithm ingests your business data, breaks it down into searchable pieces (chunks), and converts it into a format that AI agents can understand and use to answer questions. A well-curated set of documents is the key to building a smart and accurate agent.
 
@@ -17,7 +17,7 @@ Knowrithm supports a wide range of document formats:
 
 ---
 
-## 🚀 Uploading a Document
+## Uploading a Document
 
 Uploading a document is the first step in training an agent. Each document must be associated with an agent.
 
@@ -39,19 +39,19 @@ try:
             "author": "support_team"
         }
     )
-    print(f"✅ Document '{doc['filename']}' uploaded successfully.")
-    print(f"📄 Document ID: {doc['id']}")
-    print(f"⏳ Status: {doc['status']}")
+    print(f"Document '{doc['filename']}' uploaded successfully.")
+    print(f"Document ID: {doc['id']}")
+    print(f"Status: {doc['status']}")
 
 except FileNotFoundError:
-    print("❌ Error: The file was not found at the specified path.")
+    print("Error: The file was not found at the specified path.")
 except Exception as e:
-    print(f"❌ An error occurred during upload: {e}")
+    print(f"An error occurred during upload: {e}")
 ```
 
 ---
 
-## ⚙️ Checking Processing Status
+## Checking Processing Status
 
 Document processing is an asynchronous task. After uploading, you can poll the status to know when it's ready.
 
@@ -67,21 +67,21 @@ def wait_for_processing(document_id, timeout_seconds=180):
             status = status_response.get('status')
 
             if status == 'completed':
-                print(f"✅ Processing complete! Chunks created: {status_response.get('chunk_count', 0)}")
+                print(f"Processing complete! Chunks created: {status_response.get('chunk_count', 0)}")
                 return True
             elif status == 'failed':
-                print(f"❌ Processing failed. Reason: {status_response.get('error_message')}")
+                print(f"Processing failed. Reason: {status_response.get('error_message')}")
                 return False
             else:
                 progress = status_response.get('processing_progress', 0)
-                print(f"⏳ Status: {status}... {progress}% complete.")
+                print(f"Status: {status}... {progress}% complete.")
                 time.sleep(5) # Wait 5 seconds before checking again
 
         except Exception as e:
-            print(f"⚠️ Error checking status: {e}")
+            print(f"Error checking status: {e}")
             time.sleep(5)
             
-    print("⌛️ Processing timed out.")
+    print("Processing timed out.")
     return False
 
 # Usage
@@ -91,7 +91,7 @@ def wait_for_processing(document_id, timeout_seconds=180):
 
 ---
 
-## 🔍 Managing Documents
+## Managing Documents
 
 ### Listing Documents
 
@@ -151,7 +151,7 @@ print(f"Document {document_id_to_delete} has been restored.")
 
 ---
 
-## ✨ Advanced Operations
+## Advanced Operations
 
 ### Reprocessing a Document
 
@@ -183,7 +183,7 @@ Knowrithm automatically detects if a PDF contains scanned images and applies Opt
 
 ---
 
-## 💡 Best Practices
+## Best Practices
 
 - **Clean Your Data**: Before uploading, ensure your documents are well-structured and free of irrelevant headers, footers, or artifacts. The cleaner the source, the better the agent's answers.
 - **Be Descriptive**: Use clear, descriptive filenames (e.g., `2024-q1-pricing-sheet.pdf` instead of `doc1.pdf`).
@@ -193,7 +193,7 @@ Knowrithm automatically detects if a PDF contains scanned images and applies Opt
 
 ---
 
-## 🔧 Full Example: Document Lifecycle
+## Full Example: Document Lifecycle
 
 This script demonstrates the end-to-end process of managing a document.
 

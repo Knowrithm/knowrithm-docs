@@ -1,10 +1,10 @@
-# Support & Help 🆘
+# Support & Help
 
 Whether you're just getting started or running a large-scale deployment, we're here to help you succeed. This page outlines the support resources available to you.
 
 ---
 
-## 💬 Community Support
+## Community Support
 
 For general questions, best practices, and discussions with other developers.
 
@@ -18,12 +18,12 @@ For general questions, best practices, and discussions with other developers.
   </thead>
   <tbody>
     <tr>
-      <td><strong>💬 Discord Community</strong></td>
+      <td><strong>Discord Community</strong></td>
       <td>The fastest way to get help from the community and the Knowrithm team. Share your projects, ask questions, and get real-time feedback.</td>
       <td><a href="https://discord.gg/cHHWfghJrR">Join our Discord</a></td>
     </tr>
     <tr>
-      <td><strong>🐛 GitHub Issues</strong></td>
+      <td><strong>GitHub Issues</strong></td>
       <td>Found a bug or have a feature request for the Python SDK or other open-source components? Open an issue on our GitHub repository.</td>
       <td><a href="https://github.com/Knowrithm/knowrithm-py/issues">Go to GitHub Issues</a></td>
     </tr>
@@ -32,7 +32,7 @@ For general questions, best practices, and discussions with other developers.
 
 ---
 
-## 📧 Direct Support
+## Direct Support
 
 For account-specific questions, billing inquiries, or issues not suitable for a public forum.
 
@@ -41,7 +41,7 @@ For account-specific questions, billing inquiries, or issues not suitable for a 
 
 ---
 
-## 🏢 Enterprise Support
+## Enterprise Support
 
 Customers on our Enterprise plan have access to premium support features.
 

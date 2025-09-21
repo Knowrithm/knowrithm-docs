@@ -1,20 +1,20 @@
-# Getting Started with Knowrithm 🚀
+# Getting Started with Knowrithm
 
 Welcome to Knowrithm! This guide will help you set up your development environment and create your first AI agent in just a few minutes.
 
-## 🎯 What You'll Learn
+## What You'll Learn
 
 By the end of this section, you'll be able to:
 
-- ✅ Install and configure the Knowrithm Python SDK
-- ✅ Authenticate with the Knowrithm API
-- ✅ Create your first AI agent
-- ✅ Upload documents and train your agent
-- ✅ Start conversations and get responses
+- Install and configure the Knowrithm Python SDK
+- Authenticate with the Knowrithm API
+- Create your first AI agent
+- Upload documents and train your agent
+- Start conversations and get responses
 
 ---
 
-## 📋 Prerequisites
+## Prerequisites
 
 Before you begin, make sure you have:
 
@@ -29,12 +29,12 @@ Before you begin, make sure you have:
 
 ---
 
-## 🛠️ Installation Options
+## Installation Options
 
 Choose the installation method that works best for your setup:
 
 {{ tabs }}
-{{ tab title="🐍 Python Package (Recommended)" }}
+{{ tab title="Python Package (Recommended)" }}
 The easiest way to get started is with our Python SDK:
 
 ```bash
@@ -42,7 +42,7 @@ The easiest way to get started is with our Python SDK:
 pip install knowrithm-py
 
 # Verify installation
-python -c "import knowrithm_py; print('✅ Installation successful!')"
+python -c "import knowrithm_py; print('Installation successful!')"
 ```
 
 **Requirements:**
@@ -50,7 +50,7 @@ python -c "import knowrithm_py; print('✅ Installation successful!')"
 - pip (Python package installer)
 {{ endtab }}
 
-{{ tab title="🐳 Docker" }}
+{{ tab title="Docker" }}
 For containerized development:
  
 ```bash
@@ -70,7 +70,7 @@ docker-compose ps
 - Docker Compose 1.29+
 {{ endtab }}
 
-{{ tab title="📦 From Source" }}
+{{ tab title="From Source" }}
 For development and contributions:
  
 ```bash
@@ -93,7 +93,7 @@ python -m pytest tests/
 
 ---
 
-## 🔑 Getting Your API Credentials
+## Getting Your API Credentials
 
 1. **Sign up** for a Knowrithm account at [app.knowrithm.org](https://app.knowrithm.org/register)
 2. **Verify your email** and complete your profile
@@ -109,7 +109,7 @@ python -m pytest tests/
 
 ---
 
-## ⚡ Quick Verification
+## Quick Verification
 
 Let's verify your setup with a simple test.
 
@@ -128,10 +128,10 @@ client = KnowrithmClient(
 # Test connection
 try:
     user_profile = client.auth.get_profile()
-    print("✅ Connected successfully!")
-    print(f"👋 Hello, {user_profile['first_name']}!")
+    print("Connected successfully!")
+    print(f"Hello, {user_profile['first_name']}!")
 except Exception as e:
-    print(f"❌ Connection failed: {e}")
+    print(f"Connection failed: {e}")
 ```
 
 Run the test:
@@ -139,11 +139,11 @@ Run the test:
 python test_connection.py
 ```
 
-If you see the success message, you're ready to proceed! 🎉
+If you see the success message, you're ready to proceed!
 
 ---
 
-## 🎨 Development Environment Setup
+## Development Environment Setup
 
 ### Virtual Environment (Recommended)
 
@@ -197,7 +197,7 @@ client = KnowrithmClient(
 
 ---
 
-## 🚀 Your First 5 Minutes
+## ⚡ Your First 5 Minutes
 
 Ready for a quick win? Here's what you can accomplish in just 5 minutes:
 
@@ -218,7 +218,7 @@ agent = client.agents.create({
     "description": "A helpful customer service assistant",
     "personality": "friendly and professional"
 })
-print(f"🤖 Agent created: {agent['name']}")
+print(f"Agent created: {agent['name']}")
 ```
 
 ### Step 3: Start a Conversation (30 seconds)
@@ -227,7 +227,7 @@ conversation = client.conversations.create(
     agent_id=agent['id'],
     entity_type="USER"
 )
-print(f"💬 Conversation started: {conversation['id']}")
+print(f"Conversation started: {conversation['id']}")
 ```
 
 ### Step 4: Send a Message (1 minute)
@@ -237,7 +237,7 @@ response = client.messages.send_message(
     content="Hello! Can you help me with a question?",
     role="user"
 )
-print(f"🤖 Bot replied: {response['content']}")
+print(f"Bot replied: {response['content']}")
 ```
 
 ### Step 5: Celebrate! (2 minutes)
@@ -245,7 +245,7 @@ You've just created your first AI agent and had a conversation with it! 🎉
 
 ---
 
-## 🔄 Next Steps
+## Next Steps
 
 Now that you have the basics working, you can:
 
@@ -256,20 +256,20 @@ Now that you have the basics working, you can:
 
 ---
 
-## 🆘 Need Help?
+## Need Help?
 
 If you run into any issues:
 
-- 📚 Check our [FAQ](../resources/faq.md) for common solutions
-- 🔧 Visit our [Troubleshooting Guide](../resources/troubleshooting.md)
-- 💬 Join our [Discord Community](https://discord.gg/cHHWfghJrR)
-- 📧 Email our support team: support@knowrithm.org
+- Check our [FAQ](../resources/faq.md) for common solutions
+- Visit our [Troubleshooting Guide](../resources/troubleshooting.md)
+- Join our [Discord Community](https://discord.gg/cHHWfghJrR)
+- Email our support team: support@knowrithm.org
 
 ---
 
 <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 24px; border-radius: 12px; color: white; text-align: center; margin: 32px 0;">
 
-**🚀 Ready to build something amazing?**
+**Ready to build something amazing?**
 
 [Continue to Quick Start Tutorial](quick-start.md)
 

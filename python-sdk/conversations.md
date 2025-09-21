@@ -1,8 +1,8 @@
-# Conversation Management 💬
+# Conversation Management
 
 This guide covers how to manage conversations with your AI agents using the Knowrithm Python SDK. Conversations are the stateful, contextual interactions between a user (or lead) and an agent.
 
-## 🎯 What is a Conversation?
+## What is a Conversation?
 
 A conversation is a sequence of messages exchanged with an agent. The Knowrithm platform automatically manages the context and history, allowing for natural, multi-turn dialogues.
 
@@ -14,7 +14,7 @@ A conversation is a sequence of messages exchanged with an agent. The Knowrithm 
 
 ---
 
-## 🚀 Starting a Conversation
+## Starting a Conversation
 
 Use the `ConversationService` to initiate a new chat session.
 
@@ -35,12 +35,12 @@ conversation = conversation_service.create(
 )
 
 conversation_id = conversation['id']
-print(f"✅ Conversation started with ID: {conversation_id}")
+print(f"Conversation started with ID: {conversation_id}")
 ```
 
 ---
 
-## ✉️ Sending and Receiving Messages
+## • Sending and Receiving Messages
 
 Use the `MessageService` for all message-related operations within a conversation.
 
@@ -62,8 +62,8 @@ response = message_service.send_message(
     role="user"
 )
 
-print(f"👤 You: {user_message}")
-print(f"🤖 Agent: {response['content']}")
+print(f"User: {user_message}")
+print(f"Agent: {response['content']}")
 ```
 
 ### Listing Conversation History
@@ -95,12 +95,12 @@ rating_response = message_service.rate_message(
     feedback="This was a very clear and helpful answer."
 )
 
-print("✅ Feedback submitted. Thank you!")
+print("Feedback submitted. Thank you!")
 ```
 
 ---
 
-## 🌊 Streaming Responses
+## Streaming Responses
 
 For real-time applications like a chat widget, you can stream the agent's response as it's being generated. This provides a much better user experience than waiting for the full response.
 
@@ -109,8 +109,8 @@ def stream_agent_response(conversation_id, user_message):
     """
     Sends a message and streams the agent's response chunk by chunk.
     """
-    print(f"👤 You: {user_message}")
-    print("🤖 Agent: ", end="", flush=True)
+    print(f"You: {user_message}")
+    print("Agent: ", end="", flush=True)
     
     full_response_content = ""
     
@@ -133,7 +133,7 @@ def stream_agent_response(conversation_id, user_message):
         return full_response_content
 
     except Exception as e:
-        print(f"\n❌ Error during streaming: {e}")
+        print(f"\nError during streaming: {e}")
         return None
 
 # Example usage
@@ -196,7 +196,7 @@ print("Conversation metadata updated.")
 
 ---
 
-## 📊 Conversation Analytics
+## Conversation Analytics
 
 Get detailed analytics for a single conversation to understand its flow and effectiveness.
 
@@ -214,7 +214,7 @@ print(f"User Satisfaction: {conv_analytics['quality_metrics']['satisfaction_rati
 
 ---
 
-## ✨ Best Practices
+## Best Practices
 
 - **Use Metadata**: Store important session information (like user IDs, session IDs from your application, or tracking tags) in the conversation metadata. This is invaluable for analytics and debugging.
 - **Manage Conversation Lifecycle**: Explicitly end conversations when a user's session ends. This keeps your analytics clean and helps manage resources.
@@ -223,7 +223,7 @@ print(f"User Satisfaction: {conv_analytics['quality_metrics']['satisfaction_rati
 
 ---
 
-## 💡 Full Example
+## Full Example
 
 This script demonstrates a complete, interactive chat session.
 
@@ -254,7 +254,7 @@ def interactive_chat_session(client, agent_id):
             continue
 
         # 3. Send message and stream response
-        print("🤖 Agent: ", end="", flush=True)
+        print("Agent: ", end="", flush=True)
         try:
             stream = message_service.send_message_stream(
                 conversation_id=conversation_id,

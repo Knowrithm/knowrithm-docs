@@ -1,4 +1,4 @@
-# Troubleshooting Guide 🔧
+# Troubleshooting Guide
 
 Encountering an issue? This guide provides solutions to common problems you might face while using the Knowrithm platform and SDK.
 

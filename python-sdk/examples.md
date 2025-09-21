@@ -1,10 +1,10 @@
-# Code Examples & Recipes 💡
+# Code Examples & Recipes
 
 This page contains a collection of practical, ready-to-use code examples and recipes for common tasks you'll perform with the Knowrithm Python SDK.
 
 ---
 
-## 🤖 Agent Management
+## Agent Management
 
 ### Create an Agent with Advanced Configuration
 
@@ -32,9 +32,9 @@ agent_config = {
 
 try:
     agent = agent_service.create(agent_config)
-    print(f"✅ Advanced agent '{agent['name']}' created with ID: {agent['id']}")
+    print(f"Advanced agent '{agent['name']}' created with ID: {agent['id']}")
 except Exception as e:
-    print(f"❌ Error creating agent: {e}")
+    print(f"Error creating agent: {e}")
 ```
 
 ### Find an Agent by Name
@@ -61,7 +61,7 @@ else:
 
 ---
 
-## 💬 Conversation Handling
+## Conversation Management
 
 ### Interactive Chat Loop with Streaming
 
@@ -78,15 +78,15 @@ def interactive_chat_session(agent_id: str):
     print("Starting a new conversation...")
     conversation = conversation_service.create(agent_id=agent_id, entity_type="USER")
     conversation_id = conversation['id']
-    print(f"✅ Conversation started (ID: {conversation_id}). Type 'quit' to end.")
+    print(f"Conversation started (ID: {conversation_id}). Type 'quit' to end.")
 
     while True:
         try:
-            user_input = input("\n👤 You: ").strip()
+            user_input = input("\nYou: ").strip()
             if user_input.lower() in ['quit', 'exit', 'bye']:
                 break
             
-            print("🤖 Agent: ", end="", flush=True)
+            print("Agent: ", end="", flush=True)
             stream = message_service.send_message_stream(
                 conversation_id=conversation_id,
                 content=user_input,
@@ -99,11 +99,11 @@ def interactive_chat_session(agent_id: str):
         except KeyboardInterrupt:
             break
         except Exception as e:
-            print(f"\n❌ Error: {e}")
+            print(f"\nError: {e}")
 
     print("\nEnding conversation...")
     conversation_service.end_conversation(conversation_id)
-    print("✅ Session ended.")
+    print("Session ended.")
 
 # Usage
 # interactive_chat_session("your-agent-id")
@@ -141,7 +141,7 @@ with conversation_context("your-agent-id") as conv:
 
 ---
 
-## 📚 Document & Data Processing
+## Document & Data Processing
 
 ### Upload and Poll for Completion
 
@@ -164,15 +164,15 @@ def upload_and_wait(file_path: str, agent_id: str, timeout_seconds: int = 180):
         status_res = document_service.get_processing_status(doc_id)
         status = status_res.get('status')
         if status == 'completed':
-            print("✅ Processing complete!")
+            print("Processing complete!")
             return True
         if status == 'failed':
-            print(f"❌ Processing failed: {status_res.get('error_message')}")
+            print(f"Processing failed: {status_res.get('error_message')}")
             return False
-        print(f"⏳ Status: {status}...")
+        print(f"Status: {status}...")
         time.sleep(10)
         
-    print("⌛️ Processing timed out.")
+    print("Processing timed out.")
     return False
 
 # Usage
@@ -181,7 +181,7 @@ def upload_and_wait(file_path: str, agent_id: str, timeout_seconds: int = 180):
 
 ---
 
-## 📊 Analytics & Reporting
+## Analytics & Reporting
 
 ### Generate a Weekly Performance Report
 
@@ -216,7 +216,7 @@ def generate_weekly_report(agent_id: str):
         print(f"Avg. Messages per Conversation: {conv_metrics['avg_messages_per_conversation']:.1f}")
         
     except Exception as e:
-        print(f"❌ Could not generate report: {e}")
+        print(f"Could not generate report: {e}")
 
 # Usage
 # generate_weekly_report("your-agent-id")
@@ -246,9 +246,9 @@ def export_leads_to_csv(filename="leads_export.csv"):
     if 'data' in response:
         with open(filename, "w", newline="", encoding="utf-8") as f:
             f.write(response['data'])
-        print(f"✅ Lead data successfully exported to {filename}")
+        print(f"Lead data successfully exported to {filename}")
     else:
-        print("❌ No data returned for export.")
+        print("No data returned for export.")
 
 # Usage
 # export_leads_to_csv()

@@ -1,8 +1,8 @@
-# Analytics & Monitoring 📊
+# Analytics & Monitoring
 
 This guide provides a comprehensive overview of the `AnalyticsService`, which allows you to monitor agent performance, track user engagement, and gain actionable insights to improve your AI solutions.
 
-## 🎯 Why Use Analytics?
+## Why Use Analytics?
 
 The Analytics Service is crucial for understanding and optimizing your AI agents. It helps you answer key questions:
 - **Performance**: Are my agents responding quickly and accurately?
@@ -12,7 +12,7 @@ The Analytics Service is crucial for understanding and optimizing your AI agents
 
 ---
 
-## 🚀 Getting Started with Analytics
+## Getting Started with Analytics
 
 All analytics functions are accessed through the `AnalyticsService`.
 
@@ -29,7 +29,7 @@ The `get_dashboard()` method provides a high-level, real-time overview of your e
 ```python
 dashboard_data = analytics_service.get_dashboard()
 
-print("--- 📈 Platform Dashboard ---")
+print("--- Platform Dashboard ---")
 print(f"Total Agents: {dashboard_data['agents']['total']}")
 print(f"Active Conversations: {dashboard_data['conversations']['active']}")
 print(f"Total Messages Today: {dashboard_data['messages']['today']}")
@@ -39,7 +39,7 @@ print("--------------------------")
 
 ---
 
-## 🤖 Agent-Specific Metrics
+## Agent-Specific Metrics
 
 Dive deep into the performance of a single agent.
 
@@ -98,7 +98,7 @@ print(f"Response Time: {response_time_diff:+.1f}% vs. average (lower is better)"
 
 ---
 
-## 💬 Conversation & Lead Analytics
+## Conversation & Lead Analytics
 
 ### Analyzing a Single Conversation
 
@@ -137,7 +137,7 @@ if lead_analytics['top_performing_sources']:
 
 ---
 
-## 📈 Usage Metrics & Data Export
+## Usage Metrics & Data Export
 
 ### Platform Usage
 
@@ -192,12 +192,12 @@ if 'data' in lead_export:
     # Save the CSV data to a file
     with open("leads_export.csv", "w") as f:
         f.write(lead_export['data'])
-    print("✅ Lead data exported to leads_export.csv")
+    print("Lead data exported to leads_export.csv")
 ```
 
 ---
 
-## ✨ Best Practices
+## Best Practices
 
 - **Monitor Regularly**: Set up a scheduled script to fetch key metrics daily or weekly to catch performance degradation early.
 - **Focus on Satisfaction**: User satisfaction rating is one of the most important metrics. If it drops, review conversation logs to understand why.
@@ -207,7 +207,7 @@ if 'data' in lead_export:
 
 ---
 
-## 💡 Full Example: Weekly Performance Report
+## Full Example: Weekly Performance Report
 
 This script generates a weekly performance report for a specific agent.
 
