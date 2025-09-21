@@ -25,9 +25,9 @@ Get Knowrithm up and running in your environment with our installation guide. We
 - [ ] Terminal/Command prompt access
 - [ ] Knowrithm account ([Sign up here](https://app.knowrithm.org/register))
 
-{{ hint style="info" }}
+{ hint style="info" }
 **New to Python?** We recommend using [pyenv](https://github.com/pyenv/pyenv) for Python version management and [pipenv](https://pipenv.pypa.io/) or [poetry](https://python-poetry.org/) for dependency management.
-{{ endhint }}
+{ endhint }
 
 ---
 

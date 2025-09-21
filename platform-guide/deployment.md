@@ -225,8 +225,8 @@ jobs:
       - name: Log in to Docker Hub
         uses: docker/login-action@v2
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          username: ${ secrets.DOCKER_USERNAME }
+          password: ${ secrets.DOCKER_PASSWORD }
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
@@ -246,13 +246,13 @@ jobs:
         uses: azure/k8s-set-context@v3
         with:
           method: kubeconfig
-          kubeconfig: ${{ secrets.KUBE_CONFIG }}
+          kubeconfig: ${ secrets.KUBE_CONFIG }
 
       - name: Deploy with Helm
         run: |
           helm upgrade --install knowrithm knowrithm/knowrithm \
             --namespace knowrithm \
-            --set image.tag=${{ github.sha }}
+            --set image.tag=${ github.sha }
 ```
 
 ---

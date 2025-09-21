@@ -14,9 +14,9 @@ Knowrithm is an enterprise-grade, multi-tenant AI platform designed for:
 - **Global Deployment**: Multi-region support for global availability
 - **▤ Observable**: Comprehensive monitoring and analytics built-in
 
-{{ hint style="info" }}
+{ hint style="info" }
 **Production Ready**: Knowrithm powers AI agents for Fortune 500 companies, processing millions of conversations daily with 99.9% uptime.
-{{ endhint }}
+{ endhint }
 
 ---
 
@@ -1200,9 +1200,9 @@ Knowrithm is built as an enterprise-grade, multi-tenant AI platform designed for
 - **Global Deployment**: Multi-region support with edge computing capabilities
 - **Observable**: Comprehensive monitoring and analytics built-in
  
-{{ hint style="info" }}
+{ hint style="info" }
 **Production Ready**: Knowrithm powers AI agents for Fortune 500 companies, processing millions of conversations daily with 99.9% uptime.
-{{ endhint }}
+{ endhint }
 
 ---
 

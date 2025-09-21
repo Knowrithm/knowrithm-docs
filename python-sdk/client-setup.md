@@ -790,14 +790,14 @@ Now that you have your client configured:
 3. **Process Documents**: [Upload and train with documents](documents.md)
 4. **Monitor Performance**: [Track metrics and analytics](analytics.md)
 
-{{ hint style="success" }}
+{ hint style="success" }
 **Client Ready!** Your Knowrithm client is properly configured with error handling, monitoring, and production-ready settings.
-{{ endhint }}
+{ endhint }
 
-{{ hint style="tip" }}
+{ hint style="tip" }
 **Pro Tip**: Use environment-specific configurations and structured logging from the start. It will make debugging and monitoring much easier as you scale.
-{{ endhint }}
+{ endhint }
 
-{{ hint style="warning" }}
+{ hint style="warning" }
 **Production Note**: Always use connection pooling, rate limiting, and proper retry mechanisms in production environments to ensure reliability and performance.
-{{ endhint }}
+{ endhint }

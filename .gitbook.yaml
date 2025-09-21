@@ -45,12 +45,12 @@ toc:
   before: |
     <div class="toc-header">
       <h3>Knowrithm Documentation</h3>
-      <p>Version {{book.version}}</p>
+      <p>Version {book.version}</p>
     </div>
   after: |
     <div class="toc-footer">
-      <p><a href="{{book.discord_url}}" target="_blank">Join our Discord</a></p>
-      <p><a href="{{book.github_url}}" target="_blank">GitHub Repository</a></p>
+      <p><a href="{book.discord_url}" target="_blank">Join our Discord</a></p>
+      <p><a href="{book.github_url}" target="_blank">GitHub Repository</a></p>
     </div>
 
 # Format settings
