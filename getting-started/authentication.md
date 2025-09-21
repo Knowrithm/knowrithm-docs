@@ -52,9 +52,9 @@ After creation, you'll receive:
 }
 ```
 
-{% hint style="danger" %}
+{{ hint style="danger" }}
 **Important**: Copy both the API key and secret immediately. The secret is only shown once and cannot be recovered.
-{% endhint %} 
+{{ endhint }} 
 
 ## Setting Up Authentication
 

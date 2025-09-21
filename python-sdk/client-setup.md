@@ -778,7 +778,7 @@ def test_client_rate_limiting(client):
         except:
             pass
 
-# Run integration tests
+# Run integration tests/your-app
 # pytest -m integration test_client_integration.py
 ```
 
@@ -786,19 +786,19 @@ def test_client_rate_limiting(client):
 
 Now that you have your client configured:
 
-1. **Create Agents**: {% page-ref page="agents.md" %} - Set up your AI agents
-2. **Handle Conversations**: {% page-ref page="conversations.md" %} - Manage chat interactions  
-3. **Process Documents**: {% page-ref page="documents.md" %} - Upload and train with documents
-4. **Monitor Performance**: {% page-ref page="analytics.md" %} - Track metrics and analytics
+1. **Create Agents**: {{ page-ref page="agents.md" }} - Set up your AI agents
+2. **Handle Conversations**: {{ page-ref page="conversations.md" }} - Manage chat interactions  
+3. **Process Documents**: {{ page-ref page="documents.md" }} - Upload and train with documents
+4. **Monitor Performance**: {{ page-ref page="analytics.md" }} - Track metrics and analytics
 
-{% hint style="success" %}
+{{ hint style="success" }}
 **Client Ready!** 🚀 Your Knowrithm client is properly configured with error handling, monitoring, and production-ready settings.
-{% endhint %}
+{{ endhint }}
 
-{% hint style="tip" %}
+{{ hint style="tip" }}
 **Pro Tip**: Use environment-specific configurations and structured logging from the start. It will make debugging and monitoring much easier as you scale.
-{% endhint %}
+{{ endhint }}
 
-{% hint style="warning" %}
+{{ hint style="warning" }}
 **Production Note**: Always use connection pooling, rate limiting, and proper retry mechanisms in production environments to ensure reliability and performance.
-{% endhint %}
+{{ endhint }}

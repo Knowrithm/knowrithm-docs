@@ -14,41 +14,41 @@ Knowrithm enables businesses to:
 - **Monitor Performance**: Comprehensive analytics for agents, conversations, and business metrics
 - **Scale Operations**: Handle multiple conversations simultaneously with detailed monitoring
 
-{% hint style="success" %}
+{{ hint style="success" }}
 **Perfect for:** Developers, data scientists, and businesses looking to integrate AI agents into their applications with minimal setup time.
-{% endhint %}
+{{ endhint }}
 
 ---
 
 ## 📦 Installation
 
-{% tabs %}
-{% tab title="pip (Recommended)" %}
+{{ tabs }}
+{{ tab title="pip (Recommended)" }}
 ```bash
 pip install knowrithm-py
 ```
-{% endtab %}
+{{ endtab }}
 
-{% tab title="Poetry" %}
+{{ tab title="Poetry" }}
 ```bash
 poetry add knowrithm-py
 ```
-{% endtab %}
+{{ endtab }}
 
-{% tab title="From Source" %}
+{{ tab title="From Source" }}
 ```bash
 git clone https://github.com/Knowrithm/knowrithm-py.git
 cd knowrithm-py
 pip install -e .
 ```
-{% endtab %}
+{{ endtab }}
 
-{% tab title="Conda" %}
+{{ tab title="Conda" }}
 ```bash
 conda install -c conda-forge knowrithm-py
 ```
-{% endtab %}
-{% endtabs %}
+{{ endtab }}
+{{ endtabs }}
 
 **Requirements:**
 - Python 3.8 or higher

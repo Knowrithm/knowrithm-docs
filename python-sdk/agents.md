@@ -188,9 +188,9 @@ print(f"Avg. Response Time: {agent_metrics['performance_metrics']['avg_response_
 print(f"Avg. Satisfaction: {agent_metrics['quality_metrics']['avg_satisfaction_rating']:.1f}/5.0")
 ```
 
-{% content-ref url="analytics.md" %}
+{{ content-ref url="analytics.md" }}
 analytics.md
-{% endcontent-ref %}
+{{ endcontent-ref }}
 
 ---
 

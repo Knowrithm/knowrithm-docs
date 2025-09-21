@@ -133,6 +133,6 @@ For a robust monitoring setup, we recommend the following open-source tools:
 ## Next Steps
 
 - **Deployment Guide**: Learn how to deploy the platform and its dependencies.
-  {% content-ref url="deployment.md" %}
+  {{ content-ref url="deployment.md" }}
 - **Security Guide**: Review security best practices for your deployment.
-  {% content-ref url="security.md" %}
+  {{ content-ref url="security.md" }}

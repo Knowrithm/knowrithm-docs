@@ -166,9 +166,9 @@ graph TD
    )
    ```
 
-{% content-ref url="getting-started/quick-start.md" %}
+{{ content-ref url="getting-started/quick-start.md" }}
 [quick-start.md](getting-started/quick-start.md)
-{% endcontent-ref %}
+{{ endcontent-ref }}
 
 ## Community & Support
 
@@ -215,10 +215,10 @@ Ready to build your first AI agent? Check out our guides:
 
 ---
 
-{% hint style="success" %}
+{{ hint style="success" }}
 **New to Knowrithm?** Start with our [Quick Start Guide](getting-started/quick-start.md) to create your first AI agent in under 10 minutes!
-{% endhint %}
+{{ endhint }}
 
-{% hint style="info" %}
+{{ hint style="info" }}
 **Need help?** Our [Discord community](https://discord.gg/cHHWfghJrR) is active and ready to help with any questions you might have.
-{% endhint %}
+{{ endhint }}

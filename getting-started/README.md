@@ -23,9 +23,9 @@ Before you begin, make sure you have:
 - Your **API credentials** (available in your dashboard)
 - Basic familiarity with Python and REST APIs
 
-{% hint style="info" %}
+{{ hint style="info" }}
 **New to Python?** No problem! We'll guide you through each step. Consider checking out the [Python Tutorial](https://docs.python.org/3/tutorial/) if you need a refresher.
-{% endhint %}
+{{ endhint }}
 
 ---
 
@@ -33,8 +33,8 @@ Before you begin, make sure you have:
 
 Choose the installation method that works best for your setup:
 
-{% tabs %}
-{% tab title="🐍 Python Package (Recommended)" %}
+{{ tabs }}
+{{ tab title="🐍 Python Package (Recommended)" }}
 The easiest way to get started is with our Python SDK:
 
 ```bash
@@ -48,9 +48,9 @@ python -c "import knowrithm_py; print('✅ Installation successful!')"
 **Requirements:**
 - Python 3.8+
 - pip (Python package installer)
-{% endtab %}
+{{ endtab }}
 
-{% tab title="🐳 Docker" %}
+{{ tab title="🐳 Docker" }}
 For containerized development:
  
 ```bash
@@ -68,9 +68,9 @@ docker-compose ps
 **Requirements:**
 - Docker 20.10+
 - Docker Compose 1.29+
-{% endtab %}
+{{ endtab }}
 
-{% tab title="📦 From Source" %}
+{{ tab title="📦 From Source" }}
 For development and contributions:
  
 ```bash
@@ -88,8 +88,8 @@ pip install -e .
 # Run tests to verify
 python -m pytest tests/
 ```
-{% endtab %}
-{% endtabs %}
+{{ endtab }}
+{{ endtabs }}
 
 ---
 
@@ -103,9 +103,9 @@ python -m pytest tests/
    - Read/Write access to Documents
    - Read/Write access to Conversations
 
-{% hint style="warning" %}
+{{ hint style="warning" }}
 **Keep your API credentials secure!** Never commit them to version control. Use environment variables or a secure configuration management system.
-{% endhint %}
+{{ endhint }}
 
 ---
 

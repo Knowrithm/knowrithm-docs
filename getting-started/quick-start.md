@@ -488,14 +488,14 @@ Now that you have a working agent, explore these features:
 - Production deployment
 - Monitoring and alerts
 
-{% hint style="success" %}
+{{ hint style="success" }}
 **🎉 Congratulations!** You've successfully created your first AI agent with Knowrithm. Your agent can now answer questions based on the documents you uploaded.
-{% endhint %}
+{{ endhint }}
 
-{% hint style="info" %}
+{{ hint style="info" }}
 **Want to see more examples?** Check out our [Code Examples](../python-sdk/examples.md) section for more advanced use cases and patterns.
-{% endhint %}
+{{ endhint }}
 
-{% hint style="tip" %}
+{{ hint style="tip" }}
 **Pro Tip**: The more relevant documents you upload, the smarter your agent becomes. Try uploading your product documentation, FAQs, or knowledge base articles!
-{% endhint %}
+{{ endhint }}

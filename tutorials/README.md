@@ -14,9 +14,9 @@ Our tutorials cover everything from basic setup to advanced enterprise deploymen
 - **📊 Analytics & Insights**: Monitor performance and optimize results
 - **🔧 Production Deployment**: Scale to enterprise-grade solutions
 
-{% hint style="info" %}
+{{ hint style="info" }}
 **New to AI chatbots?** Start with our [Building Your First Agent](building-first-agent.md) tutorial. It covers all the fundamentals you need to know.
-{% endhint %}
+{{ endhint }}
 
 ---
 

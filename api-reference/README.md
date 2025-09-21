@@ -14,11 +14,11 @@ The Knowrithm API is a RESTful service that provides:
 - **🌍 Global Availability** - CDN-powered for low-latency worldwide access
 - **📈 Rate Limited** - Fair usage policies with generous limits
 
-{% hint style="info" %}
+{{ hint style="info" }}
 **Base URL**: `https://app.knowrithm.org/api/v1`
 
 **Current Version**: v1 (Latest)
-{% endhint %}
+{{ endhint }}
 
 ---
 
@@ -80,13 +80,13 @@ Authorization: Bearer <jwt-token>
 Authorization: Basic <base64-encoded-credentials>
 ```
 
-{% hint style="warning" %}
+{{ hint style="warning" }}
 **Security Best Practices:**
 - Never expose API keys in client-side code
 - Use HTTPS for all requests
 - Implement proper key rotation
 - Monitor API usage for anomalies
-{% endhint %}
+{{ endhint }}
 
 ---
 
@@ -556,11 +556,11 @@ curl -X GET "https://app.knowrithm.org/api/v1/auth/validate" \
 
 Download our official Postman collection for easy API testing:
 
-{% hint style="info" %}
+{{ hint style="info" }}
 **Postman Collection**: [Download here](https://api.knowrithm.org/postman/collection.json)
 
 **Environment Template**: [Download here](https://api.knowrithm.org/postman/environment.json)
-{% endhint %}
+{{ endhint }}
 
 ### cURL Examples Collection
 
