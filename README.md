@@ -15,6 +15,7 @@ Knowrithm enables businesses to create specialized AI agents that can:
 - Provide detailed analytics on performance
 - Scale across multiple departments and use cases
 
+
 ## Quick Navigation
 
 <table data-view="cards">
