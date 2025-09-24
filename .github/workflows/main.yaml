@@ -1,0 +1,24 @@
+name: Deploy GitBook
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: knowrithm-docs
+    strategy:
+      matrix:
+        python-version: ["3.12"]
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Deploy Using Docker Compose
+        run: |
+          docker compose build
+          docker compose up -d
+          
+          
+      - name: Clean Up
+        run: |
+          docker system prune -f
