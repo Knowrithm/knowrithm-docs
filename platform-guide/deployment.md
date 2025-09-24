@@ -24,7 +24,7 @@ The simplest way to use Knowrithm is through our fully managed SaaS offering.
 - **Automatic Updates**: Always have access to the latest features and security patches.
 - **99.9% Uptime SLA**: Guaranteed reliability for your business-critical applications.
 
-To get started, simply [sign up for an account](https://app.knowrithm.org/register) and get your API keys from the dashboard.
+To get started, simply [sign up for an account](https://www.knowrithm.org) and get your API keys from the dashboard.
 
 ---
 

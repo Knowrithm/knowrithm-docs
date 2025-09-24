@@ -23,7 +23,7 @@ Get Knowrithm up and running in your environment with our installation guide. We
 - [ ] Git for version control
 - [ ] Text editor or IDE (VS Code, PyCharm)
 - [ ] Terminal/Command prompt access
-- [ ] Knowrithm account ([Sign up here](https://app.knowrithm.org/register))
+- [ ] Knowrithm account ([Sign up here](https://www.knowrithm.org))
 
 { hint style="info" }
 **New to Python?** We recommend using [pyenv](https://github.com/pyenv/pyenv) for Python version management and [pipenv](https://pipenv.pypa.io/) or [poetry](https://python-poetry.org/) for dependency management.

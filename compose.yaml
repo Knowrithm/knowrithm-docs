@@ -1,0 +1,30 @@
+version: "3.8"
+services:
+  gitbook:
+    image: billryan/gitbook
+    container_name: gitbook
+    working_dir: /gitbook
+    ports:
+      - "4000:4000"
+    # Remove port exposure - Traefik handles this
+    volumes:
+      - .:/gitbook
+    command: gitbook serve
+    networks:
+      - knowrithm_network  # Changed from traefik-backend
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.gitbook.rule=Host(`docs.knowrithm.org`)"
+      - "traefik.http.routers.gitbook.entrypoints=websecure"
+      - "traefik.http.routers.gitbook.tls=true"
+      - "traefik.http.routers.gitbook.tls.certresolver=cloudflare"
+      - "traefik.http.services.gitbook.loadbalancer.server.port=4000"
+      - "traefik.docker.network=knowrithm_network"  # Updated network
+      # HTTP to HTTPS redirect
+      - "traefik.http.routers.gitbook-insecure.rule=Host(`docs.knowrithm.org`)"
+      - "traefik.http.routers.gitbook-insecure.entrypoints=web"
+      - "traefik.http.routers.gitbook-insecure.middlewares=redirect-to-https"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+networks:
+  knowrithm_network:  # Changed from traefik-backend
+    external: true

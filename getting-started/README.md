@@ -19,7 +19,7 @@ By the end of this section, you'll be able to:
 Before you begin, make sure you have:
 
 - **Python 3.8 or higher** installed on your system
-- A **Knowrithm account** ([Sign up here](https://app.knowrithm.org/register))
+- A **Knowrithm account** ([Sign up here](https://www.knowrithm.org))
 - Your **API credentials** (available in your dashboard)
 - Basic familiarity with Python and REST APIs
 
