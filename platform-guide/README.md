@@ -147,7 +147,7 @@ version: '3.8'
 
 services:
   knowrithm-app:
-    image: knowrithm/platform:latest
+    image: stevensaad11/knowrithm:latest
     ports:
       - "8543:8543"
     environment:
@@ -229,7 +229,7 @@ spec:
     spec:
       containers:
       - name: knowrithm
-        image: knowrithm/platform:latest
+        image: stevensaad11/knowrithm:latest
         resources:
           requests:
             memory: "512Mi"
@@ -1336,7 +1336,7 @@ version: '3.8'
 
 services:
   knowrithm-app:
-    image: knowrithm/platform:latest
+    image: stevensaad11/knowrithm:latest
     ports:
       - "8543:8543"
     environment:
@@ -1418,7 +1418,7 @@ spec:
     spec:
       containers:
       - name: knowrithm
-        image: knowrithm/platform:latest
+        image: stevensaad11/knowrithm:latest
         resources:
           requests:
             memory: "512Mi"

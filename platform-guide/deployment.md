@@ -55,7 +55,7 @@ version: '3.8'
 
 services:
   app:
-    image: knowrithm/platform:latest
+    image: stevensaad11/knowrithm:latest
     restart: always
     ports:
       - "8543:8543"

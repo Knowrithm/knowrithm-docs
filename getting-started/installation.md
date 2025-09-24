@@ -79,7 +79,7 @@ Perfect for containerized development and production deployments:
 
 ```bash
 # Pull the official Knowrithm image
-docker pull knowrithm/platform:latest
+docker pull stevensaad11/knowrithm:latest
 
 # Run with basic configuration
 docker run -d \
@@ -87,7 +87,7 @@ docker run -d \
   -p 8543:8543 \
   -e API_KEY=your-api-key \
   -e API_SECRET=your-api-secret \
-  knowrithm/platform:latest
+  stevensaad11/knowrithm:latest
 
 # Check if it's running
 docker ps
@@ -103,7 +103,7 @@ version: '3.8'
 
 services:
   app:
-    image: knowrithm/platform:latest
+    image: stevensaad11/knowrithm:latest
     ports:
       - "8543:8543"
     environment:
@@ -235,7 +235,7 @@ spec:
     spec:
       containers:
       - name: knowrithm
-        image: knowrithm/platform:latest
+        image: stevensaad11/knowrithm:latest
         ports:
         - containerPort: 8543
         env:
