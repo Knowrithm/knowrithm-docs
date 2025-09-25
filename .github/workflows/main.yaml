@@ -7,9 +7,7 @@ on:
 jobs:
   build:
     runs-on: knowrithm-docs
-    strategy:
-      matrix:
-        python-version: ["3.12"]
+
     steps:
       - uses: actions/checkout@v3
 
