@@ -1,3 +1,6 @@
+
+<img width="999" height="562" alt="20250925_2353_Futuristic Knowrithm Logo_simple_compose_01k616ywakf1r91ekdeb54xy9p - Edited" src="https://github.com/user-attachments/assets/c48e7075-9d35-4bf4-9993-66b1cd25c52c" />
+
 # Welcome to Knowrithm Documentation
 
 **Build, train, and deploy intelligent AI agents with advanced analytics capabilities.**
