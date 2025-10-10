@@ -12,7 +12,6 @@ Add the script to your HTML (preferably before the closing `</body>` tag).
 <script
   src="https://app.knowrithm.org/widget.js"
   data-agent-id="your-agent-id"
-  data-company-id="your-company-id"
   async>
 </script>
 ```
@@ -40,7 +39,6 @@ Example:
 <script
   src="https://app.knowrithm.org/widget.js"
   data-agent-id="agent-support"
-  data-company-id="company-acme"
   data-title="Support Center"
   data-welcome="Hi there! Ask me anything about our plans."
   data-color="#0052cc"
