@@ -1,4 +1,4 @@
-# Changelog
+﻿# Changelog
 
 All notable changes to the Knowrithm platform and Python SDK will be documented in this file.
 
@@ -9,10 +9,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## [Unreleased]
 
 ### Added
-- Native Zapier integration for no-code workflows.
+- Documentation refresh covering `/v1` REST endpoints and updated Python SDK helpers.
+- Tutorials for database integration, analytics, and document ingestion using the new `KnowrithmClient` services.
 
 ### Changed
-- Improved OCR accuracy for low-resolution scanned documents.
+- Consolidated README files to align with the latest multi-tenant architecture and authentication flows.
+- Updated troubleshooting steps to use the new SDK method names (`client.*` services).
 
 ---
 
@@ -56,3 +58,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - Database Integration (PostgreSQL, MySQL)
   - Analytics Dashboard
   - Website Chat Widget
+
+
+
+
+
+

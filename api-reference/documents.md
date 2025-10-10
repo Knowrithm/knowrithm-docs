@@ -1,79 +1,80 @@
-# Documents API
+﻿# Documents API
 
-The Documents API is used to upload, manage, and search the knowledge base content that trains your AI agents.
+Document ingestion endpoints are defined in `app/blueprints/document/routes.py`. They support file uploads, URL ingestion, chunk management, and soft deletion. Authentication requires API keys (`read`/`write`) or JWTs.
 
----
-
-## Document Data Model
-
-```json
-{
-  "id": "string",
-  "filename": "string",
-  "file_size": "integer",
-  "file_type": "string",
-  "agent_id": "string",
-  "status": "enum [processing, completed, failed]",
-  "processing_progress": "integer (0-100)",
-  "chunk_count": "integer",
-  "uploaded_at": "datetime",
-  "processed_at": "datetime",
-  "metadata": "object"
-}
-```
+Base path: `/v1/document`
 
 ---
 
-## Core Endpoints
+## Upload
 
-### Upload Document
+- **POST `/v1/document/upload`**
+  - Headers: API key (`write`) or JWT
+  - Content type:
+    - `multipart/form-data` for file uploads (`file` or `files[]`)
+    - `application/json` for URL ingestion (`url` or `urls`)
+  - Required field: `agent_id`
+  - Optional: `metadata` (JSON), `metadata[...]` when using multipart
+  - Response: upload job details with document IDs
 
-`POST /document/upload`
+---
 
-Uploads a document for processing and associates it with an agent. This is a `multipart/form-data` request.
+## Listing
 
-**Form Data:**
--   `file`: The document file to upload.
--   `agent_id`: The ID of the agent to train with this document.
--   `metadata` (optional, JSON string): Custom key-value data to store with the document.
+- **GET `/v1/document`**
+  - Headers: API key (`read`) or JWT
+  - Query parameters: `agent_id`, `status`, `page`, `per_page`
+- **GET `/v1/document/deleted`**
+  - Headers: API key (`read`) or JWT
+  - Lists soft-deleted documents
 
-### List Documents
+---
 
-`GET /document`
+## Document Lifecycle
 
-Retrieves a paginated list of documents. Can be filtered by `agent_id` and `status`.
+- **DELETE `/v1/document/<document_id>`** - soft delete
+- **PATCH `/v1/document/<document_id>/restore`** - restore
+- Headers: API key (`write`) or JWT
 
-### Search Within Documents
+Bulk operations:
+- **DELETE `/v1/document/bulk-delete`**
+  - Body: `{ "document_ids": ["uuid", ...] }`
+  - Headers: API key (`write`) or JWT
 
-`POST /search/document`
+---
 
-Performs a semantic search across the processed documents for one or more agents.
+## Chunk Management
 
-**Request Body:**
-```json
-{
-  "query": "What is the refund policy?",
-  "filters": {
-    "agent_id": "agent_123"
-  },
-  "limit": 5
-}
-```
+- **DELETE `/v1/document/<document_id>/chunk`** - delete all chunks for a document
+- **PATCH `/v1/document/<document_id>/chunk/restore-all`** - restore all chunks
+- **DELETE `/v1/document/chunk/<chunk_id>`** - delete single chunk
+- **PATCH `/v1/document/chunk/<chunk_id>/restore`** - restore single chunk
+- **GET `/v1/document/chunk/deleted`** - list deleted chunks
 
-### Get Processing Status
+All chunk routes require API key (`write`) or JWT.
 
-`GET /document/{document_id}/status`
+---
 
-Checks the current processing status of a document after it has been uploaded.
+## Search (Analytics Blueprint)
 
-### Delete Document
+Semantic search lives under the analytics blueprint:
 
-`DELETE /document/{document_id}`
+- **POST `/v1/search/document`**
+  - Headers: API key (`write`) or JWT
+  - Body: `query` (string), `agent_id` (UUID), optional `limit` (max 50)
+  - Response: list of matches with scores, content snippets, and source metadata
 
-Soft-deletes a document and its associated chunks from the knowledge base.
+---
 
-### Reprocess Document
+## Notes
 
-`POST /document/{document_id}/reprocess`
+- Uploads are asynchronous; check document listings to verify status transitions (`queued`, `processing`, `processed`, `failed`).
+- Use metadata to tag documents with versioning, locales, or business domains.
+- All deletes are soft by default, ensuring auditability and quick restoration.
+- Combine document ingestion with database exports (`/v1/database-connection/export`) for comprehensive knowledge bases.
 
-Triggers a reprocessing of an already uploaded document. This is useful if the document content has changed or if the processing engine has been updated.
+
+
+
+
+

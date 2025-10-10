@@ -1,71 +1,116 @@
-# Analytics API
+﻿# Analytics API
 
-The Analytics API provides access to a wide range of metrics for monitoring performance, engagement, and usage across the platform.
+Endpoints under `app/blueprints/dashboard/routes.py` deliver metrics, search, and exports. Authentication requires `X-API-Key` + `X-API-Secret` (scopes: `read` or `write` as noted) or `Authorization: Bearer <JWT>`.
+
+Base path prefix: `/v1/analytic`
 
 ---
 
-## Key Endpoints
+## Dashboard
 
-Most analytics endpoints accept `start_date` and `end_date` query parameters in ISO 8601 format (e.g., `2024-01-01T00:00:00Z`) to define the reporting period.
+### GET `/v1/analytic/dashboard`
+- Headers: API key (`read`) or JWT
+- Query params: optional `company_id` (super admin only)
+- Response: company-level counts for agents, documents, conversations, leads, and usage trends
 
-### Get Main Dashboard
+---
 
-`GET /analytic/dashboard`
+## Agent Metrics
 
-Retrieves a high-level summary of key metrics for the main dashboard, including agent counts, active conversations, and recent lead activity.
+### GET `/v1/analytic/agent/<agent_id>`
+- Headers: API key (`read`) or JWT
+- Query: `start_date`, `end_date` (ISO 8601, optional)
+- Response: `performance_metrics`, `quality_metrics`, `conversation_metrics`
 
-### Get Agent Metrics
+### GET `/v1/analytic/agent/<agent_id>/performance-comparison`
+- Headers: API key (`read`) or JWT
+- Query: `start_date`, `end_date`
+- Response: comparisons against company averages for response times, satisfaction, and engagement
 
-`GET /analytic/agent/{agent_id}`
+---
 
-Returns detailed performance, quality, and engagement metrics for a single agent over a specified time period.
+## Conversation Analytics
 
-**Success Response Snippet:**
-```json
-{
-  "performance_metrics": {
-    "avg_response_time_seconds": 2.8
-  },
-  "quality_metrics": {
-    "avg_satisfaction_rating": 4.5
-  },
-  "conversation_metrics": {
-    "total_conversations": 150
-  }
-}
-```
+### GET `/v1/analytic/conversation/<conversation_id>`
+- Headers: API key (`read`) or JWT
+- Response: message statistics, duration, topics, sentiment (if enabled)
 
-### Get Conversation Analytics
+---
 
-`GET /analytic/conversation/{conversation_id}`
+## Lead Analytics
 
-Provides a detailed breakdown of a single conversation, including message statistics, duration, and topic analysis.
+### GET `/v1/analytic/leads`
+- Headers: API key (`read`) or JWT
+- Query: `start_date`, `end_date`, optional `company_id`
+- Response: conversion funnel metrics, source breakdowns, growth trends
 
-### Get Lead Analytics
+---
 
-`GET /analytic/leads`
+## Usage Metrics
 
-Returns analytics related to the lead generation funnel, including total leads, conversion rates, and top-performing sources.
+### GET `/v1/analytic/usage`
+- Headers: API key (`read`) or JWT
+- Query: `start_date`, `end_date`
+- Response: API call counts, latency, error rates, token usage (where applicable)
 
-### Get Usage Metrics
+---
 
-`GET /analytic/usage`
+## Search
 
-Provides platform-level API usage statistics, including total API calls, average response times, and error rates.
+These endpoints live under the same blueprint even though they operate on documents and databases.
 
-### Export Analytics Data
+- **POST `/v1/search/document`**
+  - Headers: API key (`write`) or JWT
+  - Body: `query` (string), `agent_id` (UUID), optional `limit` (max 50)
+  - Response: semantic search matches with scores and content snippets
 
-`POST /analytic/export`
+- **POST `/v1/search/database`**
+  - Headers: API key (`write`) or JWT
+  - Body: `query` (string), optional `connection_id`
+  - Response: relevant tables or records depending on provider configuration
 
-Exports raw data for conversations, leads, or messages in JSON or CSV format for offline analysis.
+---
 
-**Request Body:**
-```json
-{
-  "type": "conversations",
-  "format": "csv",
-  "start_date": "2024-01-01T00:00:00Z",
-  "end_date": "2024-01-31T23:59:59Z",
-  "filters": { "agent_id": "agent_123" }
-}
-```
+## System Metrics
+
+- **POST `/v1/system-metric`**
+  - Headers: API key (`write`) or JWT
+  - Purpose: trigger asynchronous system metric collection (results retrieved via other endpoints)
+
+- **GET `/health`**
+  - Headers: none
+  - Response: status of the API, database, Redis, and Celery
+
+---
+
+## Exports
+
+- **POST `/v1/analytic/export`**
+  - Headers: API key (`read`) or JWT
+  - Body:
+    ```json
+    {
+      "type": "conversations",
+      "format": "csv",
+      "start_date": "2025-09-01",
+      "end_date": "2025-09-30"
+    }
+    ```
+  - `type`: `conversations`, `leads`, `agents`, or `usage`
+  - `format`: `json` or `csv`
+  - Response: export metadata (download URL or inline data depending on size)
+
+---
+
+## Notes
+
+- Date parameters accept ISO 8601 strings (`YYYY-MM-DD` or full timestamps).
+- Super admins can scope analytics across companies where supported.
+- Export responses may require polling for completion if a background job is triggered (implementation dependent).
+- Use the Python SDK's `analytics` service for typed access to each endpoint.
+
+
+
+
+
+

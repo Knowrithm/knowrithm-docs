@@ -1,147 +1,81 @@
-# Authentication API
+﻿# Authentication and User APIs
 
-This guide covers all endpoints related to user authentication, user management, and API key management.
+Endpoints in `app/blueprints/auth/routes.py` and `app/blueprints/profile/routes.py` handle credential workflows, user management, and API keys.
 
----
-
-## Authentication Methods
-
-The Knowrithm API supports two primary methods of authentication for different use cases.
-
-### 1. API Key & Secret (Recommended for Service-to-Service)
-
-This is the preferred method for programmatic access via the SDK or direct API calls from your backend.
-
-**Headers:**
-```http
-X-API-Key: your-api-key
-X-API-Secret: your-api-secret
-```
-
-### 2. JWT Bearer Token (For User-Context Actions)
-
-JWTs are used for authenticating users in a web or mobile application context, typically for actions performed through a user interface like the Knowrithm dashboard.
-
-**Header:**
-```http
-Authorization: Bearer <your-jwt-token>
-```
+All paths use the `/v1` prefix. Unless labeled public, include either `X-API-Key` + `X-API-Secret` or `Authorization: Bearer <JWT>`.
 
 ---
 
-## API Key Management
+## Credential Workflows
 
-These endpoints allow you to programmatically manage your API keys.
+| Method | Path | Purpose | Headers |
+|--------|------|---------|---------|
+| GET | `/v1/auth/super-admin` | Seed super admin from environment (one-time) | none |
+| POST | `/v1/auth/register` | Public registration for a company admin | none |
+| POST | `/v1/auth/login` | Email/password login; returns access and refresh tokens | none |
+| POST | `/v1/auth/refresh` | Exchange refresh token for new access token | `Authorization: Bearer <refresh JWT>` |
+| POST | `/v1/auth/logout` | Invalidate the current session | `Authorization: Bearer <JWT>` |
+| GET | `/v1/auth/user/me` | Return current user and company context (refreshes tokens if applicable) | API key (`read`) or JWT |
 
-### Create API Key
-
-`POST /auth/api-keys`
-
-Creates a new API key with a specified name and permissions.
-
-**Request Body:**
-```json
-{
-  "name": "Analytics Read-Only Key",
-  "permissions": {
-    "read": true,
-    "write": false
-  },
-  "expires_in_days": 90
-}
-```
-
-### List API Keys
-
-`GET /auth/api-keys`
-
-Retrieves a list of all API keys associated with the current user.
-
-### Revoke API Key
-
-`DELETE /auth/api-keys/{api_key_id}`
-
-Permanently revokes an API key, disabling its access.
-
-### Validate Credentials
-
-`GET /auth/validate`
-
-Validates the current API Key and Secret, returning information about the associated user and company. This is a great way to test your credentials.
-
-**Success Response:**
-```json
-{
-  "success": true,
-  "data": {
-    "valid": true,
-    "user": { "id": "user_123", "email": "test@example.com" },
-    "company": { "id": "company_456", "name": "Acme Corp" }
-  }
-}
-```
+Email verification:
+- **POST `/v1/send`** - request verification email (public)
+- **POST `/v1/verify`** - confirm ownership using token (public)
 
 ---
 
-## User & Session Management
+## User Management
 
-These endpoints are for managing user accounts and sessions, typically used by a client application like the Knowrithm dashboard.
+| Method | Path | Description | Headers |
+|--------|------|-------------|---------|
+| POST | `/v1/auth/user` | Create a user within the authenticated company; super admins may supply `company_id` | API key (`write`) or JWT (admin/super admin) |
+| GET | `/v1/user/<user_id>` | Fetch a user within company scope | API key (`read`) or JWT (admin) |
+| GET | `/v1/user/profile` | Retrieve authenticated profile | API key (`read`) or JWT |
+| PUT | `/v1/user/profile` | Update profile fields (`first_name`, `last_name`, `timezone`, `language`, `preferences`) | API key (`write`) or JWT |
 
-### User Registration
+Admin-specific routes (under `app/blueprints/admin/routes.py`):
+- `GET /v1/admin/user` - list users with filters (`page`, `status`, `role`, etc.)
+- `GET /v1/admin/user/<user_id>` - admin-scoped user retrieval
+- `PATCH /v1/user/<user_id>/status` - update user status
+- `PATCH /v1/user/<user_id>/role` - update user role (super admin only)
+- `POST /v1/user/<user_id>/force-password-reset`
+- `POST /v1/user/<user_id>/impersonate`
 
-`POST /auth/register`
-
-Registers a new user account.
-
-### User Login
-
-`POST /auth/login`
-
-Authenticates a user with email and password, returning a JWT token.
-
-**Request Body:**
-```json
-{
-  "email": "user@example.com",
-  "password": "your_password"
-}
-```
-
-**Success Response:**
-```json
-{
-  "success": true,
-  "data": {
-    "access_token": "ey...",
-    "refresh_token": "ey..."
-  }
-}
-```
-
-### Refresh Token
-
-`POST /auth/refresh`
-
-Uses a refresh token to generate a new access token.
-
-### User Logout
-
-`POST /auth/logout`
-
-Invalidates the user's current session tokens.
+Headers for admin routes: API key (`admin` scope) or JWT (admin/super admin).
 
 ---
 
-## User Profile Management
+## API Keys
 
-### Get User Profile
+These routes live under the OAuth blueprint.
 
-`GET /user/profile`
+| Method | Path | Description | Headers |
+|--------|------|-------------|---------|
+| POST | `/v1/auth/api-keys` | Create an API key for the authenticated JWT user | `Authorization: Bearer <JWT>` |
+| GET | `/v1/auth/api-keys` | List API keys owned by the JWT user | `Authorization: Bearer <JWT>` |
+| DELETE | `/v1/auth/api-keys/<api_key_id>` | Revoke a specific key | `Authorization: Bearer <JWT>` |
+| GET | `/v1/auth/validate` | Validate current credentials; returns metadata | `Authorization: Bearer <JWT>` |
 
-Retrieves the profile information for the currently authenticated user.
+API key analytics (`/v1/overview`, `/v1/usage-trends`, `/v1/top-endpoints`, `/v1/api-key-performance`, `/v1/error-analysis`, `/v1/rate-limit-analysis`, `/v1/detailed-usage/<api_key_id>`) require API key scopes `read` + `admin` or an admin JWT.
 
-### Update User Profile
+---
 
-`PUT /user/profile`
+## Headers Summary
 
-Updates the profile information for the currently authenticated user.
+- `X-API-Key` and `X-API-Secret`: service-to-service access; ensure scopes (`read`, `write`, `admin`) cover requested endpoints.
+- `Authorization: Bearer <token>`: JWT access for dashboard or delegated operations.
+- Most endpoints accept either credentials; prefer API keys for automation and JWTs for user-context flows.
+
+---
+
+## Recommendations
+
+- Rotate API keys regularly and monitor usage through analytics endpoints.
+- Store credentials in a vault; never embed them in client-side applications.
+- Use JWT refresh tokens sparingly and invalidate them on logout or user deactivation.
+- Super admin seeding should be run once per environment; subsequent calls return the existing record.
+
+
+
+
+
+

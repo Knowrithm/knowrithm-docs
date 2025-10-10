@@ -1,39 +1,42 @@
-# Resources
+﻿# Resources
 
-Welcome to the Knowrithm resources section. Here you'll find helpful information, answers to common questions, and guides to resolve issues.
+Centralize help material, troubleshooting steps, and update history for the Knowrithm platform and SDK.
 
 ---
 
 ## Quick Links
 
-<table data-card-size="large" data-view="cards">
-  <thead>
-    <tr>
-      <th></th>
-      <th></th>
-      <th data-hidden data-card-target data-type="content-ref"></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>FAQ</strong></td>
-      <td>Find answers to frequently asked questions about the platform, SDK, and billing.</td>
-      <td><a href="faq.md">faq.md</a></td>
-    </tr>
-    <tr>
-      <td><strong>Troubleshooting</strong></td>
-      <td>Solutions for common errors and issues you might encounter during installation or development.</td>
-      <td><a href="troubleshooting.md">troubleshooting.md</a></td>
-    </tr>
-    <tr>
-      <td><strong>Changelog</strong></td>
-      <td>Stay up-to-date with the latest changes, new features, and bug fixes for the platform and SDK.</td>
-      <td><a href="changelog.md">changelog.md</a></td>
-    </tr>
-    <tr>
-      <td><strong>Support</strong></td>
-      <td>Learn about the different ways you can get help, from community support to enterprise-level assistance.</td>
-      <td><a href="support.md">support.md</a></td>
-    </tr>
-  </tbody>
-</table>
+| Topic | Summary | Reference |
+|-------|---------|-----------|
+| FAQ | Answers to common product, billing, and technical questions | [faq.md](faq.md) |
+| Troubleshooting | Resolve connectivity, ingestion, and deployment issues | [troubleshooting.md](troubleshooting.md) |
+| Changelog | Track SDK, API, and platform releases | [changelog.md](changelog.md) |
+| Support Plans | Learn how to engage support from community to enterprise SLAs | [support.md](support.md) |
+| Status Page | Monitor uptime and incident history | https://status.knowrithm.org |
+| API Reference | Complete REST endpoint catalogue | ../api-reference/README.md |
+| Python SDK Guide | Typed helpers and usage examples | ../python-sdk/README.md |
+
+---
+
+## When to Use These Resources
+
+- **Before filing a ticket**: check the FAQ and troubleshooting guide for known fixes.
+- **After an update**: review the changelog for breaking changes or new capabilities.
+- **During incidents**: monitor the status page and follow support escalation paths.
+- **For integrations**: reference the API and SDK guides to map endpoints to helpers.
+
+---
+
+## Contact and Feedback
+
+- Email: support@knowrithm.org
+- Community Discord: https://discord.gg/cHHWfghJrR
+- GitHub Issues: https://github.com/Knowrithm/knowrithm-py/issues
+
+Please include logs, request IDs, and reproduction steps when reporting issues. Feedback on documentation can be submitted via pull requests or the community forums.
+
+
+
+
+
+

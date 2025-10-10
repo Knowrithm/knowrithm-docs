@@ -1,79 +1,96 @@
-# Agents API
+﻿# Agents API
 
-The Agents API allows you to create, configure, and manage your AI agents.
+Manage agent records under `app/blueprints/agent/routes.py`. All endpoints require either `X-API-Key` + `X-API-Secret` (with appropriate scopes) or `Authorization: Bearer <JWT>` unless noted.
 
----
-
-## Agent Data Model
-
-```json
-{
-  "id": "string",
-  "name": "string",
-  "description": "string",
-  "personality": "string",
-  "model_name": "string",
-  "temperature": "number (0-1)",
-  "max_response_length": "integer",
-  "status": "enum [active, inactive, training]",
-  "company_id": "string",
-  "created_at": "datetime",
-  "updated_at": "datetime",
-  "response_config": {
-    "tone": "string",
-    "include_sources": "boolean",
-    "fallback_message": "string"
-  }
-}
-```
+Base path: `/v1/agent`
 
 ---
 
-## Core Endpoints
+## Endpoints
 
 ### Create Agent
 
-`POST /agent`
-
-Creates a new AI agent for the authenticated user's company.
-
-**Request Body:**
-```json
-{
-  "name": "Sales Assistant",
-  "description": "AI assistant for sales inquiries",
-  "personality": "Enthusiastic, persuasive, and knowledgeable about our products.",
-  "model_name": "gpt-4",
-  "temperature": 0.8
-}
-```
+- **POST `/v1/agent`**
+- Headers: API key (`write`) or JWT
+- Body fields: `name` (required), optional `description`, `status`, `avatar_url`, `llm_settings_id`, `personality_traits`, `capabilities`, `operating_hours`, `languages`
+- Response: agent JSON
 
 ### List Agents
 
-`GET /agent`
+- **GET `/v1/agent`**
+- Headers: API key (`read`) or JWT
+- Query params: `company_id` (super admin), `status`, `search`, `page`, `per_page`
+- Response: paginated list
 
-Retrieves a paginated list of all agents belonging to the company. Supports standard filtering and sorting parameters (e.g., `?status=active&search=Support`).
+### Get Agent
 
-### Get Agent Details
-
-`GET /agent/{agent_id}`
-
-Retrieves the complete configuration for a single agent by its ID.
+- **GET `/v1/agent/<agent_id>`**
+- Headers: none (public route)
+- Response: agent details
 
 ### Update Agent
 
-`PUT /agent/{agent_id}`
-
-Updates the configuration of an existing agent. You can modify its personality, model, or other settings.
+- **PUT `/v1/agent/<agent_id>`**
+- Headers: API key (`write`) or JWT
+- Body: any updatable fields from creation payload
+- Response: updated agent JSON
 
 ### Delete Agent
 
-`DELETE /agent/{agent_id}`
-
-Soft-deletes an agent. The agent and its associated data can be recovered.
+- **DELETE `/v1/agent/<agent_id>`**
+- Headers: API key (`write`) or JWT
+- Effect: soft delete
 
 ### Restore Agent
 
-`PATCH /agent/{agent_id}/restore`
+- **PATCH `/v1/agent/<agent_id>/restore`**
+- Headers: same as delete
+- Response: restored agent
 
-Restores a previously soft-deleted agent to an active state.
+### Embed Code
+
+- **GET `/v1/agent/<agent_id>/embed-code`**
+- Headers: API key (`read`) or JWT
+- Response: widget script and configuration
+
+### Test Agent
+
+- **POST `/v1/agent/<agent_id>/test`**
+- Headers: API key (`read`) or JWT
+- Body: `{ "query": "optional prompt" }`
+- Response: test completion payload
+
+### Agent Stats
+
+- **GET `/v1/agent/<agent_id>/stats`**
+- Headers: API key (`read`) or JWT
+- Response: aggregate counts and satisfaction metrics
+
+### Clone Agent
+
+- **POST `/v1/agent/<agent_id>/clone`**
+- Headers: API key (`write`) or JWT
+- Body: optional `name`, `llm_settings_id`
+- Response: cloned agent record
+
+---
+
+## Widget and Test Utilities
+
+- **GET `/widget.js`**: public widget script (no authentication)
+- **POST `/test`**: render a test HTML snippet, typically used internally for debugging widgets
+
+---
+
+## Notes and Best Practices
+
+- Soft deletes preserve configuration and attachments; use restore to recover.
+- Associate LLM settings via `/v1/settings` to reuse provider credentials across agents.
+- For tenant administration, super admins can list agents across companies by passing `company_id`.
+- Monitor agent performance via the Analytics endpoints (`/v1/analytic/agent/<agent_id>`).
+
+
+
+
+
+

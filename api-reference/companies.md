@@ -1,78 +1,91 @@
-# Companies API
+﻿# Companies API
 
-The Companies API provides endpoints for creating and managing company accounts within the Knowrithm platform. These endpoints are typically restricted to super administrators.
+Company management endpoints reside in `app/blueprints/company/routes.py`. They enable onboarding, lifecycle control, and statistics per tenant. Authentication requires API keys (scopes `read`, `write`, `admin`) or JWTs with matching roles.
 
----
-
-## Company Data Model
-
-```json
-{
-  "id": "string",
-  "name": "string",
-  "status": "enum [active, inactive, deleted]",
-  "created_at": "datetime",
-  "updated_at": "datetime",
-  "settings": {
-    "timezone": "string",
-    "default_language": "string"
-  }
-}
-```
+Base path: `/v1/company`
 
 ---
 
-## Core Endpoints
+## Endpoints
 
 ### Create Company
 
-`POST /company`
+- **POST `/v1/company`**
+- Headers: context dependent (often super admin during onboarding)
+- Body: `name`, `email`, optional `logo`, `address_id`, `phone`
+- Supports JSON or multipart form data for logo uploads
 
-Creates a new company account.
+### Retrieve Current Company
 
-**Request Body:**
-```json
-{
-  "name": "New Client Inc.",
-  "admin_email": "admin@newclient.com",
-  "admin_first_name": "Admin",
-  "admin_last_name": "User"
-}
-```
+- **GET `/v1/company`**
+- Headers: API key (`read`) or JWT
+- Returns the company associated with the authenticated credentials
 
-### List Companies
+### Company Statistics
 
-`GET /company`
-
-Retrieves a paginated list of all company accounts. Supports standard filtering and sorting parameters.
-
-### Get Company Details
-
-`GET /company/{company_id}`
-
-Retrieves the details for a single company by its ID.
+- **GET `/v1/company/statistics`**
+  - Headers: API key (`read`) or JWT
+  - Query: `days` (default 30)
+  - For super admins, pass `company_id` to target another tenant
+- **GET `/v1/company/<company_id>/statistics`**
+  - Same response scoped to the specified company ID
 
 ### Update Company
 
-`PUT /company/{company_id}`
+- **PUT `/v1/company/<company_id>`**
+- **PATCH `/v1/company/<company_id>`**
+- Headers: API key (`admin`) or JWT (admin/super admin)
+- Body: any subset of `name`, `logo`, `address_id`, `email`, `phone`
 
-Updates the information for a specific company.
+### Delete / Restore Company
 
-### Delete Company
+- **DELETE `/v1/company/<company_id>`** - soft delete
+- **PATCH `/v1/company/<company_id>/restore`** - restore soft-deleted record
+- Headers: API key (`write`) or JWT
 
-`DELETE /company/{company_id}`
+### Deleted Companies
 
-Soft-deletes a company. The company can be recovered using the restore endpoint.
+- **GET `/v1/company/deleted`**
+- Headers: API key (`read`) or JWT
+- Lists soft-deleted companies (paginated)
+
+### Bulk Operations
+
+- **DELETE `/v1/company/bulk-delete`**
+  - Headers: API key (`write`) or JWT
+  - Body: `{ "company_ids": ["uuid", ...] }`
+- **PATCH `/v1/company/bulk-restore`**
+  - Headers: API key (`write`) or JWT
+  - Body: same structure
+
+### Super Admin Routes
+
+- **GET `/v1/super-admin/company`**
+  - Headers: `Authorization: Bearer <JWT>` (super admin)
+  - Query: `page`, `per_page`
+- **GET `/v1/company/<company_id>/related-data`**
+  - Headers: super admin JWT
+  - Response: counts for dependent records (agents, leads, documents, etc.)
+- **DELETE `/v1/company/<company_id>/cascade-delete`**
+  - Headers: super admin JWT
+  - Body: optional `{ "delete_related": true }` to cascade soft deletes
 
 ---
 
-## Company Statistics
+## Address Management
 
-### Get Company Statistics
+See [api-reference/documents.md](documents.md) for document endpoints and [api-reference/authentication.md](authentication.md) for user creation, which are typically used alongside company onboarding.
 
-`GET /company/{company_id}/statistics`
+---
 
-Retrieves key statistics for a company, such as the number of agents, total conversations, and lead conversion rates over a specified period.
+## Notes
 
-**Query Parameters:**
-- `days` (integer, default: 30): The number of past days to include in the statistics.
+- Soft deletes retain tenant data for audit purposes. Cascading delete should be used cautiously and typically only by super admins preparing for permanent removal.
+- Apply consistent naming for `company_id` across API calls to avoid cross-tenant access issues.
+- When combining with analytics, pass the `company_id` query parameter to scope dashboards and reports.
+
+
+
+
+
+

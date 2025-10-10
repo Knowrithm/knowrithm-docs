@@ -1,77 +1,101 @@
-# Databases API
+﻿# Database Connections API
 
-The Databases API allows you to connect external databases to your agents, enabling them to query for real-time information.
+Database endpoints reside in `app/blueprints/database/routes.py`. They register external data sources, manage table metadata, and power semantic or text-to-SQL workflows. Authentication requires API keys (`read`/`write`) or JWTs.
 
----
-
-## Database Connection Model
-
-```json
-{
-  "id": "string",
-  "name": "string",
-  "type": "enum [postgresql, mysql, sqlite, mongodb]",
-  "host": "string",
-  "port": "integer",
-  "database": "string",
-  "username": "string",
-  "status": "enum [connected, disconnected, error]",
-  "company_id": "string",
-  "created_at": "datetime"
-}
-```
+Base path: `/v1/database-connection`
 
 ---
 
-## Core Endpoints
+## Connections
 
-### Add Database Connection
+### Create Connection
 
-`POST /database-connection`
-
-Adds and saves the connection details for an external database. The password is encrypted at rest.
-
-**Request Body:**
-```json
-{
-  "name": "Production Customer DB",
-  "type": "postgresql",
-  "host": "db.example.com",
-  "port": 5432,
-  "database": "customers",
-  "username": "readonly_user",
-  "password": "your_database_password"
-}
-```
+- **POST `/v1/database-connection`**
+- Headers: API key (`write`) or JWT
+- Body fields:
+  - `name`: descriptive label
+  - `url`: full connection string (`postgresql://user:pass@host:port/db`, etc.)
+  - `database_type`: `postgres`, `mysql`, `sqlite`, `mongodb`
+  - `agent_id`: UUID of the agent that should access this connection
+  - `connection_params`: optional JSON overrides
+- Response: connection record
 
 ### List Connections
 
-`GET /database-connection`
+- **GET `/v1/database-connection`**
+- Headers: API key (`read`) or JWT
+- Query: `page`, `per_page`, optional search filters
 
-Retrieves a list of all saved database connections for the company.
+### Get Connection
 
-### Test Connection
+- **GET `/v1/database-connection/<connection_id>`**
+- Headers: API key (`read`) or JWT
 
-`POST /database-connection/{connection_id}/test`
+### Update / Patch Connection
 
-Tests the connectivity to a saved database connection to ensure the credentials and network access are correct.
+- **PUT `/v1/database-connection/<connection_id>`**
+- **PATCH `/v1/database-connection/<connection_id>`**
+- Headers: API key (`write`) or JWT
+- Body: same fields as create (full or partial)
 
-### Analyze Database Schema
+### Delete / Restore Connection
 
-`POST /database-connection/{connection_id}/analyze`
+- **DELETE `/v1/database-connection/<connection_id>`** - soft delete
+- **PATCH `/v1/database-connection/<connection_id>/restore`** - restore
+- Headers: API key (`write`) or JWT
 
-Analyzes the schema of the connected database (tables, columns, relationships) to make it available for the agent to query. This is an asynchronous process.
+### Deleted Connections
 
-### Search Across Databases
+- **GET `/v1/database-connection/deleted`**
+- Headers: API key (`read`) or JWT
+- Response: soft-deleted records
 
-`POST /search/database`
+---
 
-Allows an agent to perform a natural language query that gets translated into an SQL query and executed against one or more connected databases.
+## Tables and Metadata
 
-**Request Body:**
-```json
-{
-  "query": "Show me the total orders for customer 'john@example.com' in the last 30 days",
-  "connection_ids": ["conn_123", "conn_456"]
-}
-```
+- **GET `/v1/database-connection/<connection_id>/table`** - list captured tables
+- **GET `/v1/database-connection/table/<table_id>`** - retrieve table metadata
+- **DELETE `/v1/database-connection/<connection_id>/table`** - delete all tables for a connection
+- **DELETE `/v1/database-connection/table/<table_id>`** - delete single table metadata
+- **PATCH `/v1/database-connection/table/<table_id>/restore`** - restore table metadata
+- **GET `/v1/database-connection/table/deleted`** - list deleted tables
+
+All routes require API key (`read`/`write`) or JWT.
+
+---
+
+## Analysis and Text-to-SQL
+
+- **POST `/v1/database-connection/<connection_id>/test`** - re-test connectivity
+- **POST `/v1/database-connection/<connection_id>/analyze`** - queue semantic/schema analysis
+- **POST `/v1/database-connection/analyze`** - batch analysis for eligible connections
+- **GET `/v1/database-connection/<connection_id>/semantic-snapshot`** - retrieve latest semantic snapshot
+- **GET `/v1/database-connection/<connection_id>/knowledge-graph`** - fetch knowledge graph JSON
+- **GET `/v1/database-connection/<connection_id>/sample-queries`** - sample NL-to-SQL prompts
+- **POST `/v1/database-connection/<connection_id>/text-to-sql`**
+  - Body: `question` (string), optional `execute` (bool), `result_limit` (int)
+  - Response: generated SQL and optional execution results
+
+---
+
+## Exporting
+
+- **POST `/v1/database-connection/export`**
+  - Headers: API key (`write`) or JWT
+  - Body: `{ "connection_id": "uuid" }`
+  - Effect: converts database tables into company documents for ingestion
+
+---
+
+## Notes
+
+- Store credentials in environment variables and inject them into the `url` field to avoid committing secrets.
+- Run `test` and `analyze` whenever credentials or schema change to keep metadata fresh.
+- Combine database search (`/v1/search/database`) with document search for unified answers across structured and unstructured data.
+
+
+
+
+
+

@@ -1,96 +1,110 @@
-# Conversations API
+﻿# Conversations API
 
-The Conversations API is used to manage chat sessions and the messages within them.
+Conversation and message routes are defined in `app/blueprints/conversation/routes.py`. They control session lifecycle, history retrieval, and soft deletion. Authentication requires API keys (`read`/`write`) or JWTs.
 
----
-
-## Conversation Data Model
-
-```json
-{
-  "id": "string",
-  "agent_id": "string", 
-  "entity_type": "enum [USER, LEAD]",
-  "status": "enum [active, ended, archived]",
-  "lead_id": "string",
-  "message_count": "integer",
-  "started_at": "datetime",
-  "ended_at": "datetime",
-  "rating": "integer (1-5)",
-  "metadata": "object"
-}
-```
+Base paths:
+- Conversations: `/v1/conversation`
+- Messages: `/v1/message`
 
 ---
 
-## Conversation Endpoints
+## Conversations
 
-### Start a New Conversation
+### Create Conversation
 
-`POST /conversation`
-
-Initiates a new conversation with a specified agent.
-
-**Request Body:**
-```json
-{
-  "agent_id": "agent_123",
-  "entity_type": "USER",
-  "metadata": {
-    "source": "website_widget",
-    "page_url": "/pricing"
+- **POST `/v1/conversation`**
+- Headers: API key (`write`) or JWT
+- Body:
+  ```json
+  {
+    "agent_id": "uuid",
+    "title": "optional",
+    "metadata": { "source": "widget" },
+    "max_context_length": 20
   }
-}
-```
+  ```
+- Response: conversation object linked to the authenticated entity
 
 ### List Conversations
 
-`GET /conversation`
+- **GET `/v1/conversation`**
+- Headers: API key (`read`) or JWT
+- Query: `page`, `per_page`
+- Response: paginated list scoped to the company
 
-Retrieves a paginated list of conversations. Can be filtered by `agent_id`, `status`, etc.
+### List Conversations for Current Entity
 
-### End a Conversation
+- **GET `/v1/conversation/entity`**
+- Headers: API key (`read`) or JWT
+- Returns conversations associated with the authenticated user or lead
 
-`POST /conversation/{conversation_id}/end`
+### Retrieve Messages
 
-Marks a conversation as `ended` and allows for an overall rating to be submitted.
+- **GET `/v1/conversation/<conversation_id>/messages`**
+- Headers: API key (`read`) or JWT
+- Query: `page`, `per_page`
+- Response: paginated message history
 
-**Request Body:**
-```json
-{
-  "rating": 5,
-  "feedback": "The agent was very helpful!"
-}
-```
+### Send Message
+
+- **POST `/v1/conversation/<conversation_id>/chat`**
+- Headers: API key (`write`) or JWT
+- Body: `{ "message": "user content" }`
+- Response: conversation history including agent reply
+
+### Delete / Restore Conversation
+
+- **DELETE `/v1/conversation/<conversation_id>`**
+- **PATCH `/v1/conversation/<conversation_id>/restore`**
+- Headers: API key (`write`) or JWT
+- Effect: soft delete / restore entire conversation
+
+### Delete / Restore All Messages in Conversation
+
+- **DELETE `/v1/conversation/<conversation_id>/messages`**
+- **PATCH `/v1/conversation/<conversation_id>/message/restore-all`**
+- Headers: API key (`write`) or JWT
+- Use for bulk removal or recovery
+
+### Deleted Conversations
+
+- **GET `/v1/conversation/deleted`**
+- Headers: API key (`read`) or JWT
+- Lists soft-deleted conversations
 
 ---
 
-## Message Endpoints
+## Messages
 
-### Send a Message
+### Delete Message
 
-`POST /conversation/{conversation_id}/chat`
+- **DELETE `/v1/message/<message_id>`**
+- Headers: API key (`write`) or JWT
+- Soft deletes a single message
 
-Sends a message from a user to the agent within a specific conversation and returns the agent's response. This is the primary endpoint for interaction.
+### Restore Message
 
-**Request Body:**
-```json
-{
-  "content": "I need help with my recent order.",
-  "role": "user"
-}
-```
+- **PATCH `/v1/message/<message_id>/restore`**
+- Headers: API key (`write`) or JWT
+- Restores a soft-deleted message
 
-For real-time applications, you can enable streaming by setting `"stream": true` in the request body. See the main API reference for a detailed example.
+### Deleted Messages
 
-### Get Conversation History
+- **GET `/v1/message/deleted`**
+- Headers: API key (`read`) or JWT
+- Paginated list of deleted messages
 
-`GET /conversation/{conversation_id}/messages`
+---
 
-Retrieves a paginated list of all messages within a single conversation.
+## Notes
 
-### Rate a Message
+- Agent responses are returned synchronously via `/chat`. Streaming is handled at the transport layer.
+- Metadata fields accept arbitrary JSON for custom tags or CRM identifiers.
+- Soft delete endpoints enable compliance workflows by retaining audit trails.
+- Combine these endpoints with Analytics (`/v1/analytic/conversation/<conversation_id>`) for insights into conversation quality and flow.
 
-`POST /message/{message_id}/rate`
 
-Allows a user to rate a specific agent message (e.g., with a thumbs up/down).
+
+
+
+

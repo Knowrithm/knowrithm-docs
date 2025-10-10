@@ -1,4 +1,4 @@
-# Support & Help
+﻿# Support & Help
 
 Whether you're just getting started or running a large-scale deployment, we're here to help you succeed. This page outlines the support resources available to you.
 
@@ -63,3 +63,8 @@ To help us resolve your issue as quickly as possible, please provide the followi
 -   Any relevant code snippets.
 -   Error messages and logs.
 -   Relevant IDs (e.g., `agent_id`, `conversation_id`, `document_id`).
+
+
+
+
+

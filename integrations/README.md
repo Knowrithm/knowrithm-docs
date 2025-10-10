@@ -1,112 +1,111 @@
-# Integrations
+﻿# Integrations
 
-Connect Knowrithm to your existing workflows, websites, and applications. This section provides guides for integrating your AI agents seamlessly into your business ecosystem.
-
----
-
-## Integration Capabilities
-
-Knowrithm is designed to be highly extensible, allowing you to:
-
-- **Embed Agents on Your Website**: Add a no-code chat widget to any website.
-- **Receive Real-time Notifications**: Use webhooks to trigger actions in your systems.
-- **Build Custom Solutions**: Leverage our powerful REST API for deep integration.
-- **Connect to Third-Party Apps**: Integrate with popular platforms like Slack, Zapier, and more (coming soon).
+Connect Knowrithm to your existing workflows, websites, and applications. This guide introduces the primary integration patterns and points you to detailed references for each option.
 
 ---
 
-## Core Integrations
+## Capabilities
 
-<table data-card-size="large" data-view="cards">
-  <thead>
-    <tr>
-      <th></th>
-      <th></th>
-      <th data-hidden data-card-target data-type="content-ref"></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>Website Chat Widget</strong></td>
-      <td>The fastest way to deploy your AI agent. Add a customizable chat widget to your website with a single HTML snippet.</td>
-      <td><a href="website-widget.md">website-widget.md</a></td>
-    </tr>
-    <tr>
-      <td><strong>Webhooks</strong></td>
-      <td>Get real-time, event-driven notifications pushed to your services when key actions occur, such as a new lead being created or a conversation starting.</td>
-      <td><a href="../api-reference/#webhooks">../api-reference/#webhooks</a></td>
-    </tr>
-    <tr>
-      <td><strong>REST API</strong></td>
-      <td>For full control and custom integrations, use our comprehensive REST API to build agents, manage conversations, and pull analytics from your own backend.</td>
-      <td><a href="../api-reference/">../api-reference/</a></td>
-    </tr>
-  </tbody>
-</table>
+- **Website widget**: drop-in chat widget powered by your agents.
+- **Webhooks**: event-driven notifications for leads, conversations, and system changes.
+- **REST API**: full control over agents, conversations, documents, analytics, and more.
+- **Python SDK**: typed helpers for every documented endpoint.
+
+---
+
+## Website Chat Widget
+
+Add the widget to any page by embedding the public script:
+
+```html
+<script
+  src="https://app.knowrithm.org/widget.js"
+  data-agent-id="agent-id"
+  async>
+</script>
+```
+
+Configure styling and behavior via the Settings service (`/v1/settings`) or by passing data attributes. See `website-widget.md` for customization details.
+
+---
+
+## Webhooks
+
+Subscribe to platform events (lead creation, conversation updates, document ingestion, and more) via the webhook endpoints in the API. Each event payload includes metadata needed to reconcile with your CRM, ticketing system, or analytics stack.
+
+Recommended flow:
+1. Register a webhook endpoint using the API or SDK.
+2. Verify shared secrets to authenticate callbacks.
+3. Retry idempotently on failure (Knowrithm retries with exponential backoff).
+
+See the [API Reference](../api-reference/README.md) section on webhooks for event types and payload schemas.
+
+---
+
+## REST API and Python SDK
+
+Interact with the platform programmatically:
+
+```python
+from knowrithm_py.knowrithm.client import KnowrithmClient
+
+client = KnowrithmClient(
+    api_key="your-api-key",
+    api_secret="your-api-secret"
+)
+
+conversation = client.conversations.create_conversation(agent_id="agent-id")
+reply = client.messages.send_message(
+    conversation_id=conversation["id"],
+    message="Hello from our integration!"
+)
+
+print(reply["history"][-1]["assistant_response"])
+```
+
+Use scoped API keys for automated backends and pass JWT headers when acting on behalf of a user.
 
 ---
 
 ## Integration Patterns
 
-### Customer Support Automation
+### Customer Support Escalation
+1. Widget forwards chat to an agent.
+2. Agent triggers a webhook when escalation is needed.
+3. Integration service creates a support ticket and notifies human agents.
 
-```mermaid
-graph TD
-    A[Customer on Website] --> B{Chat Widget};
-    B --> C[Knowrithm Agent];
-    C --> D{Needs Human?};
-    D -- No --> B;
-    D -- Yes --> E[Webhook Sent];
-    E --> F[Create Ticket in Zendesk/Jira];
-    F --> G[Notify Support on Slack];
-```
+### Lead Generation
+1. Website visitors interact with a marketing agent.
+2. Qualified leads trigger `lead.registered` webhooks.
+3. CRM integration syncs leads and triggers follow-up sequences.
 
-1.  A customer interacts with the **Chat Widget** on your site.
-2.  The **Knowrithm Agent** handles the conversation.
-3.  If human intervention is needed, the agent triggers a **Webhook**.
-4.  Your backend service receives the webhook and creates a support ticket in a system like **Zendesk** and notifies your team on **Slack**.
-
-### Lead Generation Funnel
-
-```mermaid
-graph TD
-    A[Prospect on Website] --> B{Chat Widget};
-    B --> C[Knowrithm Agent];
-    C --> D{Qualifies Lead};
-    D -- Yes --> E[Webhook: lead.created];
-    E --> F[Add Lead to Salesforce/HubSpot];
-    F --> G[Assign to Sales Rep];
-```
-
-1.  A prospect engages with the **Chat Widget**.
-2.  The **Knowrithm Agent** asks qualifying questions.
-3.  Once qualified, the agent creates a lead, triggering the `lead.created` **Webhook**.
-4.  Your system captures the webhook and pushes the new lead data into your **CRM (e.g., Salesforce)**.
+### Internal Enablement
+1. Employees query a knowledge base agent.
+2. Agent retrieves answers from documents and databases.
+3. Responses are logged for analytics and continuous improvement.
 
 ---
 
 ## Coming Soon
 
-We are constantly expanding our integration ecosystem. Here are some of the platforms we're working on native integrations for:
-
-- **Slack**: Chat with your Knowrithm agents directly from Slack channels.
-- **Zapier**: Connect Knowrithm to thousands of apps with no-code workflows.
-- **Salesforce & HubSpot**: Two-way data synchronization for leads and contacts.
-- **Zendesk & Intercom**: Seamlessly hand off conversations from AI agents to human support agents.
-- **Twilio**: Enable conversations over SMS and WhatsApp.
+- Native Slack, Teams, and Twilio connectors
+- Zapier templates for no-code automation
+- Turnkey CRM integrations (Salesforce, HubSpot)
+- Customer support handoff (Zendesk, Intercom)
 
 ---
 
-## Custom Integrations
+## Resources
 
-Don't see the integration you need? Our **REST API** and **Python SDK** provide all the tools necessary to build a custom connection to any third-party service.
+- [Website Widget Guide](website-widget.md)
+- [Webhooks Reference](../api-reference/README.md#dashboard-and-analytics-appblueprintsdashboardroutespy)
+- [Python SDK Overview](../python-sdk/README.md)
+- [Tutorial Examples](../tutorials/README.md)
 
-See the Python SDK Overview for more details.
+For help, reach out via support@knowrithm.org or the community Discord.
 
-<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 24px; border-radius: 12px; color: white; text-align: center; margin: 32px 0;">
 
-**Ready to connect Knowrithm?**
 
-Add the Chat Widget to Your Site • Explore the API Reference
 
-</div>
+
+

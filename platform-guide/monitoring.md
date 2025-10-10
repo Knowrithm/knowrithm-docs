@@ -1,26 +1,16 @@
-# Monitoring & Observability
+﻿# Monitoring and Observability
 
-This guide covers best practices and tools for monitoring the health, performance, and security of your Knowrithm platform deployment.
-
----
-
-## Monitoring Philosophy
-
-Effective monitoring is key to maintaining a reliable and performant platform. Our approach focuses on the "Three Pillars of Observability":
-
-1.  **Metrics**: Aggregated numerical data that provides a high-level view of system health (e.g., request rates, error percentages).
-2.  **Logs**: Detailed, timestamped records of specific events, essential for debugging and root cause analysis.
-3.  **Traces**: A complete view of a request's lifecycle as it travels through different services, used for performance profiling.
+Maintain availability by tracking health checks, metrics, logs, and alerts across the Knowrithm stack.
 
 ---
 
 ## Health Checks
 
-The platform includes a built-in health check endpoint to quickly assess the status of the core services.
+- `/health`: verifies API process, PostgreSQL, Redis, and Celery connectivity.
+- Use for container readiness/liveness probes or external uptime checks.
 
-**Endpoint**: `GET /health`
+Example response:
 
-**Success Response (200 OK)**:
 ```json
 {
   "status": "healthy",
@@ -30,108 +20,84 @@ The platform includes a built-in health check endpoint to quickly assess the sta
 }
 ```
 
-**Failure Response (503 Service Unavailable)**:
-```json
-{
-  "status": "unhealthy",
-  "database": "connected",
-  "redis": "disconnected",
-  "celery": "not_running"
-}
-```
-
-This endpoint is ideal for use with Kubernetes readiness/liveness probes or other automated health monitoring systems.
+Non-200 responses should trigger alerts.
 
 ---
 
-## Key Metrics to Monitor
+## Metrics
 
-We recommend monitoring the following key performance indicators (KPIs).
+Expose Prometheus-compatible metrics (via `/metrics` or sidecar exporters) to track:
 
-### Application Metrics
--   **API Request Rate**: The number of requests per second/minute to your API endpoints.
--   **API Error Rate**: The percentage of requests that result in a 5xx server error. A sudden spike indicates a problem.
--   **API Latency (p95, p99)**: The 95th and 99th percentile response times for your API. This is a better indicator of user experience than average latency.
+| Category | Key Signals |
+|----------|-------------|
+| API | Request rate, 4xx/5xx counts, latency (p95/p99), queue depth |
+| Workers | Celery task throughput, retry counts, backlog size |
+| Agents | Conversation volume, avg response time, satisfaction scores |
+| Infrastructure | CPU, memory, disk, network usage on API and worker nodes |
+| Datastores | PostgreSQL connections, replication lag, Redis memory usage |
 
-### Agent Performance Metrics
--   **Agent Response Time**: The average time it takes for an agent to generate a response after receiving a message.
--   **User Satisfaction Score**: The average rating (1-5) provided by users at the end of conversations.
--   **Conversation Volume**: The number of new conversations started per hour/day.
-
-### System Metrics
--   **CPU Utilization**: Monitor the CPU usage of your application, database, and worker containers.
--   **Memory Usage**: Track memory consumption to detect memory leaks.
--   **Disk Space**: Monitor disk space on your database and log storage volumes.
--   **Celery Queue Length**: A consistently growing queue indicates that your background workers cannot keep up with the task load and may need to be scaled up.
+Recommended dashboards (Grafana):
+- API latency heatmap and HTTP status distribution
+- Celery queue length with autoscaling thresholds
+- Agent leaderboard (conversations vs. satisfaction)
+- Database and Redis resource utilization
 
 ---
 
-## Logging
+## Logs
 
-The platform uses structured logging (JSON format) to make logs easy to parse, search, and analyze.
+Use structured JSON logs with contextual fields (`company_id`, `agent_id`, `conversation_id`, `request_id`). Route logs to a centralized solution (Grafana Loki, ELK, Datadog, Splunk). Suggested log levels:
 
-### Log Levels
--   **`ERROR`**: Critical errors that require immediate attention (e.g., database connection failure, unhandled exceptions).
--   **`WARNING`**: Potential issues that do not immediately break functionality but should be investigated (e.g., high response times, API deprecation warnings).
--   **`INFO`**: Standard operational messages (e.g., user login, agent created, document processed).
--   **`DEBUG`**: Verbose, detailed information useful for debugging specific issues. Should be disabled in production by default.
+- `ERROR`: request failures, unhandled exceptions
+- `WARNING`: degraded performance, partial failures
+- `INFO`: lifecycle events (agent created, document processed)
+- `DEBUG`: verbose diagnostics (enable selectively)
 
-### Example Log Entry
+Include correlation IDs (`X-Knowrithm-Request-Id`) across services to trace events end-to-end.
 
-```json
-{
-  "timestamp": "2024-05-21T14:30:00.123Z",
-  "level": "INFO",
-  "message": "Conversation started",
-  "service": "conversation-engine",
-  "conversation_id": "conv_123abc",
-  "agent_id": "agent_456def",
-  "company_id": "company_789ghi"
-}
-```
+---
 
-We recommend shipping your logs to a centralized logging platform like the **ELK Stack (Elasticsearch, Logstash, Kibana)**, **Grafana Loki**, or **Datadog** for powerful searching and visualization.
+## Tracing
+
+Instrument critical flows (document ingestion, conversation handling) with OpenTelemetry or another tracing framework. Export to Jaeger, Tempo, or vendor services to analyze latency across API and worker boundaries.
 
 ---
 
 ## Alerting
 
-Set up alerts to be notified proactively when issues arise.
+Trigger notifications when thresholds are exceeded:
 
-### Recommended Alerts
+| Alert | Condition | Target |
+|-------|-----------|--------|
+| API error spike | 5xx rate > 5% for 5 minutes | PagerDuty / Slack |
+| Latency regression | p99 > 2s for 5 minutes | Engineering |
+| Worker backlog | Celery queue length > 1,000 for 10 minutes | Data ingestion team |
+| Health check failure | `/health` non-200 | Ops |
+| DB saturation | Connections > 80% of pool, or disk < 10% free | DBA |
+| Low satisfaction | Avg rating < 3.0 over 24h | Customer success |
 
-| Alert Name | Condition | Severity |
-|---|---|---|
-| **High API Error Rate** | Error rate > 5% for 5 minutes | Critical |
-| **High API Latency** | p99 latency > 2000ms for 5 minutes | Warning |
-| **Celery Queue Growth** | Queue length > 1000 for 10 minutes | Critical |
-| **High CPU/Memory Usage** | Utilization > 85% for 15 minutes | Warning |
-| **Low Disk Space** | Free disk space < 10% | Critical |
-| **Health Check Failure** | `/health` endpoint returns non-200 status | Critical |
-| **Low Agent Satisfaction** | Average satisfaction score < 3.0 over 24 hours | Warning |
+Use Alertmanager, Opsgenie, or equivalent. Ensure alerts include remediation playbooks.
 
 ---
 
-## Recommended Tooling
+## Instrumentation Checklist
 
-For a robust monitoring setup, we recommend the following open-source tools:
-
--   **Prometheus**: For collecting and storing time-series metrics. The application can be configured to expose a `/metrics` endpoint in a Prometheus-compatible format.
--   **Grafana**: For creating dashboards to visualize your metrics from Prometheus and logs from Loki or Elasticsearch.
--   **Alertmanager**: To handle alerts defined in Prometheus and route them to services like Slack, PagerDuty, or email.
--   **Loki** or **ELK Stack**: For centralized log aggregation and analysis.
-
-### Example Grafana Dashboard Panels
--   API Request Rate & Error Percentage (Time Series)
--   API Latency Heatmap
--   Agent Performance Leaderboard (Table)
--   Celery Queue Length (Gauge)
--   CPU & Memory Usage per Service (Time Series)
+- Enable request logging and request IDs in the API gateway/load balancer.
+- Capture Celery task success/failure metrics.
+- Export PostgreSQL and Redis metrics using exporters.
+- Back up logs and metrics as required by compliance policies.
+- Document runbooks for common incidents (API error spike, ingestion backlog, degraded LLM provider).
 
 ---
 
 ## Next Steps
-- **Deployment Guide**: Learn how to deploy the platform and its dependencies.
-  [Deployment Guide](deployment.md)
-- **Security Guide**: Review security best practices for your deployment.
-  [Security Guide](security.md)
+
+- Configure deployment monitoring pipelines (see [deployment.md](deployment.md)).
+- Apply security baselines (see [security.md](security.md)).
+- Integrate business KPIs (lead conversions, agent SLA) into the same observability stack.
+
+
+
+
+
+

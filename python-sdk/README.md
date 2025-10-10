@@ -1,671 +1,343 @@
-# Knowrithm Python SDK
+﻿# Knowrithm Python SDK
 
-The Knowrithm Python SDK provides a comprehensive interface for building, training, and deploying intelligent AI agents. This powerful SDK enables you to create custom chatbots, process documents, manage conversations, and access detailed analytics—all with just a few lines of Python code.
+[![Python Version](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/downloads/)
+[![License](https://img.shields.io/badge/license-MIT-green)](../LICENSE)
+[![PyPI version](https://badge.fury.io/py/knowrithm-py.svg)](https://pypi.org/project/knowrithm-py/)
 
----
-
-## SDK Overview
-
-Knowrithm enables businesses to:
-
-- **Build Custom AI Agents**: Create specialized chatbots tailored to your business needs
-- **Process & Analyze Documents**: Upload and analyze various document types for knowledge extraction
-- **Manage Leads**: Track and convert leads through intelligent conversation flows
-- **Monitor Performance**: Comprehensive analytics for agents, conversations, and business metrics
-- **Scale Operations**: Handle multiple conversations simultaneously with detailed monitoring
-
-{ hint style="success" }
-**Ideal for:** Developers, data scientists, and businesses looking to integrate AI agents into their applications with minimal setup.
-{ endhint }
+Knowrithm is a Python SDK for the Knowrithm platform. It wraps every documented
+Flask blueprint route with typed helpers, covers authentication primitives, and
+adds pragmatic conveniences such as automatic retries and multipart upload
+handling.
 
 ---
 
 ## Installation
 
-{ tabs }
-{ tab title="pip (Recommended)" }
 ```bash
 pip install knowrithm-py
 ```
-{ endtab }
 
-{ tab title="Poetry" }
-```bash
-poetry add knowrithm-py
-```
-{ endtab }
+For local development:
 
-{ tab title="From Source" }
 ```bash
 git clone https://github.com/Knowrithm/knowrithm-py.git
 cd knowrithm-py
 pip install -e .
 ```
-{ endtab }
-
-{ tab title="Conda" }
-```bash
-conda install -c conda-forge knowrithm-py
-```
-{ endtab }
-{ endtabs }
-
-**Requirements:**
-- Python 3.8 or higher
-- Internet connection for API access
 
 ---
 
 ## Quick Start
 
-Get up and running in under 2 minutes:
-
 ```python
-from knowrithm_py.client import KnowrithmClient
+from pathlib import Path
+from knowrithm_py.knowrithm.client import KnowrithmClient
 
-# Initialize the client
+# Initialize the client (API key + secret OR provide JWT headers to each call)
 client = KnowrithmClient(
     api_key="your-api-key",
-    api_secret="your-api-secret",
-    base_url="https://app.knowrithm.org"
+    api_secret="your-api-secret"
 )
 
-# Create an AI agent
-agent = client.agents.create({
-    "name": "Customer Support Bot",
-    "description": "Helpful customer service assistant",
-    "personality": "friendly and professional",
-    "model_name": "gpt-4",
-    "max_response_length": 500
+# Create an agent
+agent = client.agents.create_agent({
+    "name": "Support Bot",
+    "description": "Customer support assistant",
+    "status": "active"
 })
+print(agent["id"])
 
-# Start a conversation
-conversation = client.conversations.create(
-    agent_id=agent['id'],
-    entity_type="USER"
+# Upload supporting documents
+client.documents.upload_documents(
+    agent_id=agent["id"],
+    file_paths=[Path("knowledge-base.pdf")]
 )
 
-# Send a message
-response = client.messages.send_message(
-    conversation_id=conversation['id'],
-    content="How can I help you today?",
-    role="user"
-)
-
-print(f"Agent response: {response['content']}")
+# Start a conversation and send a message
+conversation = client.conversations.create_conversation(agent_id=agent["id"])
+reply = client.messages.send_message(conversation_id=conversation["id"], message="Hello there!")
+print(reply["history"][-1]["assistant_response"])
 ```
+
+> **Authentication** - Unless a route explicitly states otherwise, supply either
+> `X-API-Key` + `X-API-Secret` with the proper scopes or `Authorization: Bearer <JWT>`.
+> All service methods take an optional `headers` argument so you can override the
+> default API key headers with JWT tokens when needed.
 
 ---
 
-## SDK Architecture
+## Service Reference
 
-The SDK is organized into logical service modules:
+Each service is accessible through `KnowrithmClient` (for example `client.agents`).
+Every method forwards to the documented REST endpoint under `app/blueprints` and
+returns the JSON payload (or raw text/bytes for non-JSON responses).
 
-```python
-client = KnowrithmClient(api_key="...", api_secret="...")
+### AuthService (`client.auth`)
 
-# Service modules
-client.agents         # Agent management
-client.conversations  # Conversation handling  
-client.documents      # Document processing
-client.messages       # Message operations
-client.analytics      # Analytics and metrics
-client.leads          # Lead management
-client.databases      # Database connections
-client.auth           # Authentication
-client.companies      # Company management
-```
+- `seed_super_admin(headers=None)` - `GET /v1/auth/super-admin`. No auth required.
+  Seeds the platform super admin from environment variables.
+- `register_admin(payload, headers=None)` - `POST /v1/auth/register`. Public
+  registration for a company admin. Payload must include company ID, email,
+  username, password, first and last name.
+- `login(email, password, headers=None)` - `POST /v1/auth/login`. Returns access
+  and refresh JWT tokens.
+- `refresh_access_token(refresh_token, headers=None)` - `POST /v1/auth/refresh`.
+  Send `Authorization: Bearer <refresh JWT>` to obtain a new access token.
+- `logout(headers)` - `POST /v1/auth/logout`. Revoke the current JWT session.
+- `send_verification_email(email, headers=None)` - `POST /v1/send`. Public route
+  that kicks off the verification email flow.
+- `verify_email(token, headers=None)` - `POST /v1/verify`. Confirms email ownership.
+- `get_current_user(headers)` - `GET /v1/auth/user/me`. Returns the authenticated
+  user together with the active company.
+- `create_user(payload, headers=None)` - `POST /v1/auth/user`. Admin-only user
+  creation. Accepts email, username, password, and optional company override.
 
----
+### ApiKeyService (`client.api_keys`)
 
-## Core Services
+- `create_api_key(payload, headers=None)` - `POST /v1/auth/api-keys`. Create a
+  new API key for the JWT user. Payload may include name, scopes, permissions, and expiry.
+- `list_api_keys(headers)` - `GET /v1/auth/api-keys`. Lists active keys owned by the user.
+- `delete_api_key(api_key_id, headers)` - `DELETE /v1/auth/api-keys/<id>`. Revokes a key.
+- `validate_credentials(headers)` - `GET /v1/auth/validate`. Confirms the caller's
+  credentials and returns metadata.
+- `get_api_key_overview(days=None, headers=None)` - `GET /v1/overview`. High-level
+  analytics for API key usage.
+- `get_usage_trends(days=None, granularity=None, headers=None)` - `GET /v1/usage-trends`.
+  Returns daily/hourly usage patterns.
+- `get_top_endpoints(days=None, headers=None)` - `GET /v1/top-endpoints`. Shows the
+  most-used endpoints per company.
+- `get_api_key_performance(days=None, headers=None)` - `GET /v1/api-key-performance`.
+  Performance metrics by key.
+- `get_error_analysis(days=None, headers=None)` - `GET /v1/error-analysis`. Error distribution.
+- `get_rate_limit_analysis(days=None, headers=None)` - `GET /v1/rate-limit-analysis`.
+  Rate-limit consumption overview.
+- `get_detailed_usage(api_key_id, days=None, headers=None)` -
+  `GET /v1/detailed-usage/<api_key_id>`. Fine-grained request logs.
 
-### Agent Management
+### UserService (`client.users`)
 
-Create and manage intelligent AI agents:
+- `get_profile(headers)` - `GET /v1/user/profile`. Returns the authenticated profile.
+- `update_profile(payload, headers)` - `PUT /v1/user/profile`. Update first/last
+  name, timezone, language, or preferences.
+- `get_user(user_id, headers)` - `GET /v1/user/<user_id>`. Fetch another user
+  (requires admin privileges or appropriate scopes).
 
-```python
-from knowrithm_py.services.agent import AgentService
+### AddressService (`client.addresses`)
 
-agent_service = AgentService(client)
+- `seed_reference_data(headers=None)` - `GET /v1/address-seed`. Populates countries,
+  states, and cities (public).
+- `create_country(name, iso_code=None, headers=None)` - `POST /v1/country`.
+  Admin-only country creation.
+- `list_countries(headers=None)` - `GET /v1/country`. Fetch all countries.
+- `get_country(country_id, headers=None)` - `GET /v1/country/<id>`. Returns a country
+  with nested states.
+- `update_country(country_id, name=None, iso_code=None, headers=None)` -
+  `PATCH /v1/country/<id>`.
+- `create_state(name, country_id, headers=None)` - `POST /v1/state`. Admin-only.
+- `list_states_by_country(country_id, headers=None)` -
+  `GET /v1/state/country/<country_id>`.
+- `get_state(state_id, headers=None)` - `GET /v1/state/<id>`. Includes nested cities.
+- `update_state(state_id, name=None, country_id=None, headers=None)` - `PATCH /v1/state/<id>`.
+- `create_city(name, state_id, postal_code_prefix=None, headers=None)` - `POST /v1/city`.
+- `list_cities_by_state(state_id, headers=None)` - `GET /v1/city/state/<state_id>`.
+- `get_city(city_id, headers=None)` - `GET /v1/city/<id>`.
+- `update_city(city_id, name=None, state_id=None, postal_code_prefix=None, headers=None)` -
+  `PATCH /v1/city/<id>`.
+- `create_address(...)` - `POST /v1/address`. Admin-only company address creation
+  with support for `lat`, `lan`, `postal_code`, and `is_primary`.
+- `get_company_address(headers=None)` - `GET /v1/address`. Fetch the authenticated
+  company's address.
 
-# Create a specialized agent
-agent = agent_service.create({
-    "name": "Sales Assistant",
-    "description": "Handles sales inquiries and lead qualification",
-    "personality": "enthusiastic and helpful",
-    "model_name": "gpt-4",
-    "max_response_length": 300,
-    "temperature": 0.7
-})
+### AdminService (`client.admin`)
 
-# List all agents
-agents = agent_service.list()
+- `list_users(...)` - `GET /v1/admin/user` (or `/v1/super-admin/company/<id>/user`
+  when `company_id` is provided). Supports pagination, status/role filters, search,
+  date ranges, and sorting.
+- `get_user(user_id, headers=None)` - `GET /v1/admin/user/<user_id>`.
+- `get_company_system_metrics(company_id=None, headers=None)` -
+  `GET /v1/admin/system-metric` or the super-admin variant.
+- `get_audit_logs(...)` - `GET /v1/audit-log`. Filter by entity type, event type,
+  risk level, and pagination.
+- `get_system_configuration(headers=None)` - `GET /v1/config`. Reads configuration
+  values (sensitive keys hidden from non super-admins).
+- `upsert_system_configuration(...)` - `PATCH /v1/config`. Create or update a config entry.
+- `force_password_reset(user_id, headers=None)` - `POST /v1/user/<id>/force-password-reset`.
+- `impersonate_user(user_id, headers=None)` - `POST /v1/user/<id>/impersonate`.
+- `update_user_status(user_id, status, reason=None, headers=None)` - `PATCH /v1/user/<id>/status`.
+- `update_user_role(user_id, role, headers=None)` - `PATCH /v1/user/<id>/role`.
 
-# Update agent configuration
-agent_service.update(agent['id'], {
-    "personality": "professional and concise"
-})
-```
+### AgentService (`client.agents`)
 
-### Conversation Management
+- `create_agent(payload, headers=None)` - `POST /v1/agent`. `payload` must include `name` and
+  may contain description, avatar URL, LLM settings, etc.
+- `get_agent(agent_id, headers=None)` - `GET /v1/agent/<id>`. Public route.
+- `list_agents(company_id=None, status=None, search=None, page=None, per_page=None, headers=None)` -
+  `GET /v1/agent`.
+- `update_agent(agent_id, payload, headers=None)` - `PUT /v1/agent/<id>`.
+- `delete_agent(agent_id, headers=None)` - `DELETE /v1/agent/<id>` (soft delete).
+- `restore_agent(agent_id, headers=None)` - `PATCH /v1/agent/<id>/restore`.
+- `get_embed_code(agent_id, headers=None)` - `GET /v1/agent/<id>/embed-code`.
+- `test_agent(agent_id, query=None, headers=None)` - `POST /v1/agent/<id>/test`.
+- `get_agent_stats(agent_id, headers=None)` - `GET /v1/agent/<id>/stats`.
+- `clone_agent(agent_id, name=None, llm_settings_id=None, headers=None)` -
+  `POST /v1/agent/<id>/clone`.
+- `fetch_widget_script(headers=None)` - `GET /widget.js`. Returns the public widget JavaScript.
+- `render_test_page(body_html, headers=None)` - `POST /test`. Renders a test HTML snippet.
 
-Handle real-time conversations with context awareness:
+### AnalyticsService (`client.analytics`)
 
-```python
-from knowrithm_py.services.conversation import ConversationService
-from knowrithm_py.services.message import MessageService
+- `get_dashboard_overview(company_id=None, headers=None)` - `GET /v1/analytic/dashboard`.
+- `get_agent_analytics(agent_id, start_date=None, end_date=None, headers=None)` -
+  `GET /v1/analytic/agent/<agent_id>`.
+- `get_agent_performance_comparison(agent_id, start_date=None, end_date=None, headers=None)` -
+  `GET /v1/analytic/agent/<agent_id>/performance-comparison`.
+- `get_conversation_analytics(conversation_id, headers=None)` -
+  `GET /v1/analytic/conversation/<conversation_id>`.
+- `get_lead_analytics(start_date=None, end_date=None, company_id=None, headers=None)` -
+  `GET /v1/analytic/leads`.
+- `get_usage_metrics(start_date=None, end_date=None, headers=None)` - `GET /v1/analytic/usage`.
+- `search_documents(query, agent_id, limit=None, headers=None)` - `POST /v1/search/document`.
+- `search_database(query, connection_id=None, headers=None)` - `POST /v1/search/database`.
+- `trigger_system_metric_collection(headers=None)` - `POST /v1/system-metric`.
+- `export_analytics(export_type, export_format, start_date=None, end_date=None, headers=None)` -
+  `POST /v1/analytic/export`.
+- `health_check(headers=None)` - `GET /health`. Public health probe.
 
-conv_service = ConversationService(client)
-msg_service = MessageService(client)
+### CompanyService (`client.companies`)
 
-# Start a conversation
-conversation = conv_service.create(
-    agent_id=agent['id'],
-    entity_type="USER"
-)
+- `create_company(payload, logo_path=None, headers=None)` - `POST /v1/company`. Supports JSON
+  or multipart form data.
+- `list_companies(page=None, per_page=None, headers=None)` - `GET /v1/super-admin/company`.
+- `get_company(headers=None)` - `GET /v1/company`.
+- `get_company_statistics(company_id=None, days=None, headers=None)` -
+  `GET /v1/company/statistics` or `/v1/company/<id>/statistics`.
+- `list_deleted_companies(headers=None)` - `GET /v1/company/deleted`.
+- `update_company(company_id, payload, logo_path=None, headers=None)` - `PUT /v1/company/<id>`.
+- `patch_company(company_id, payload, headers=None)` - `PATCH /v1/company/<id>`.
+- `delete_company(company_id, headers=None)` - `DELETE /v1/company/<id>`.
+- `restore_company(company_id, headers=None)` - `PATCH /v1/company/<id>/restore`.
+- `cascade_delete_company(company_id, delete_related=None, headers=None)` -
+  `DELETE /v1/company/<id>/cascade-delete`.
+- `get_related_data_summary(company_id, headers=None)` - `GET /v1/company/<id>/related-data`.
+- `bulk_delete_companies(company_ids, headers=None)` - `DELETE /v1/company/bulk-delete`.
+- `bulk_restore_companies(company_ids, headers=None)` - `PATCH /v1/company/bulk-restore`.
 
-# Send messages
-response = msg_service.send_message(
-    conversation_id=conversation['id'],
-    content="I need help with my order",
-    role="user"
-)
+### DatabaseService (`client.databases`)
 
-# Get conversation history
-messages = msg_service.list_messages(conversation['id'])
+- `create_connection(name, url, database_type, agent_id, connection_params=None, headers=None)` -
+  `POST /v1/database-connection`.
+- `list_connections(params=None, headers=None)` - `GET /v1/database-connection`.
+- `get_connection(connection_id, headers=None)` - `GET /v1/database-connection/<id>`.
+- `update_connection(...)` - `PUT /v1/database-connection/<id>`.
+- `patch_connection(connection_id, updates, headers=None)` - `PATCH /v1/database-connection/<id>`.
+- `delete_connection(connection_id, headers=None)` - `DELETE /v1/database-connection/<id>`.
+- `restore_connection(connection_id, headers=None)` - `PATCH /v1/database-connection/<id>/restore`.
+- `list_deleted_connections(headers=None)` - `GET /v1/database-connection/deleted`.
+- `test_connection(connection_id, headers=None)` - `POST /v1/database-connection/<id>/test`.
+- `analyze_connection(connection_id, headers=None)` - `POST /v1/database-connection/<id>/analyze`.
+- `analyze_multiple_connections(payload=None, headers=None)` - `POST /v1/database-connection/analyze`.
+- `list_tables(connection_id, headers=None)` - `GET /v1/database-connection/<id>/table`.
+- `get_table(table_id, headers=None)` - `GET /v1/database-connection/table/<table_id>`.
+- `delete_table(table_id, headers=None)` - `DELETE /v1/database-connection/table/<table_id>`.
+- `delete_tables_for_connection(connection_id, headers=None)` -
+  `DELETE /v1/database-connection/<id>/table`.
+- `restore_table(table_id, headers=None)` - `PATCH /v1/database-connection/table/<table_id>/restore`.
+- `list_deleted_tables(headers=None)` - `GET /v1/database-connection/table/deleted`.
+- `get_semantic_snapshot(connection_id, headers=None)` -
+  `GET /v1/database-connection/<id>/semantic-snapshot`.
+- `get_knowledge_graph(connection_id, headers=None)` -
+  `GET /v1/database-connection/<id>/knowledge-graph`.
+- `get_sample_queries(connection_id, headers=None)` -
+  `GET /v1/database-connection/<id>/sample-queries`.
+- `text_to_sql(connection_id, question, execute=None, result_limit=None, headers=None)` -
+  `POST /v1/database-connection/<id>/text-to-sql`.
+- `export_connection(connection_id, headers=None)` - `POST /v1/database-connection/export`.
 
-# End conversation with rating
-conv_service.end_conversation(
-    conversation_id=conversation['id'],
-    rating=5
-)
-```
+### DocumentService (`client.documents`)
 
-### Document Processing
+- `upload_documents(agent_id, file_paths=None, urls=None, url=None, metadata=None, headers=None)` -
+  `POST /v1/document/upload`. Supports multipart files and JSON URL ingestion.
+- `list_documents(page=None, per_page=None, status=None, headers=None)` - `GET /v1/document`.
+- `list_deleted_documents(headers=None)` - `GET /v1/document/deleted`.
+- `list_deleted_chunks(headers=None)` - `GET /v1/document/chunk/deleted`.
+- `delete_document(document_id, headers=None)` - `DELETE /v1/document/<id>`.
+- `restore_document(document_id, headers=None)` - `PATCH /v1/document/<id>/restore`.
+- `delete_document_chunk(chunk_id, headers=None)` - `DELETE /v1/document/chunk/<chunk_id>`.
+- `restore_document_chunk(chunk_id, headers=None)` - `PATCH /v1/document/chunk/<chunk_id>/restore`.
+- `delete_document_chunks(document_id, headers=None)` - `DELETE /v1/document/<id>/chunk`.
+- `restore_all_document_chunks(document_id, headers=None)` -
+  `PATCH /v1/document/<id>/chunk/restore-all`.
+- `bulk_delete_documents(document_ids, headers=None)` - `DELETE /v1/document/bulk-delete`.
 
-Upload, process, and search through various document types:
+### ConversationService (`client.conversations`) and MessageService (`client.messages`)
 
-```python
-from knowrithm_py.services.document import DocumentService
+- `create_conversation(agent_id, title=None, metadata=None, max_context_length=None, headers=None)` -
+  `POST /v1/conversation`.
+- `list_conversations(page=None, per_page=None, headers=None)` - `GET /v1/conversation`.
+- `list_conversations_for_entity(page=None, per_page=None, headers=None)` -
+  `GET /v1/conversation/entity`.
+- `list_deleted_conversations(headers=None)` - `GET /v1/conversation/deleted`.
+- `list_conversation_messages(conversation_id, page=None, per_page=None, headers=None)` -
+  `GET /v1/conversation/<id>/messages`.
+- `delete_conversation(conversation_id, headers=None)` - `DELETE /v1/conversation/<id>`.
+- `delete_conversation_messages(conversation_id, headers=None)` -
+  `DELETE /v1/conversation/<id>/messages`.
+- `restore_conversation(conversation_id, headers=None)` -
+  `PATCH /v1/conversation/<id>/restore`.
+- `restore_all_messages(conversation_id, headers=None)` -
+  `PATCH /v1/conversation/<id>/message/restore-all`.
+- `send_message(conversation_id, message, headers=None)` -
+  `POST /v1/conversation/<id>/chat`.
+- `delete_message(message_id, headers=None)` - `DELETE /v1/message/<id>`.
+- `restore_message(message_id, headers=None)` - `PATCH /v1/message/<id>/restore`.
+- `list_deleted_messages(headers=None)` - `GET /v1/message/deleted`.
 
-doc_service = DocumentService(client)
+### LeadService (`client.leads`)
 
-# Upload document for training
-document = doc_service.upload(
-    file_path="path/to/company_faq.pdf",
-    agent_id=agent['id']
-)
-
-# Check processing status
-status = doc_service.get_processing_status(document['id'])
-print(f"Processing status: {status['status']}")
-
-# Search within documents
-search_results = doc_service.search(
-    query="refund policy",
-    filters={"agent_id": agent['id']}
-)
-
-# List all documents
-documents = doc_service.list(agent_id=agent['id'])
-```
-
-### Analytics & Monitoring
-
-Access comprehensive analytics and performance metrics:
-
-```python
-from knowrithm_py.services.analytics import AnalyticsService
-
-analytics = AnalyticsService(client)
-
-# Get dashboard overview
-dashboard = analytics.get_dashboard()
-print(f"Total conversations: {dashboard['conversations']['total']}")
-
-# Agent performance metrics
-agent_metrics = analytics.get_agent_metrics(
-    agent_id=agent['id'],
-    start_date="2024-01-01T00:00:00Z",
-    end_date="2024-01-31T23:59:59Z"
-)
-
-print(f"Average response time: {agent_metrics['performance_metrics']['avg_response_time_seconds']}s")
-print(f"Satisfaction rating: {agent_metrics['quality_metrics']['avg_satisfaction_rating']}")
-
-# Export analytics data
-export_data = analytics.export_analytics_data({
-    "type": "conversations",
-    "format": "json",
-    "start_date": "2024-01-01T00:00:00Z",
-    "end_date": "2024-01-31T23:59:59Z"
-})
-```
-
-### Lead Management
-
-Track and convert leads through intelligent conversations:
-
-```python
-from knowrithm_py.services.lead import LeadService
-
-lead_service = LeadService(client)
-
-# Create a new lead
-lead = lead_service.create({
-    "first_name": "Jane",
-    "last_name": "Doe",
-    "email": "jane@example.com",
-    "phone": "+1234567890",
-    "source": "website_chat"
-})
-
-# Update lead status
-lead_service.update_status(
-    lead_id=lead['id'],
-    status="qualified",
-    notes="Interested in premium plan"
-)
-
-# Get lead analytics
-lead_analytics = analytics.get_lead_analytics(
-    start_date="2024-01-01T00:00:00Z",
-    end_date="2024-01-31T23:59:59Z"
-)
-```
-
-### 🗄️ Database Integration
-
-Connect external databases for dynamic agent responses:
-
-```python
-from knowrithm_py.services.database import DatabaseService
-
-db_service = DatabaseService(client)
-
-# Create database connection
-connection = db_service.create_connection({
-    "name": "Customer Database",
-    "type": "postgresql",
-    "host": "localhost",
-    "port": 5432,
-    "database": "customers",
-    "username": "db_user",
-    "password": "db_password"
-})
-
-# Test connection
-test_result = db_service.test_connection(connection['id'])
-
-# Search across databases
-search_results = db_service.search(
-    query="customer orders from last month",
-    connection_ids=[connection['id']]
-)
-```
-
----
-
-## Authentication & Security
-
-### API Key Management
-
-```python
-from knowrithm_py.services.auth import AuthService
-
-auth_service = AuthService(client)
-
-# Validate credentials
-validation = auth_service.validate_credentials()
-print(f"API key valid: {validation['valid']}")
-
-# Create new API key
-new_key = auth_service.create_api_key(
-    name="Analytics Key",
-    permissions={"read": True, "write": False}
-)
-
-# Get user profile
-profile = auth_service.get_profile()
-```
-
-### Environment-based Configuration
-
-```python
-import os
-from knowrithm_py.client import KnowrithmClient
-
-# Recommended: Use environment variables
-client = KnowrithmClient(
-    api_key=os.getenv('KNOWRITHM_API_KEY'),
-    api_secret=os.getenv('KNOWRITHM_API_SECRET'),
-    base_url=os.getenv('KNOWRITHM_BASE_URL', 'https://app.knowrithm.org')
-)
-```
+- `register_lead(payload, headers=None)` - `POST /v1/lead/register`. Public widget
+  registration; payload includes agent ID, first/last name, email, phone, and
+  optional consent flags.
+- `create_lead(payload, headers=None)` - `POST /v1/lead`. Admin-created leads.
+- `get_lead(lead_id, headers=None)` - `GET /v1/lead/<id>`.
+- `list_company_leads(page=None, per_page=None, status=None, search=None, headers=None)` -
+  `GET /v1/lead/company`.
+- `update_lead(lead_id, payload, headers=None)` - `PUT /v1/lead/<id>`.
+- `delete_lead(lead_id, headers=None)` - `DELETE /v1/lead/<id>`.
 
 ---
 
 ## Error Handling
 
-The SDK provides comprehensive error handling:
+All helper methods raise `KnowrithmAPIError` when the API returns a non-success
+status code or when the request ultimately fails after retries. Inspect
+`e.status_code`, `e.message`, and `e.response_data` for diagnostics.
 
 ```python
-from knowrithm_py.exceptions import (
-    KnowrithmAPIError,
-    AuthenticationError,
-    RateLimitError,
-    ValidationError
-)
+from knowrithm_py.dataclass.error import KnowrithmAPIError
 
 try:
-    agent = client.agents.create(agent_data)
-except AuthenticationError:
-    print("Invalid API credentials")
-except ValidationError as e:
-    print(f"Validation error: {e.message}")
-except RateLimitError:
-    print("Rate limit exceeded, please retry later")
-except KnowrithmAPIError as e:
-    print(f"API error: {e.message}")
+    client.messages.send_message(conversation_id, "Hi!")
+except KnowrithmAPIError as exc:
+    print(f"Request failed ({exc.status_code}): {exc.message}")
+    print(exc.response_data)
 ```
-
-### Retry Logic with Exponential Backoff
-
-```python
-import time
-from typing import Dict, Any
-
-def safe_api_call(func, *args, max_retries=3, **kwargs) -> Dict[str, Any]:
-    """Execute API calls with automatic retries"""
-    for attempt in range(max_retries):
-        try:
-            return func(*args, **kwargs)
-        except RateLimitError:
-            if attempt == max_retries - 1:
-                raise
-            wait_time = (2 ** attempt) + random.uniform(0, 1)
-            time.sleep(wait_time)
-        except KnowrithmAPIError as e:
-            if e.status_code >= 500:  # Server errors
-                if attempt == max_retries - 1:
-                    raise
-                time.sleep(2 ** attempt)
-            else:
-                raise  # Client errors shouldn't be retried
-```
-
----
-
-## Advanced Features
-
-### Batch Operations
-
-Process multiple operations efficiently:
-
-```python
-# Batch create multiple agents
-agents_data = [
-    {"name": "Sales Bot", "personality": "persuasive"},
-    {"name": "Support Bot", "personality": "helpful"},
-    {"name": "Technical Bot", "personality": "precise"}
-]
-
-agents = []
-for agent_data in agents_data:
-    agent = client.agents.create(agent_data)
-    agents.append(agent)
-
-# Batch upload documents
-import os
-from pathlib import Path
-
-documents_folder = Path("./training_docs")
-for file_path in documents_folder.glob("*.pdf"):
-    document = client.documents.upload(
-        file_path=str(file_path),
-        agent_id=agent['id']
-    )
-    print(f"Uploaded: {file_path.name}")
-```
-
-### Streaming Responses
-
-Handle real-time streaming responses:
-
-```python
-def handle_streaming_response(conversation_id, message):
-    """Handle streaming responses from the agent"""
-    response = client.messages.send_message_stream(
-        conversation_id=conversation_id,
-        content=message,
-        role="user"
-    )
-    
-    full_response = ""
-    for chunk in response:
-        if chunk.get('content'):
-            print(chunk['content'], end='', flush=True)
-            full_response += chunk['content']
-    
-    return full_response
-```
-
-### Webhook Integration
-
-Set up webhooks for real-time notifications:
-
-```python
-from knowrithm_py.services.webhook import WebhookService
-
-webhook_service = WebhookService(client)
-
-# Create webhook endpoint
-webhook = webhook_service.create({
-    "url": "https://your-app.com/webhooks/knowrithm",
-    "events": ["conversation.started", "message.received", "lead.created"],
-    "secret": "your-webhook-secret"
-})
-
-# Verify webhook signature (in your webhook handler)
-def verify_webhook_signature(payload, signature, secret):
-    import hmac
-    import hashlib
-    
-    expected_signature = hmac.new(
-        secret.encode(),
-        payload,
-        hashlib.sha256
-    ).hexdigest()
-    
-    return hmac.compare_digest(f"sha256={expected_signature}", signature)
-```
-
----
-
-## Configuration Options
-
-### Client Configuration
-
-```python
-client = KnowrithmClient(
-    api_key="your-api-key",
-    api_secret="your-api-secret",
-    base_url="https://app.knowrithm.org",
-    timeout=30,                    # Request timeout in seconds
-    max_retries=3,                 # Automatic retry attempts
-    retry_delay=1,                 # Base delay between retries
-    enable_logging=True,           # Enable request/response logging
-    log_level="INFO"               # Logging level
-)
-```
-
-### Agent Configuration
-
-```python
-agent_config = {
-    "name": "Advanced Support Bot",
-    "description": "AI assistant for complex customer support",
-    "personality": "professional, empathetic, and solution-oriented",
-    "model_name": "gpt-4",
-    "temperature": 0.7,            # Creativity level (0-1)
-    "max_response_length": 500,    # Maximum response tokens
-    "response_config": {
-        "include_sources": True,    # Include source references
-        "tone": "professional",     # Response tone
-        "fallback_message": "I need more information to help you."
-    }
-}
-
-agent = client.agents.create(agent_config)
-```
-
----
-
-## SDK Reference
-
-### Complete Service List
-
-| Service | Description | Key Methods |
-|---------|-------------|-------------|
-| `AgentService` | Manage AI agents | `create()`, `list()`, `update()`, `delete()` |
-| `ConversationService` | Handle conversations | `create()`, `list()`, `end_conversation()` |
-| `MessageService` | Send/receive messages | `send_message()`, `list_messages()` |
-| `DocumentService` | Process documents | `upload()`, `search()`, `list()` |
-| `AnalyticsService` | Access metrics | `get_dashboard()`, `get_agent_metrics()` |
-| `LeadService` | Manage leads | `create()`, `update_status()`, `list()` |
-| `DatabaseService` | Database integration | `create_connection()`, `search()` |
-| `AuthService` | Authentication | `validate_credentials()`, `get_profile()` |
-| `CompanyService` | Company management | `get()`, `get_statistics()` |
-
----
-
-## Best Practices
-
-### 1. Environment Management
-
-```python
-# Use different configurations for different environments
-import os
-from knowrithm_py.client import KnowrithmClient
-
-def create_client():
-    environment = os.getenv('ENVIRONMENT', 'development')
-    
-    if environment == 'production':
-        return KnowrithmClient(
-            api_key=os.getenv('PROD_API_KEY'),
-            api_secret=os.getenv('PROD_API_SECRET'),
-            base_url='https://app.knowrithm.org',
-            timeout=30
-        )
-    else:
-        return KnowrithmClient(
-            api_key=os.getenv('DEV_API_KEY'),
-            api_secret=os.getenv('DEV_API_SECRET'),
-            base_url='https://staging.knowrithm.org',
-            timeout=60,
-            enable_logging=True
-        )
-
-client = create_client()
-```
-
-### 2. Performance Monitoring
-
-```python
-import logging
-import time
-from functools import wraps
-
-def monitor_performance(func):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-        start_time = time.time()
-        try:
-            result = func(*args, **kwargs)
-            duration = time.time() - start_time
-            logging.info(f"{func.__name__} completed in {duration:.2f}s")
-            return result
-        except Exception as e:
-            duration = time.time() - start_time
-            logging.error(f"{func.__name__} failed after {duration:.2f}s: {e}")
-            raise
-    return wrapper
-
-@monitor_performance
-def create_and_train_agent(name, documents):
-    agent = client.agents.create({"name": name})
-    
-    for doc_path in documents:
-        client.documents.upload(doc_path, agent['id'])
-    
-    return agent
-```
-
-### 3. Resource Management
-
-```python
-from contextlib import contextmanager
-
-@contextmanager
-def conversation_context(agent_id, entity_type="USER"):
-    """Context manager for conversation lifecycle"""
-    conversation = client.conversations.create(
-        agent_id=agent_id,
-        entity_type=entity_type
-    )
-    
-    try:
-        yield conversation
-    finally:
-        # Clean up - end conversation
-        client.conversations.end_conversation(
-            conversation_id=conversation['id'],
-            rating=5
-        )
-
-# Usage
-with conversation_context(agent['id']) as conv:
-    response = client.messages.send_message(
-        conversation_id=conv['id'],
-        content="Hello!",
-        role="user"
-    )
-```
-
----
-
-## Related Documentation
-
-- **[Client Setup Guide](client-setup.md)** - Detailed client configuration
-- **[Agent Management](agents.md)** - Complete agent operations
-- **[Conversation Handling](conversations.md)** - Advanced conversation features
-- **[Document Processing](documents.md)** - File upload and processing
-- **[Analytics Dashboard](analytics.md)** - Metrics and reporting
-- **[Code Examples](examples.md)** - Real-world implementation examples
-
----
-
-## Contributing
-
-We welcome contributions to the Knowrithm Python SDK! See our [Contributing Guide](https://github.com/Knowrithm/knowrithm-py/blob/main/CONTRIBUTING.md) for details.
 
 ---
 
 ## Support
 
-- **Documentation**: [docs.knowrithm.org](https://docs.knowrithm.org)
-- **Discord**: [Join our community](https://discord.gg/cHHWfghJrR)
-- **Email**: support@knowrithm.org
-- **Issues**: [GitHub Issues](https://github.com/Knowrithm/knowrithm-py/issues)
+- Documentation: https://docs.knowrithm.org
+- GitHub Issues: https://github.com/Knowrithm/knowrithm-py/issues
+- Email: support@knowrithm.org
 
 ---
 
-<div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 24px; border-radius: 12px; color: white; text-align: center; margin: 32px 0;">
+## License
 
-**Ready to dive deeper?**
+Licensed under the MIT License. See [LICENSE](../LICENSE) for details.
 
-[Explore Client Setup](client-setup.md) • [View Examples](examples.md) • [Check API Reference](../api-reference/)
 
-</div>
+
+
+
+

@@ -1,4 +1,4 @@
-# Frequently Asked Questions (FAQ)
+﻿# Frequently Asked Questions (FAQ)
 
 Find answers to common questions about Knowrithm, our services, and the platform.
 
@@ -58,10 +58,19 @@ Our pricing is typically based on a combination of factors, including the number
 You can manage your subscription directly from your account dashboard under the "Billing" section.
 
 #### Where can I find my API keys?
-Your API keys can be generated and managed in your account dashboard under **Settings → API Keys**.
+Your API keys can be generated and managed in your account dashboard under **Settings -> API Keys**.
 
 ---
 
 ## Still have questions?
 
 If your question isn't answered here, please check out our Support page for more ways to get help.
+
+
+
+
+
+
+
+
+
