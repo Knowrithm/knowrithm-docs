@@ -1,21 +1,18 @@
-
-{ 
+{
   "title": "Knowrithm Documentation",
-  "description": "Complete guide to building intelligent AI agents with Knowrithm platform",
+  "description": "Complete guide to building intelligent AI agents with the Knowrithm platform.",
   "author": "Knowrithm Team",
   "language": "en",
-  "gitbook": ">=3.0.0",
-  
+  "gitbook": ">=3.2.0",
   "plugins": [
     "highlight",
     "search",
-    "lunr@1.0.0",
-    "fontsettings@^2.0.0",
+    "lunr",
+    "fontsettings",
     "theme-default",
     "-sharing",
     "-livereload"
   ],
-  
   "pluginsConfig": {
     "theme-default": {
       "showLevel": true
@@ -23,23 +20,25 @@
     "fontsettings": {
       "theme": "white",
       "family": "sans",
-      "size": 2
+      "size": 3
+    },
+    "lunr": {
+      "maxIndexSize": 1000000,
+      "fuzziness": 2,
+      "distance": 100
     }
   },
-  
   "styles": {
     "website": "styles/websites.css"
   },
-  
-  "variables": {
-    "version": "0.1.3",
-    "company": "Knowrithm",
-    "apiUrl": "https://pypi.org/project/knowrithm-py",
-    "dashboardUrl": "https://www.knowrithm.com"
-  },
-  
   "structure": {
     "readme": "README.md",
     "summary": "SUMMARY.md"
+  },
+  "variables": {
+    "version": "1.0.0",
+    "company": "Knowrithm",
+    "apiUrl": "https://app.knowrithm.org/api/v1",
+    "dashboardUrl": "https://app.knowrithm.org"
   }
 }

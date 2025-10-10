@@ -1,32 +1,21 @@
 root: ./
 
-# Configuration for the book
 structure:
   readme: README.md
   summary: SUMMARY.md
 
-# Configuration for PDF generation
 pdf:
   page_numbers: true
-  font_size: 12
+  font_size: 11
   paper_size: a4
   chapter_mark: pagebreak
   page_break_before: h1
 
-# Plugin configuration
-plugins:
-  - search
-  - sharing
-  - fontsettings
-  - theme-default
-
-# Redirects for legacy URLs
 redirects:
   /docs/python-sdk: /python-sdk
   /docs/api: /api-reference
   /docs/guides: /platform-guide
 
-# Variables that can be used in documentation
 variables:
   version: "1.0.0"
   api_base_url: "https://app.knowrithm.org/api/v1"
@@ -36,11 +25,9 @@ variables:
   discord_url: "https://discord.gg/cHHWfghJrR"
   github_url: "https://github.com/Knowrithm/knowrithm-py"
 
-# Link validation
 links:
   validation: warning
-  
-# Table of contents settings
+
 toc:
   before: |
     <div class="toc-header">
@@ -53,7 +40,6 @@ toc:
       <p><a href="{book.github_url}" target="_blank">GitHub Repository</a></p>
     </div>
 
-# Format settings
 format:
   ebook:
     theme: white
@@ -65,7 +51,6 @@ format:
       left: 62
       right: 62
 
-# Search configuration
 search:
   maxIndexSize: 1000000
   fuzziness: 2
