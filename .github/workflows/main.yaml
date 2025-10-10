@@ -7,7 +7,7 @@ on:
       - deploy
 jobs:
   build:
-    runs-on: knowrithm-docs
+    runs-on: knowrithm-doc
 
     steps:
       - uses: actions/checkout@v3

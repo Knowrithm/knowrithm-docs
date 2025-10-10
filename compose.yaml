@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   gitbook:
     image: billryan/gitbook
@@ -9,7 +8,8 @@ services:
     # Remove port exposure - Traefik handles this
     volumes:
       - .:/gitbook
-    command: gitbook serve
+    command: >
+      sh -c "gitbook install && gitbook serve"
     networks:
       - knowrithm_network  # Changed from traefik-backend
     labels:

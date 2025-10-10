@@ -9,6 +9,7 @@
   "plugins": [
     "highlight",
     "search",
+    "lunr@1.0.0",
     "fontsettings@^2.0.0",
     "theme-default",
     "-sharing",
@@ -27,7 +28,7 @@
   },
   
   "styles": {
-    "website": "styles/website.css"
+    "website": "styles/websites.css"
   },
   
   "variables": {
