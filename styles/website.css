@@ -1,0 +1,503 @@
+/* Knowrithm Documentation Theme - Modern GitBook Style */
+
+/* Import fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+:root {
+  /* NebulaOS Color Palette */
+  --primary: #6366f1;
+  --primary-hover: #4f46e5;
+  --secondary: #8b5cf6;
+  --accent: #ec4899;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  
+  /* Neutral colors matching NebulaOS */
+  --white: #ffffff;
+  --gray-50: #f9fafb;
+  --gray-100: #f3f4f6;
+  --gray-200: #e5e7eb;
+  --gray-300: #d1d5db;
+  --gray-400: #9ca3af;
+  --gray-500: #6b7280;
+  --gray-600: #4b5563;
+  --gray-700: #374151;
+  --gray-800: #1f2937;
+  --gray-900: #111827;
+  
+  /* Semantic colors */
+  --text-primary: var(--gray-900);
+  --text-secondary: var(--gray-600);
+  --text-muted: var(--gray-500);
+  --background: var(--white);
+  --surface: var(--gray-50);
+  --border: var(--gray-200);
+  --sidebar-bg: var(--white);
+  --sidebar-border: var(--gray-200);
+  
+  /* Typography */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', Monaco, Consolas, monospace;
+  
+  /* Spacing */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  
+  /* Layout */
+  --sidebar-width: 280px;
+  --content-max-width: 800px;
+}
+
+/* Base styles */
+body {
+  font-family: var(--font-sans) !important;
+  color: var(--text-primary) !important;
+  background: var(--background) !important;
+  line-height: 1.6 !important;
+  font-size: 16px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Layout structure */
+.book {
+  display: flex !important;
+  min-height: 100vh !important;
+}
+
+/* Sidebar styling - matching NebulaOS */
+.book-summary {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: var(--sidebar-width) !important;
+  height: 100vh !important;
+  background: var(--sidebar-bg) !important;
+  border-right: 1px solid var(--sidebar-border) !important;
+  overflow-y: auto !important;
+  z-index: 100 !important;
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.05) !important;
+}
+
+/* Sidebar header with logo area */
+.book-summary::before {
+  content: "";
+  display: block;
+  height: 60px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  margin-bottom: var(--space-4);
+  position: relative;
+}
+
+/* Navigation sections styling */
+.book-summary .summary {
+  padding: 0 !important;
+  margin: 0 !important;
+  list-style: none !important;
+}
+
+.book-summary .summary .header {
+  font-size: 11px !important;
+  font-weight: 700 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.1em !important;
+  color: var(--text-muted) !important;
+  padding: var(--space-4) var(--space-6) var(--space-2) var(--space-6) !important;
+  margin-top: var(--space-6) !important;
+}
+
+.book-summary .summary .header:first-child {
+  margin-top: 0 !important;
+}
+
+/* Navigation items */
+.book-summary .summary li {
+  margin: 0 !important;
+  list-style: none !important;
+}
+
+.book-summary .summary li a {
+  display: flex !important;
+  align-items: center !important;
+  padding: 10px var(--space-6) !important;
+  color: var(--text-secondary) !important;
+  text-decoration: none !important;
+  font-size: 14px !important;
+  font-weight: 500 !important;
+  border-radius: 0 !important;
+  transition: all 0.15s ease !important;
+  position: relative !important;
+}
+
+/* Navigation icons (using CSS shapes) */
+.book-summary .summary li a::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gray-300);
+  margin-right: var(--space-3);
+  transition: all 0.15s ease;
+}
+
+.book-summary .summary li a:hover {
+  color: var(--text-primary) !important;
+  background: var(--gray-50) !important;
+}
+
+.book-summary .summary li a:hover::before {
+  background: var(--primary);
+}
+
+.book-summary .summary li.active > a {
+  color: var(--primary) !important;
+  background: rgba(99, 102, 241, 0.1) !important;
+  font-weight: 600 !important;
+}
+
+.book-summary .summary li.active > a::before {
+  background: var(--primary);
+  transform: scale(1.2);
+}
+
+/* Main content area */
+.book-body {
+  margin-left: var(--sidebar-width) !important;
+  width: calc(100% - var(--sidebar-width)) !important;
+  min-height: 100vh !important;
+  background: var(--background) !important;
+}
+
+.book-body .body-inner {
+  max-width: var(--content-max-width) !important;
+  margin: 0 auto !important;
+  padding: var(--space-12) var(--space-8) !important;
+}
+
+/* Hero banner styling (like NebulaOS) */
+.hero-banner {
+  background: linear-gradient(135deg, #8b5a8c 0%, #6b46c1 50%, #4f46e5 100%) !important;
+  color: white !important;
+  padding: var(--space-16) var(--space-8) !important;
+  margin: calc(-1 * var(--space-12)) calc(-1 * var(--space-8)) var(--space-12) calc(-1 * var(--space-8)) !important;
+  border-radius: 0 0 24px 24px !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.hero-banner::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    radial-gradient(circle at 25% 25%, rgba(255,255,255,0.1) 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, rgba(255,255,255,0.05) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.hero-banner h1 {
+  font-size: 3rem !important;
+  font-weight: 800 !important;
+  margin: 0 0 var(--space-4) 0 !important;
+  position: relative;
+  z-index: 1;
+}
+
+.hero-banner .logo {
+  display: inline-block;
+  background: rgba(255,255,255,0.2);
+  border-radius: 12px;
+  padding: var(--space-4);
+  margin-bottom: var(--space-6);
+  backdrop-filter: blur(10px);
+  position: relative;
+  z-index: 1;
+}
+
+/* Typography */
+h1 {
+  font-size: 2.5rem !important;
+  font-weight: 800 !important;
+  color: var(--text-primary) !important;
+  margin: var(--space-8) 0 var(--space-6) 0 !important;
+  line-height: 1.2 !important;
+}
+
+h2 {
+  font-size: 1.875rem !important;
+  font-weight: 700 !important;
+  color: var(--text-primary) !important;
+  margin: var(--space-12) 0 var(--space-4) 0 !important;
+  line-height: 1.3 !important;
+}
+
+h3 {
+  font-size: 1.5rem !important;
+  font-weight: 600 !important;
+  color: var(--text-primary) !important;
+  margin: var(--space-8) 0 var(--space-4) 0 !important;
+}
+
+h4 {
+  font-size: 1.25rem !important;
+  font-weight: 600 !important;
+  color: var(--text-primary) !important;
+  margin: var(--space-6) 0 var(--space-3) 0 !important;
+}
+
+h5, h6 {
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  color: var(--text-primary) !important;
+  margin: var(--space-4) 0 var(--space-2) 0 !important;
+}
+
+p {
+  font-size: 16px !important;
+  line-height: 1.7 !important;
+  color: var(--text-secondary) !important;
+  margin: var(--space-4) 0 !important;
+}
+
+/* Section headers with numbers (like "1. Getting Started") */
+.numbered-section {
+  display: flex !important;
+  align-items: center !important;
+  gap: var(--space-3) !important;
+  margin: var(--space-8) 0 var(--space-4) 0 !important;
+}
+
+.numbered-section .number {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 32px !important;
+  height: 32px !important;
+  background: var(--primary) !important;
+  color: white !important;
+  font-weight: 700 !important;
+  font-size: 14px !important;
+  border-radius: 8px !important;
+}
+
+.numbered-section .title {
+  font-size: 1.25rem !important;
+  font-weight: 600 !important;
+  color: var(--text-primary) !important;
+  margin: 0 !important;
+}
+
+/* Code styling */
+code {
+  font-family: var(--font-mono) !important;
+  font-size: 0.875em !important;
+  background: var(--gray-100) !important;
+  color: var(--primary) !important;
+  padding: 2px 6px !important;
+  border-radius: 4px !important;
+  font-weight: 500 !important;
+}
+
+pre {
+  background: var(--gray-50) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 12px !important;
+  padding: var(--space-6) !important;
+  margin: var(--space-6) 0 !important;
+  overflow-x: auto !important;
+  position: relative !important;
+}
+
+pre code {
+  background: none !important;
+  padding: 0 !important;
+  color: var(--text-primary) !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+}
+
+/* Links */
+a {
+  color: var(--primary) !important;
+  text-decoration: none !important;
+  font-weight: 500 !important;
+  transition: all 0.15s ease !important;
+}
+
+a:hover {
+  color: var(--primary-hover) !important;
+  text-decoration: underline !important;
+}
+
+/* Tables */
+table {
+  width: 100% !important;
+  border-collapse: collapse !important;
+  margin: var(--space-6) 0 !important;
+  background: var(--white) !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+}
+
+table th {
+  background: var(--gray-50) !important;
+  color: var(--text-primary) !important;
+  font-weight: 600 !important;
+  padding: 12px 16px !important;
+  text-align: left !important;
+  font-size: 14px !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+table td {
+  padding: 12px 16px !important;
+  border-bottom: 1px solid var(--border) !important;
+  color: var(--text-secondary) !important;
+  font-size: 14px !important;
+}
+
+table tr:last-child td {
+  border-bottom: none !important;
+}
+
+table tr:hover {
+  background: var(--gray-50) !important;
+}
+
+/* Lists */
+ul, ol {
+  margin: var(--space-4) 0 !important;
+  padding-left: var(--space-6) !important;
+}
+
+li {
+  margin: var(--space-2) 0 !important;
+  color: var(--text-secondary) !important;
+  line-height: 1.6 !important;
+}
+
+/* Search styling */
+.book-summary .book-search {
+  padding: var(--space-4) !important;
+  border-bottom: 1px solid var(--border) !important;
+}
+
+.book-summary .book-search input {
+  width: 100% !important;
+  padding: 10px 12px !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 8px !important;
+  font-family: var(--font-sans) !important;
+  font-size: 14px !important;
+  background: var(--gray-50) !important;
+  outline: none !important;
+  transition: all 0.15s ease !important;
+}
+
+.book-summary .book-search input:focus {
+  border-color: var(--primary) !important;
+  background: var(--white) !important;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1) !important;
+}
+
+.book-summary .book-search input::placeholder {
+  color: var(--text-muted) !important;
+}
+
+/* Navigation buttons */
+.navigation {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  margin-top: var(--space-12) !important;
+  padding-top: var(--space-8) !important;
+  border-top: 1px solid var(--border) !important;
+}
+
+.navigation .navigation-prev,
+.navigation .navigation-next {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: var(--space-2) !important;
+  padding: 12px 24px !important;
+  background: var(--white) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 8px !important;
+  color: var(--text-primary) !important;
+  text-decoration: none !important;
+  font-weight: 500 !important;
+  transition: all 0.15s ease !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+}
+
+.navigation .navigation-next {
+  background: var(--primary) !important;
+  color: white !important;
+  border-color: var(--primary) !important;
+}
+
+.navigation .navigation-prev:hover,
+.navigation .navigation-next:hover {
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+}
+
+.navigation .navigation-next:hover {
+  background: var(--primary-hover) !important;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  :root {
+    --sidebar-width: 100%;
+  }
+  
+  .book-summary {
+    transform: translateX(-100%) !important;
+    transition: transform 0.3s ease !important;
+    z-index: 200 !important;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1) !important;
+  }
+  
+  .book-summary.open {
+    transform: translateX(0) !important;
+  }
+  
+  .book-body {
+    margin-left: 0 !important;
+    width: 100% !important;
+  }
+  
+  .book-body .body-inner {
+    padding: var(--space-6) var(--space-4) !important;
+  }
+  
+  .hero-banner {
+    margin: calc(-1 * var(--space-6)) calc(-1 * var(--space-4)) var(--space-8) calc(-1 * var(--space-4)) !important;
+    padding: var(--space-12) var(--space-4) !important;
+  }
+  
+  .hero-banner h1 {
+    font-size: 2rem !important;
+  }
+  
+  h1 {
+    font-size: 2rem !important;
+  }
+  
+  h2 {
+    font-size: 1.5rem !important;
+  }
+}
