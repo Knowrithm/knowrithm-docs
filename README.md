@@ -1,4 +1,5 @@
-﻿<img width="999" height="562" alt="20250925_2353_Futuristic Knowrithm Logo_simple_compose_01k616ywakf1r91ekdeb54xy9p - Edited" src="https://github.com/user-attachments/assets/f414f249-776d-4d47-b1bc-e28d63ade7cc" />
+
+<img width="831" height="294" alt="20250925_2353_Futuristic Knowrithm Logo_simple_compose_01k616ywakf1r91ekdeb54xy9p" src="https://github.com/user-attachments/assets/323ae7d3-1810-40b7-b3bc-9f61d75c0186" />
 
 # Knowrithm (Enterprise Multi-Agent Chatbot Platform)
 
