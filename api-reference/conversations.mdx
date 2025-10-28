@@ -1,0 +1,156 @@
+﻿---
+title: "Conversations & leads"
+description: "Coordinate live chats, orchestrate AI responses, and manage lead records."
+---
+
+## Start conversations
+
+### Create a conversation - `POST /api/v1/conversation`
+
+- **Auth**: API key or bearer token.  
+- **Purpose**: Bootstraps a conversation for a user, lead, or admin operator.  
+- **Response**: `201 Created` with the conversation record.
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `agent_id` | UUID | Yes | Agent that will own the conversation. |
+| `title` | String | No | Friendly label (`"New Conversation"` by default). |
+| `metadata` | Object | No | Custom context (CRM IDs, campaign info, etc.). |
+| `max_context_length` | Integer | No | Defaults to `4000`; trims history beyond this length. |
+
+### Register a lead & conversation - `POST /api/v1/lead/register`
+
+- **Auth**: Public  
+- **Purpose**: Main widget entry point. Creates a lead, issues a scoped JWT, and opens the first conversation.  
+- **Response**: `201 Created` with lead record, JWT, refresh token, and conversation IDs.
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `agent_id` | UUID | Yes | Agent that will handle the chat. |
+| `first_name` | String | Yes | Lead first name (max 100 chars). |
+| `last_name` | String | Yes | Lead last name (max 100 chars). |
+| `email` | String(email) | Yes | Lead email. |
+| `phone` | String | No | Optional phone number. |
+| `source` | String | No | Origin identifier (e.g., `website_chatbot`). |
+| `consent_data_processing` | Boolean | No | Defaults to `true`. |
+| `consent_marketing` | Boolean | No | Defaults to `false`. |
+
+<Callout icon="information-circle">
+  The register endpoint immediately returns a signed JWT scoped to the lead. Present it as <code>Authorization: Bearer {"<lead_token>"}</code> when continuing the conversation from the widget.
+</Callout>
+
+## Messaging workflow
+
+### Queue a message - `POST /api/v1/conversation/{conversation_id}/chat`
+
+- **Auth**: API key, bearer token, or lead token.  
+- **Response**: `202 Accepted` with `task_id`, `conversation_id`, `message_id`, and `poll_url`.  
+- **Body**: `message` (required string), optional `attachments` array.
+
+### Stream responses - `GET /api/v1/conversation/{conversation_id}/messages/stream`
+
+- **Protocol**: Server-Sent Events.  
+- **Events**:
+  - `chat_status` - lifecycle updates (`queued`, `in_progress`, `completed`, `failed`).  
+  - `chat_response` - final assistant reply, citations, metrics.  
+  - `heartbeat` - keep-alive ping (~15s).
+
+### Retrieve history - `GET /api/v1/conversation/{conversation_id}/messages`
+
+- Supports pagination (`page`, `per_page`), chronological ordering, and filtering by message role.
+
+<Tabs>
+  <Tab title="Poll">
+```bash
+curl https://{env}/api/v1/conversation/<conversation_id>/messages \
+  -H "Authorization: Bearer <token>"
+```
+  </Tab>
+  <Tab title="Stream">
+```bash
+curl https://{env}/api/v1/conversation/<conversation_id>/messages/stream \
+  -H "Authorization: Bearer <token>"
+```
+  </Tab>
+</Tabs>
+
+## Conversation directories
+
+| Endpoint | Description | Filters |
+| --- | --- | --- |
+| `GET /api/v1/conversation` | Tenant-wide conversations. | `page`, `per_page`, `status`, `agent_id`, `search`, `created_before`, `created_after`. |
+| `GET /api/v1/conversation/agent/{agent_id}` | Scoped to a specific agent. | `page`, `per_page`, `status`. |
+| `GET /api/v1/conversation/entity` | Conversations for the current principal (user or lead). | `page`, `per_page`, `status`. |
+| `GET /api/v1/conversation/entity/{entity_id}` | Admin view of a specific entity (lead or user). | `entity_type`, `status`, pagination. |
+| `GET /api/v1/conversation/deleted` | Soft-deleted conversations. | `page`, `per_page`, `deleted_by`. |
+
+### Lifecycle controls
+
+- `DELETE /api/v1/conversation/{conversation_id}` - Soft delete conversation + messages.  
+- `PATCH /api/v1/conversation/{conversation_id}/restore` - Restore conversation.  
+- `DELETE /api/v1/conversation/{conversation_id}/messages` - Remove all messages while keeping the conversation shell.  
+- `PATCH /api/v1/conversation/{conversation_id}/message/restore-all` - Restore every soft-deleted message in the conversation.
+
+## Message controls
+
+| Endpoint | Purpose |
+| --- | --- |
+| `DELETE /api/v1/message/{message_id}` | Soft delete an individual message. |
+| `PATCH /api/v1/message/{message_id}/restore` | Restore a single message. |
+| `GET /api/v1/message/deleted` | Browse soft-deleted messages. |
+
+All delete/restore operations require the same auth level as the original conversation. They return `202 Accepted` with a task handle when the change is processed asynchronously.
+
+## Lead lifecycle (admin)
+
+| Endpoint | Auth | Summary |
+| --- | --- | --- |
+| `POST /api/v1/lead` | API key (`write`) or bearer | Create a lead on behalf of the company (returns lead + optional conversation). |
+| `GET /api/v1/lead/company` | API key or bearer | Paginate company leads (`page`, `per_page`, `status`, `search`, `created_before`, `created_after`). |
+| `GET /api/v1/lead/{lead_id}` | API key or bearer | Retrieve a specific lead, including consent flags and most recent conversation. |
+| `PUT /api/v1/lead/{lead_id}` | API key or bearer | Update lead profile fields. |
+| `DELETE /api/v1/lead/{lead_id}` | API key or bearer | Soft delete (deactivate) a lead. |
+| `POST /api/v1/sdk/lead` | API key or bearer | Synchronous create returning the complete lead record. |
+| `PUT /api/v1/sdk/lead/{lead_id}` | API key or bearer | Synchronous update. |
+| `DELETE /api/v1/sdk/lead/{lead_id}` | API key or bearer | Synchronous delete. |
+
+### Lead payload (create/update)
+
+| Field | Type | Notes |
+| --- | --- | --- |
+| `first_name`, `last_name` | String | Required on create; max 100 chars. |
+| `email` | String(email) | Required on create; used for uniqueness. |
+| `phone` | String | Optional contact channel. |
+| `company` | String | Optional lead company name. |
+| `tags` | `Array<string>` | Categorisation labels. |
+| `metadata` | Object | Arbitrary JSON (CRM IDs, campaign IDs, etc.). |
+
+## Endpoint catalog
+
+| Method | Endpoint | Auth | Summary |
+| --- | --- | --- | --- |
+| `POST` | `/api/v1/conversation` | API key or bearer | Create a conversation for an agent. |
+| `GET` | `/api/v1/conversation` | API key or bearer | List conversations with filters. |
+| `GET` | `/api/v1/conversation/agent/{agent_id}` | API key or bearer | Conversations scoped to an agent. |
+| `GET` | `/api/v1/conversation/entity` | API key or bearer | Conversations for the authenticated entity. |
+| `GET` | `/api/v1/conversation/entity/{entity_id}` | API key or bearer | Admin lookup by entity. |
+| `GET` | `/api/v1/conversation/deleted` | API key or bearer | Soft-deleted conversations. |
+| `DELETE` | `/api/v1/conversation/{conversation_id}` | API key or bearer | Soft delete conversation + messages. |
+| `PATCH` | `/api/v1/conversation/{conversation_id}/restore` | API key or bearer | Restore a conversation. |
+| `POST` | `/api/v1/conversation/{conversation_id}/chat` | API key, bearer, or lead token | Queue a user message and AI response. |
+| `GET` | `/api/v1/conversation/{conversation_id}/messages` | API key, bearer, or lead token | Fetch message history. |
+| `GET` | `/api/v1/conversation/{conversation_id}/messages/stream` | API key, bearer, or lead token | Stream SSE updates. |
+| `DELETE` | `/api/v1/conversation/{conversation_id}/messages` | API key or bearer | Delete all messages in a conversation. |
+| `PATCH` | `/api/v1/conversation/{conversation_id}/message/restore-all` | API key or bearer | Restore all messages in a conversation. |
+| `DELETE` | `/api/v1/message/{message_id}` | API key or bearer | Soft delete a specific message. |
+| `PATCH` | `/api/v1/message/{message_id}/restore` | API key or bearer | Restore a specific message. |
+| `GET` | `/api/v1/message/deleted` | API key or bearer | Soft-deleted messages directory. |
+| `POST` | `/api/v1/lead/register` | Public | Register a lead, issue tokens, start conversation. |
+| `POST` | `/api/v1/lead` | API key or bearer | Admin-style lead creation. |
+| `GET` | `/api/v1/lead/company` | API key or bearer | Paginate leads for the company. |
+| `GET` | `/api/v1/lead/{lead_id}` | API key or bearer | Retrieve a specific lead. |
+| `PUT` | `/api/v1/lead/{lead_id}` | API key or bearer | Update lead profile. |
+| `DELETE` | `/api/v1/lead/{lead_id}` | API key or bearer | Soft delete a lead. |
+| `POST` | `/api/v1/sdk/lead` | API key or bearer | Synchronous lead creation. |
+| `PUT` | `/api/v1/sdk/lead/{lead_id}` | API key or bearer | Synchronous lead update. |
+| `DELETE` | `/api/v1/sdk/lead/{lead_id}` | API key or bearer | Synchronous lead deletion. |

@@ -1,0 +1,133 @@
+---
+title: "Quickstart"
+description: "Provision Knowrithm locally in minutes and connect your first agent."
+---
+
+## Prerequisites
+
+- **Python** 3.11+
+- **Node.js** 18+ (for the widget preview)
+- **PostgreSQL** 13+
+- **Redis** 6+
+- **Tesseract OCR** (for scanned document parsing)
+
+<Callout icon="information-circle">
+  A Docker workflow is available if you prefer not to install system dependencies manually.
+</Callout>
+
+## Configure environment variables
+
+Create a `.env` file at the project root. The snippet below lists the minimum you need to boot the stack locally-adjust values to match your environment.
+
+```env
+SECRET_KEY=dev-secret
+SQLALCHEMY_DATABASE_URI=postgresql://postgres:postgres@localhost:5432/knowrithm
+REDIS_URL=redis://localhost:6379/0
+CELERY_BROKER_URL=redis://localhost:6379/0
+CELERY_RESULT_BACKEND=redis://localhost:6379/0
+JWT_SECRET_KEY=dev-jwt-secret
+UPLOAD_FOLDER=./uploads
+MAX_FILE_SIZE=52428800
+SUPER_ADMIN_EMAIL=admin@knowrithm.local
+SUPER_ADMIN_PASSWORD=changeme
+```
+
+> Need the full list? See the reference inside `/README.md` or import the example file that ships with the repo.
+
+## Choose your setup path
+
+<Tabs>
+  <Tab title="Docker Compose">
+    <Steps>
+      <Step title="Clone and configure">
+        ```bash
+        git clone https://github.com/Knowrithm/knowrithm-backend.git
+        cd knowrithm-backend
+        cp .env.example .env
+        ```
+      </Step>
+      <Step title="Start services">
+        ```bash
+        docker compose up -d
+        ```
+        This boots the Flask API, Postgres, Redis, Celery workers, and the background scheduler.
+      </Step>
+      <Step title="Run database migrations">
+        ```bash
+        docker compose exec api flask db upgrade
+        ```
+      </Step>
+      <Step title="Seed the platform super admin">
+        ```bash
+        curl http://localhost:8543/api/v1/auth/super-admin
+        ```
+        The endpoint provisions the admin user from `.env` and returns the credentials you can use to authenticate.
+      </Step>
+      <Step title="Smoke test">
+        ```bash
+        curl http://localhost:8543/api/health
+        ```
+      </Step>
+    </Steps>
+  </Tab>
+  <Tab title="Manual install">
+    <Steps>
+      <Step title="Create a virtual environment">
+        ```bash
+        python -m venv venv
+        source venv/bin/activate  # Windows: venv\Scripts\activate
+        ```
+      </Step>
+      <Step title="Install dependencies">
+        ```bash
+        pip install -r requirements.txt
+        npm install --prefix widget
+        ```
+      </Step>
+      <Step title="Prepare services">
+        1. Start PostgreSQL (`createdb knowrithm` if needed).  
+        2. Start Redis (`redis-server`).  
+        3. Ensure Tesseract OCR is available on your `$PATH`.
+      </Step>
+      <Step title="Apply migrations and seed data">
+        ```bash
+        flask db upgrade
+        flask seed base
+        curl http://localhost:8543/api/v1/auth/super-admin
+        ```
+      </Step>
+      <Step title="Run the stack">
+        ```bash
+        # Terminal 1
+        flask run --port 8543
+
+        # Terminal 2
+        celery -A clients.celery worker --loglevel=info --queues critical,default,low,slow,dead_letter
+
+        # Terminal 3 (optional scheduler)
+        celery -A clients.celery beat --loglevel=info
+        ```
+      </Step>
+    </Steps>
+  </Tab>
+</Tabs>
+
+## Verify everything is connected
+
+<CardGroup cols={3}>
+  <Card title="Check health" icon="lifebuoy">
+    `GET /api/health` should return `{"status":"healthy"}` when PostgreSQL, Redis, and Celery are reachable.
+  </Card>
+  <Card title="Log in" icon="key">
+    Hit `POST /api/v1/auth/login` with the super-admin credentials to receive access and refresh tokens.
+  </Card>
+  <Card title="Create your first agent" icon="user-plus">
+    Use `POST /api/v1/sdk/agent` with provider/model names to provision an agent and default LLM settings in one call.
+  </Card>
+</CardGroup>
+
+## Next steps
+
+1. Connect knowledge sources in <Link href="/platform/data-sources">Data sources &amp; ingestion</Link>.  
+2. Explore the runtime and task queues in <Link href="/platform/architecture">Platform architecture</Link>.  
+3. Automate provisioning with the <Link href="/api-reference/introduction">API reference</Link>.

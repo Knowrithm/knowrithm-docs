@@ -1,0 +1,216 @@
+﻿---
+title: "Knowledge sources"
+description: "Ingest documents, connect databases, crawl websites, and power semantic search."
+---
+
+## Document ingestion
+
+### Upload documents - `POST /api/v1/document/upload`
+
+- **Auth**: API key (`write`) or bearer token (`admin`).  
+- **Content types**: `multipart/form-data` for files, `application/json` for URL-only ingestion.  
+- **Response**: `200 OK` when every item succeeded, `207 Multi-Status` if a subset failed (inspect the `errors` array).
+
+**Multipart fields**
+
+| Field | Type | Description |
+| --- | --- | --- |
+| `files` / `file` | File | One or many documents. Supported: PDF, DOCX, TXT, CSV, HTML, Markdown. |
+| `agent_id` | UUID | Associates documents with a specific agent (required). |
+| `url` | URI | Fetch and ingest a single remote document. |
+| `urls` | String/JSON | Comma-separated list or JSON array of URLs to crawl. |
+
+**JSON payload (alternative)**
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `agent_id` | UUID | Yes | Target agent. |
+| `url` | URI | No | Single document to fetch. |
+| `urls` | `Array<URI>` | No | Multiple documents to fetch. |
+
+<Tabs>
+  <Tab title="Files">
+```bash
+curl -X POST https://{env}/api/v1/document/upload \
+  -H "X-API-Key: <api_key>" \
+  -H "X-API-Secret: <api_secret>" \
+  -F "agent_id=<agent_id>" \
+  -F "files[]=@knowledge-base.pdf" \
+  -F "files[]=@faq.docx"
+```
+  </Tab>
+  <Tab title="URLs">
+```bash
+curl -X POST https://{env}/api/v1/document/upload \
+  -H "X-API-Key: <api_key>" \
+  -H "X-API-Secret: <api_secret>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "agent_id": "<agent_id>",
+    "urls": [
+      "https://docs.example.com/pricing",
+      "https://docs.example.com/slas"
+    ]
+  }'
+```
+  </Tab>
+</Tabs>
+
+### List and inspect documents
+
+| Endpoint | Description | Key filters |
+| --- | --- | --- |
+| `GET /api/v1/document` | Paginated list of active documents. | `page`, `per_page`, `search`, `document_type`. |
+| `GET /api/v1/document/agent/{agent_id}` | Documents linked to a particular agent. | `page`, `per_page`, `document_type`. |
+| `GET /api/v1/document/deleted` | Soft-deleted documents for disaster recovery. | `page`, `per_page`, `deleted_by`. |
+
+### Lifecycle management
+
+- `DELETE /api/v1/document/{document_id}` - Soft delete a document and all associated chunks.  
+- `PATCH /api/v1/document/{document_id}/restore` - Restore a soft-deleted document.  
+- `DELETE /api/v1/document/bulk-delete` - Remove multiple documents in one call.
+
+**Bulk delete payload**
+
+```json
+{
+  "document_ids": [
+    "550e8400-e29b-41d4-a716-446655440001",
+    "550e8400-e29b-41d4-a716-446655440002"
+  ]
+}
+```
+
+<Callout icon="information-circle">
+  Document routes return enriched metadata: word counts, ingestion durations, detected languages, and chunk statistics. Use these fields to monitor processing quality.
+</Callout>
+
+## Chunk management
+
+| Endpoint | Description |
+| --- | --- |
+| `DELETE /api/v1/document/{document_id}/chunk` | Soft delete every chunk for the specified document. |
+| `PATCH /api/v1/document/{document_id}/chunk/restore-all` | Restore all chunks for a document. |
+| `DELETE /api/v1/document/chunk/{chunk_id}` | Soft delete an individual chunk. |
+| `PATCH /api/v1/document/chunk/{chunk_id}/restore` | Bring back a single chunk. |
+| `GET /api/v1/document/chunk/deleted` | Browse soft-deleted chunks. |
+
+When a document is deleted, the platform automatically deactivates its chunks. Use the dedicated chunk endpoints to surgically remove or reinstate specific content.
+
+## Semantic search
+
+### Document search - `POST /api/v1/search/document`
+
+- **Auth**: API key (`read`) or bearer token.  
+- **Purpose**: Perform semantic retrieval across the authenticated tenant's knowledge base.  
+- **Body fields**:
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `query` | `string` | Yes | Natural-language question. |
+| `agent_id` | `uuid` | Yes | Restrict to content indexed for the agent. |
+| `limit` | `integer` | No | Defaults to `10`; max `50`. |
+| `include_content` | `boolean` | No | When `true`, full chunk bodies are returned. Defaults to `true`. |
+
+**Response highlights**
+
+- `results[]` - Each entry contains `document_id`, `chunk_id`, `score`, `content`, `source_url`, and metadata.  
+- `execution_time` - Query duration in seconds.  
+- `aggregations` - Optional counts by document type.
+
+### Database search - `POST /api/v1/search/database`
+
+- **Auth**: API key or bearer.  
+- **Capabilities**: Execute free-form SQL or NL-to-SQL depending on connection capabilities.  
+- **Body fields**:
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `query` | `string` | Yes | Natural-language prompt or raw SQL. |
+| `agent_id` | `uuid` | No | Restrict to connections linked to the agent. |
+| `connection_id` | `uuid` | No | Run against a specific database connection. |
+| `mode` | `string` | No | `semantic` (default) or `sql`. |
+| `limit` | `integer` | No | Max number of rows to return. |
+
+Results include translated SQL (when applicable), execution stats, and record samples.
+
+## Database connectors
+
+### Create a connection - `POST /api/v1/database-connection`
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `name` | `string` | Yes | Friendly label. |
+| `database_type` | `string` | Yes | One of `postgresql`, `mysql`, `sqlite`, `mongodb`, `mssql`, `cockroachdb`. |
+| `url` | `string` | Yes | Connection string or DSN. |
+| `agent_id` | `uuid` | Yes | Agent that will leverage the connection. |
+| `connection_params` | `object` | No | Extra driver options (SSL flags, schemas, etc.). |
+
+Successful calls return `201 Created` with connection metadata, including last test timestamp and inferred tables.
+
+### Manage connections
+
+| Endpoint | Purpose |
+| --- | --- |
+| `GET /api/v1/database-connection` | Paginate connections (filters: `page`, `per_page`, `database_type`, `status`). |
+| `GET /api/v1/database-connection/agent/{agent_id}` | Scope connections to an agent. |
+| `GET /api/v1/database-connection/deleted` | Inspect soft-deleted connections. |
+| `PATCH /api/v1/database-connection/{connection_id}` | Partially update connection details. |
+| `PUT /api/v1/database-connection/{connection_id}` | Replace the full configuration. |
+| `DELETE /api/v1/database-connection/{connection_id}` | Soft delete a connection (tables removed as well). |
+| `PATCH /api/v1/database-connection/{connection_id}/restore` | Restore a previously deleted connection. |
+| `POST /api/v1/database-connection/{connection_id}/test` | Validate credentials and reachability. |
+| `POST /api/v1/database-connection/{connection_id}/analyze` | Trigger metadata analysis for a single connection. |
+| `POST /api/v1/database-connection/analyze` | Batch analysis across all active connections. |
+| `POST /api/v1/database-connection/export` | Export table rows into document chunks for hybrid search. |
+
+### SDK-friendly connectors
+
+- `POST /api/v1/sdk/database` - Create a connection synchronously using provider-friendly names.  
+- `PUT /api/v1/sdk/database/{connection_id}` - Update synchronously.  
+- `DELETE /api/v1/sdk/database/{connection_id}` - Delete synchronously.
+
+### Table catalog
+
+| Endpoint | Description |
+| --- | --- |
+| `GET /api/v1/database-connection/{connection_id}/table` | Paginated table metadata (columns, sample row counts). |
+| `GET /api/v1/database-connection/table/{table_id}` | Detailed table schema, including detected relationships. |
+| `DELETE /api/v1/database-connection/{connection_id}/table` | Soft delete every table for a connection. |
+| `DELETE /api/v1/database-connection/table/{table_id}` | Soft delete a single table. |
+| `PATCH /api/v1/database-connection/table/{table_id}/restore` | Restore a soft-deleted table. |
+| `GET /api/v1/database-connection/table/deleted` | Browse soft-deleted tables. |
+
+## Website sources
+
+### Register and crawl
+
+| Endpoint | Auth | Summary |
+| --- | --- | --- |
+| `GET /api/v1/website/source` | API key or bearer | List website sources for the tenant (`page`, `per_page`, `status`). |
+| `POST /api/v1/website/source` | API key or bearer | Register a new source (`url`, `agent_id`, optional crawl rules). Returns `201 Created`. |
+| `DELETE /api/v1/website/source/{source_id}` | API key or bearer | Soft delete a source (asynchronous cleanup). |
+| `POST /api/v1/website/source/{source_id}/crawl` | API key or bearer | Queue a crawl via background task. |
+| `POST /api/v1/sdk/website/source/{source_id}/crawl` | API key or bearer | Synchronous crawl with immediate payload (for lightweight refreshes). |
+| `DELETE /api/v1/sdk/website/source/{source_id}` | API key or bearer | Synchronously delete a source. |
+| `GET /api/v1/website/source/{source_id}/pages` | API key or bearer | Paginated list of discovered pages, including crawl statuses. |
+| `GET /api/v1/website/agent/{agent_id}/sources` | API key or bearer | Sources linked to a specific agent. |
+
+### Widget handshake - `POST /api/v1/website/handshake` (Public)
+
+Used by the embeddable widget to declare host context.
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `agent_id` | UUID | Yes | Agent handling the conversation. |
+| `url` | URI | Yes | Current page URL. |
+| `title` | String | No | Page title or identifier. |
+| `trigger_crawl` | Boolean | No | Set to `true` to request a background crawl immediately. |
+
+Response returns the resolved `website_source`, detected `website_page`, and an optional `crawl_task_id`.
+
+## Error handling & throttling
+
+- Document and database ingestion routes enforce stricter rate limits than read-only operations. Expect `429` after rapid bursts; use exponential backoff.  
+- Soft deletes preserve data for compliance. Restoration endpoints mirror delete routes and require the same authentication level.  
+- `status_url` fields follow the standard task polling contract described in the [API overview](introduction#asynchronous-workflows).

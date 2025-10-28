@@ -1,0 +1,217 @@
+---
+title: "TypeScript SDK"
+description: "Build web and Node.js integrations with the official Knowrithm TypeScript SDK."
+---
+
+The TypeScript SDK offers a fully typed interface to the Knowrithm platform for both Node.js and browser environments. Beyond thin REST wrappers it delivers automatic task polling, streaming helpers, and ergonomic file upload utilities. This guide expands on the repository README with extra commentary, examples, and production tips.
+
+## Installation & compatibility
+
+- Node.js **18+** (CommonJS and ES modules supported)
+- TypeScript **5.0+** (ships first-party type declarations)
+- Works with npm, Yarn, or pnpm
+
+```bash
+npm install @knowrithm/sdk
+# or
+yarn add @knowrithm/sdk
+# or
+pnpm add @knowrithm/sdk
+```
+
+For local development of the SDK itself:
+
+```bash
+git clone https://github.com/Knowrithm/knowrithm-typescript-sdk.git
+cd knowrithm-typescript-sdk
+npm install
+npm run build
+```
+
+## Client bootstrap
+
+```typescript
+import { KnowrithmClient } from '@knowrithm/sdk';
+
+const client = new KnowrithmClient({
+  apiKey: process.env.KNOWRITHM_API_KEY!,
+  apiSecret: process.env.KNOWRITHM_API_SECRET!,
+  baseUrl: 'https://api.knowrithm.org', // default
+});
+```
+
+- For browser usage, swap to JWT authentication (`headers: { Authorization: 'Bearer …' }`) and omit the API secret.
+- Supply `autoResolveTasks: false` to opt out of automatic task polling (you can await `client.tasks.waitForCompletion` manually).
+- HTTP requests rely on `fetch`; in Node.js the SDK ships with a ponyfill so no extra dependency is required.
+
+## Quick start scenario
+
+```typescript
+// Provision an agent with name-based model lookups
+const { agent, settings } = await client.agents.createSdkAgent({
+  name: 'Support Bot',
+  status: 'active',
+  settings: {
+    llm_provider: 'openai',
+    llm_model: 'gpt-4o-mini',
+    embedding_provider: 'openai',
+    embedding_model: 'text-embedding-3-large',
+  },
+});
+
+// Upload documents via multipart form-data
+await client.documents.uploadDocuments(agent.id, {
+  filePaths: ['./docs/faq.pdf', './docs/getting-started.docx'],
+});
+
+// Initiate a conversation and send a message
+const conversation = await client.conversations.createConversation(agent.id);
+const reply = await client.messages.sendMessage(
+  conversation.conversation.id,
+  'Introduce yourself!'
+);
+
+console.log(`${reply.role}: ${reply.content}`);
+```
+
+## Auth flows & headers
+
+| Scenario | Configuration |
+| --- | --- |
+| Server-to-server | Provide `apiKey` + `apiSecret` in the client constructor. |
+| Browser apps | Pass a JWT per call: `client.conversations.createConversation(agentId, { headers: { Authorization: 'Bearer …' } })`. |
+| Super admin impersonation | Combine JWT + `companyId` parameter where the API allows cross-tenant scope. |
+
+The SDK automatically injects the correct `X-API-Key` / `X-API-Secret` headers for you. Additional headers (for example `X-Request-ID`) can be supplied per call.
+
+## Task polling model
+
+Asynchronous API endpoints respond with `{ status: "accepted", status_url: "/v1/tasks/<id>/status" }`. By default the SDK:
+
+- Polls the status URL every 1.5 seconds.
+- Times out after 5 minutes.
+- Throws a `KnowrithmAPIError` when the task resolves with `state: failure`.
+
+To customise:
+
+```typescript
+const client = new KnowrithmClient({
+  apiKey,
+  apiSecret,
+  autoResolveTasks: true,
+  taskPollIntervalMs: 2000,
+  taskPollTimeoutMs: 240_000,
+});
+```
+
+Manual polling example:
+
+```typescript
+const ack = await client.agents.createAgent(payload, { autoResolve: false });
+const result = await client.tasks.waitForCompletion(ack.status_url, { timeoutMs: 120_000 });
+```
+
+## Service catalogue
+
+| Service | Highlights |
+| --- | --- |
+| `client.auth` | Login, logout, refresh tokens, registration helpers. |
+| `client.apiKeys` | Create/list/revoke API keys and validate credentials. |
+| `client.users` | Retrieve current user, update profile, admin user lookup. |
+| `client.addresses`, `client.companies` | Manage company metadata, addresses, cities/states/countries. |
+| `client.admin` | Access system metrics and user directories with rich filtering. |
+| `client.agents` | CRUD operations, cloning, stats, SDK-friendly endpoints. |
+| `client.analytics` | Dashboard views, usage trends, error/rate-limit analysis. |
+| `client.databases` | Register SQL sources, run semantic or SQL queries, export tables. |
+| `client.documents` | Upload files/URLs, manage chunks, bulk restore/delete. |
+| `client.conversations` & `client.messages` | Manage threads, send/stream messages, soft-delete recovery. |
+| `client.leads` | Widget registration, admin CRUD, consent tracking. |
+| `client.settings` & `client.providers` | LLM + embedding configuration, provider/model catalogues. |
+| `client.websites` | Register sources, trigger crawls, handshake for widgets. |
+
+Every method returns typed promises, enabling full IntelliSense in editors.
+
+## Streaming responses
+
+When you need real-time updates from `POST /conversation/<id>/chat`, enable streaming:
+
+```typescript
+import { ChatEventType } from '@knowrithm/sdk';
+
+const stream = await client.messages.sendMessage(conversationId, 'Summarise today', {
+  stream: true,
+});
+
+for await (const event of stream) {
+  if (event.type === ChatEventType.ChatResponse) {
+    console.log(event.data.content);
+  }
+}
+```
+
+The async iterator yields `{ type, data }` tuples. Call `stream.close()` once done to release resources in long-lived processes.
+
+## File uploads
+
+`client.documents.uploadDocuments` accepts:
+
+- `filePaths` — paths resolved relative to the current working directory.
+- `files` — already constructed `Blob`/`File` instances (browser-friendly).
+- `urls` — remote content to ingest without uploading files manually.
+
+Behind the scenes the SDK constructs multipart requests and handles retries on transient network failures. For browser uploads ensure you pass `files` instead of `filePaths`.
+
+## Error handling
+
+Errors appear as `KnowrithmAPIError` instances:
+
+```typescript
+import { KnowrithmAPIError } from '@knowrithm/sdk';
+
+try {
+  await client.messages.sendMessage(conversationId, 'ping');
+} catch (error) {
+  if (error instanceof KnowrithmAPIError) {
+    console.error(error.statusCode, error.message, error.responseBody);
+  }
+  throw error;
+}
+```
+
+- `statusCode` — HTTP status.
+- `message` — server-supplied description.
+- `responseBody` — parsed JSON payload (if available).
+- `task` — when present, the failed asynchronous task payload.
+
+## Configuration options
+
+`KnowrithmClient` accepts a rich configuration object:
+
+| Option | Default | Purpose |
+| --- | --- | --- |
+| `baseUrl` | `https://api.knowrithm.org` | Override for staging or self-hosted clusters. |
+| `timeoutMs` | `30000` | Request timeout in milliseconds. |
+| `retry` | `{ retries: 3, minTimeout: 500 }` | Retries via `p-retry` under the hood. |
+| `autoResolveTasks` | `true` | Toggle automatic polling. |
+| `taskPollIntervalMs` | `1500` | Delay between task polls. |
+| `taskPollTimeoutMs` | `300000` | Maximum task wait time. |
+| `fetch` | global `fetch` | Supply a custom fetch implementation if needed. |
+| `headers` | `{}` | Global header overrides (merged with per-request headers). |
+
+## Browser vs Node usage
+
+- Use ESM imports (`import { KnowrithmClient } from '@knowrithm/sdk'`) in modern bundlers (Vite, Next.js, webpack 5).
+- For CommonJS environments, require the default export: `const { KnowrithmClient } = require('@knowrithm/sdk');`
+- When deploying in the browser, ensure secret values never leave the backend. Prefer exchanging short-lived JWTs via your server.
+
+## Examples & recipes
+
+- **Next.js API route:** Initialize the client once per request, call SDK methods, and return JSON responses.
+- **CLI tooling:** Combine with `commander` or `yargs` to automate bulk document ingestion or analytics exports.
+- **Queues & workers:** Use BullMQ or Temporal to schedule agent provisioning, relying on automatic task polling for completion.
+
+## Support
+
+- Documentation: [https://docs.knowrithm.org](https://docs.knowrithm.org)
+- Issues: [https://github.com/Knowrithm/knowrithm-typescript-sdk/issues](https://github.com/Knowrithm/knowrithm-typescript-sdk/issues)
+- Email: support@knowrithm.org

@@ -1,0 +1,121 @@
+---
+title: "Development"
+description: "Operate Knowrithm services locally and contribute confidently."
+---
+
+<Info>
+  **Prerequisites**  
+  - Python 3.11+  
+  - PostgreSQL 13+  
+  - Redis 6+  
+  - Tesseract OCR  
+  - Celery (installed via `pip install -r requirements.txt`)
+</Info>
+
+## Run the core services
+
+<Steps>
+  <Step title="API server">
+    ```bash
+    flask run --port 8543
+    ```
+  </Step>
+  <Step title="Task workers">
+    ```bash
+    celery -A clients.celery worker \
+      --loglevel=info \
+      --queues critical,default,low,slow,dead_letter
+    ```
+  </Step>
+  <Step title="Scheduler (optional)">
+    ```bash
+    celery -A clients.celery beat --loglevel=info
+    ```
+    Enables recurring jobs such as document reprocessing, website crawls, and analytics refreshes.
+  </Step>
+</Steps>
+
+## Task queues at a glance
+
+<Columns cols={3}>
+  <Card title="critical" icon="exclamation-triangle">
+    Authentication, seed operations, and short-lived chat requests. Keep a dedicated worker consuming this queue.
+  </Card>
+  <Card title="default" icon="bolt">
+    Standard API writes (agent updates, lead creation, configuration changes).
+  </Card>
+  <Card title="slow" icon="clock">
+    Document ingestion, website crawling, database analysis, and large exports. Monitor for long-running tasks.
+  </Card>
+</Columns>
+
+<Columns cols={2}>
+  <Card title="low" icon="sparkles">
+    Non-blocking background jobs (metric aggregation, cache warmers).
+  </Card>
+  <Card title="dead_letter" icon="exclamation-triangle">
+    Failed tasks land here. Inspect and replay manually as needed.
+  </Card>
+</Columns>
+
+## Helpful CLI commands
+
+```bash
+# Run migrations
+flask db migrate -m "describe change"
+flask db upgrade
+
+# Load seed data (providers, models, system config)
+flask seed base
+
+# Generate a temporary super admin (if the seed failed)
+curl http://localhost:8543/api/v1/auth/super-admin
+```
+
+## Quality gates
+
+<AccordionGroup>
+  <Accordion icon="bug-ant" title="Run unit tests">
+    ```bash
+    pytest
+    ```
+    Use `pytest --cov=app --cov-report=term-missing` before opening a pull request.
+  </Accordion>
+  <Accordion icon="check-badge" title="Lint and format">
+    ```bash
+    ruff check app
+    ruff format app
+    ```
+  </Accordion>
+  <Accordion icon="wrench" title="Exercise the API">
+    ```bash
+    curl http://localhost:8543/api/health
+    curl http://localhost:8543/api/v1/auth/login \
+      -H "Content-Type: application/json" \
+      -d '{"email":"admin@knowrithm.local","password":"changeme"}'
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Debugging tips
+
+<Callout icon="light-bulb">
+  All write-heavy routes respond with `202 Accepted`. If you don't receive the payload you expect, fetch `GET /api/v1/tasks/<task_id>/status` to inspect progress and error messages.
+</Callout>
+
+<Columns cols={2}>
+  <Card title="Celery stuck?" icon="question-mark-circle">
+    Clear Redis queues with `redis-cli flushall` and restart workers. Confirm each queue binding matches the `TaskPriority` enum.
+  </Card>
+  <Card title="Uploads failing?" icon="cloud">
+    Ensure the `UPLOAD_FOLDER` path exists and your OS user can write to it. For Docker, map a persistent volume.
+  </Card>
+</Columns>
+
+## Production parity checklist
+
+- Use the same `.env` defaults as staging to catch mismatched providers or models.  
+- Configure HTTPS termination and WAF rules in front of `/api/widget.js` and `/api/v1/website/handshake`.  
+- Subscribe at least one worker to all priority queues; scale out additional dedicated pools for `slow` workloads.  
+- Monitor `GET /api/v1/analytic/usage` for anomalous spikes before upgrades.  
+- Keep your SDKs aligned with the backend release train (`pip install knowrithm-py`, `npm install @knowrithm/sdk`).

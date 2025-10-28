@@ -1,0 +1,104 @@
+﻿---
+title: "Administration & analytics"
+description: "Operate the platform: manage companies and users, govern locations, and monitor performance."
+---
+
+## User directory
+
+### List users - `GET /api/v1/admin/user`
+
+- **Auth**: API key (`admin` scope) or bearer token with admin role.  
+- **Response**: Paginated users with roles, status, MFA state, login metrics.
+
+**Filters**
+
+| Param | Description |
+| --- | --- |
+| `status`, `role` | Filter by account status or role. |
+| `email_verified`, `two_factor_enabled`, `never_logged_in`, `locked` | Boolean flags for compliance reporting. |
+| `include_deleted`, `only_deleted` | Surface soft-deleted users. |
+| `search` | Case-insensitive search across email, username, and name fields. |
+| `created_after`, `created_before`, `last_login_after`, `last_login_before` | ISO-8601 timestamps for temporal filtering. |
+| `high_login_attempts` | Minimum failed login attempts threshold (default 5). |
+| `timezone`, `language` | Localisation filters. |
+| `sort_by`, `sort_order` | Sort results (`asc`/`desc`). |
+
+### Super-admin variant - `GET /api/v1/super-admin/company/{company_id}/user`
+
+Identical filters plus a path parameter to scope results to a tenant when acting as a super admin.
+
+### Retrieve a user
+
+- `GET /api/v1/admin/user/{user_id}` - Full profile, permissions, and audit stamps.  
+- `GET /api/v1/user/{user_id}` - Mirror endpoint documented in the [Authentication guide](authentication); included here for completeness when operating in admin tooling.
+
+## Company management
+
+| Endpoint | Summary |
+| --- | --- |
+| `POST /api/v1/company` | Create a company (JSON or multipart). Required fields: `name`, `email`. Supports optional logo upload and executes asynchronously. |
+| `GET /api/v1/company` | Retrieve the company associated with the authenticated user. |
+| `GET /api/v1/super-admin/company` | Super-admin listing with pagination (`page`, `per_page`, `status`, `search`). |
+| `PUT /api/v1/company/{company_id}` | Replace company profile fields. |
+| `PATCH /api/v1/company/{company_id}` | Partial update (e.g., rename, change phone). |
+| `GET /api/v1/company/statistics` / `GET /api/v1/company/{company_id}/statistics` | Lead funnel, active agents, and usage breakdown for the current or specified company. |
+
+<Callout icon="information-circle">
+  Company creation, update, and deletion routes return `{"status":"accepted","status_url":"/v1/tasks/123/status"}`. Poll the task to confirm completion before provisioning additional resources tied to the company.
+</Callout>
+
+## Address & location registry
+
+### Addresses
+
+- `GET /api/v1/address` - Retrieve the company's primary address.  
+- `POST /api/v1/address` - Asynchronous address creation (`street_address`, `city_id`, `state_id`, `country_id`, `postal_code`, `lat`, `lan`, `is_primary`).
+
+### Countries, states, and cities
+
+| Tag | Endpoints | Notes |
+| --- | --- | --- |
+| Countries | `GET /api/v1/country`, `POST /api/v1/country`, `GET /api/v1/country/{country_id}`, `PATCH /api/v1/country/{country_id}` | Country creation/update requires admin or super-admin access. |
+| States | `POST /api/v1/state`, `GET /api/v1/state/{state_id}`, `PATCH /api/v1/state/{state_id}`, `GET /api/v1/state/country/{country_id}` | Associate states with countries; conflict-safe (returns `409` when duplicates exist). |
+| Cities | `POST /api/v1/city`, `GET /api/v1/city/{city_id}`, `PATCH /api/v1/city/{city_id}`, `GET /api/v1/city/state/{state_id}` | City creation enforces unique `(name, state_id)` pairs. |
+
+Use these registries to normalise addresses across tenants and power dropdowns in admin tooling.
+
+## Analytics & exports
+
+| Endpoint | Purpose |
+| --- | --- |
+| `GET /api/v1/analytic/dashboard` | Company-wide dashboard: document counts, active agents, lead conversion, database connectors. |
+| `GET /api/v1/analytic/agent/{agent_id}` | Deep metrics per agent with optional `start_date` / `end_date`. |
+| `GET /api/v1/analytic/agent/{agent_id}/performance-comparison` | Benchmark an agent against company averages. |
+| `GET /api/v1/analytic/conversation/{conversation_id}` | Conversation drill-down (latency, satisfaction scores, escalations). |
+| `GET /api/v1/analytic/leads` | Lead funnel analytics with consent breakdown. |
+| `GET /api/v1/analytic/usage` | Aggregate token, storage, and API consumption metrics. |
+| `POST /api/v1/analytic/export` | Export analytics (`type`: `conversations`, `agents`, `leads`, `usage`; `format`: `json` or `csv`; optional `start_date`, `end_date`). Returns a downloadable payload or task handle depending on size. |
+
+## API usage insights
+
+| Endpoint | Description |
+| --- | --- |
+| `GET /api/v1/overview` | High-level API usage overview (requests, success rate, unique keys). |
+| `GET /api/v1/usage-trends` | Time-series usage (daily/hourly). |
+| `GET /api/v1/top-endpoints` | Most frequently called endpoints. |
+| `GET /api/v1/api-key-performance` | Success rate, latency, and volume per API key. Supports `limit` and `days` query params. |
+| `GET /api/v1/detailed-usage/{api_key_id}` | Request-level log stream for a specific key. |
+| `GET /api/v1/error-analysis` | Error distribution by status code and endpoint. |
+| `GET /api/v1/rate-limit-analysis` | Rate-limit breaches and near-breach warnings. |
+
+All analytics endpoints require either an admin JWT or API key with `read` + `admin` scopes.
+
+## System health
+
+- `GET /api/v1/admin/system-metric` - Last 24 hours of infrastructure metrics (queue health, worker availability, latency percentiles) for the current company. Super admins may include `company_id`.  
+- `GET /api/v1/super-admin/company/{company_id}/system-metric` - Cross-tenant variant.  
+- `POST /api/v1/system-metric` - Trigger a fresh metrics collection cycle. Useful when running health diagnostics after infrastructure changes.
+
+## Governance checklist
+
+1. **Ratchet permissions**: Ensure API keys involved in analytics calls include the `admin` scope; others will receive `403`.  
+2. **Monitor rate limits**: `GET /api/v1/rate-limit-analysis` exposes keys approaching ceilings; rotate or throttle clients proactively.  
+3. **Keep registries current**: Automated provisioning flows should upsert countries, states, and cities before referencing them in addresses.  
+4. **Automate exports**: Schedule `POST /api/v1/analytic/export` with `format: csv` for weekly leadership reports; large responses return a task handle with download links on completion.

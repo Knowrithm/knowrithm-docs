@@ -1,0 +1,108 @@
+﻿---
+title: "LLM settings & providers"
+description: "Curate model providers, manage LLM settings, and validate credentials before routing traffic."
+---
+
+## Provision LLM settings
+
+Both creation endpoints run asynchronously and return the standard task envelope. Poll the `status_url` to obtain the finished settings record and associated agent updates.
+
+### Create with provider/model IDs - `POST /api/v1/settings`
+
+- **Auth**: API key (`write`) or bearer token (`admin`).  
+- **Body fields**:
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `llm_provider_id` | UUID | Yes | ID from the Providers catalog. |
+| `llm_model_id` | UUID | Yes | Chosen LLM model ID. |
+| `embedding_provider_id` | UUID | Yes | Embedding provider ID. |
+| `embedding_model_id` | UUID | Yes | Embedding model ID. |
+| `agent_id` | UUID | No | Scope settings to a single agent; omit for company defaults. |
+| `llm_temperature` | Number | No | Defaults to `0.5`. Range `0.0-1.0`. |
+| `llm_max_tokens` | Integer | No | Hard cap for completions. |
+| `fallback_models` | `Array<UUID>` | No | Ordered list of model IDs to try when the primary fails. |
+| `metadata` | Object | No | Provider-specific overrides (e.g., Azure deployment name). |
+
+### Create with provider/model names - `POST /api/v1/sdk/settings`
+
+Accepts `llm_provider`, `llm_model`, `embedding_provider`, and `embedding_model` name strings. Optional `provider_options` map allows secrets such as API keys or regions.
+
+<Tabs>
+  <Tab title="cURL">
+```bash
+curl -X POST https://{env}/api/v1/sdk/settings \
+  -H "Authorization: Bearer <admin_token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "llm_provider": "openai",
+    "llm_model": "gpt-4o",
+    "embedding_provider": "openai",
+    "embedding_model": "text-embedding-3-large",
+    "llm_temperature": 0.4,
+    "is_default": true
+  }'
+```
+  </Tab>
+  <Tab title="Response">
+```json
+{
+  "status": "accepted",
+  "status_url": "/v1/tasks/7d6f1c20-9c32-4f6b-b967-f0b7b0ff5b8d/status"
+}
+```
+  </Tab>
+</Tabs>
+
+### Retrieve settings
+
+| Endpoint | Description |
+| --- | --- |
+| `GET /api/v1/settings/{settings_id}` | Full settings record including provider details, throttle configuration, and audit metadata. |
+| `GET /api/v1/settings/company/{company_id}` | Super-admin listing of all settings for a company. |
+| `GET /api/v1/settings/agent/{agent_id}` | Settings currently linked to an agent. |
+
+### Maintain settings
+
+- `PUT /api/v1/settings/{settings_id}` - Asynchronous full update (same schema as creation).  
+- `DELETE /api/v1/settings/{settings_id}` - Soft delete settings; disallowed for default configurations.  
+- `POST /api/v1/settings/test/{settings_id}` - Execute a live credential test against the provider; returns latency, authentication status, and diagnostic logs.
+
+<Callout icon="shield-check">
+  Secrets supplied inside settings payloads are encrypted at rest and redacted in subsequent responses. Use the test endpoint whenever rotating credentials to validate access before assigning settings to production agents.
+</Callout>
+
+## Providers & models
+
+### Provider catalog
+
+| Endpoint | Summary |
+| --- | --- |
+| `GET /api/v1/providers` | Paginated provider list. Filters: `type`, `status`, `include_models`. |
+| `GET /api/v1/providers/{provider_id}` | Detailed provider metadata including supported regions, auth requirements, and models. |
+| `POST /api/v1/providers` | Create a custom provider definition. |
+| `PUT /api/v1/providers/{provider_id}` | Update provider metadata (display name, logo URL, defaults). |
+| `DELETE /api/v1/providers/{provider_id}` | Soft delete a provider; associated models are disabled. |
+| `POST /api/v1/providers/bulk-import` | Upload a JSON definition to seed multiple providers/models asynchronously. |
+
+### Model management
+
+| Endpoint | Summary |
+| --- | --- |
+| `GET /api/v1/providers/{provider_id}/models` | Models for a provider (filters: `type`, `deployment`, `status`). |
+| `GET /api/v1/providers/{provider_id}/models/{model_id}` | Full model manifest. |
+| `POST /api/v1/providers/{provider_id}/models` | Create a model entry. Required fields: `name`, `provider_model_id`, `type`, `context_window`. |
+| `PUT /api/v1/providers/{provider_id}/models/{model_id}` | Update pricing, capabilities (streaming, function calling), or metadata. |
+| `DELETE /api/v1/providers/{provider_id}/models/{model_id}` | Soft delete a model. |
+
+### Seed and explore defaults
+
+- `GET /api/v1/settings/providers` - Curated list of Knowrithm-maintained providers and models. Use to bootstrap UI drop-downs.  
+- `POST /api/v1/settings/providers/seed` - Populate the defaults table; idempotent and safe to call during environment setup.
+
+## Best practices
+
+- Prefer the SDK endpoints (`/api/v1/sdk/...`) when building command-line tools or when you do not want to store provider IDs.  
+- After creating or updating settings, poll the returned `status_url` until `state: success`; only then is it safe to assign the `llm_settings_id` to agents.  
+- When deleting settings, verify no agents still reference them; otherwise `409 Conflict` is returned and the deletion is aborted.  
+- Keep provider and model records in sync with upstream vendors using the bulk import endpoint; large payloads return 202 with per-model error reporting.
