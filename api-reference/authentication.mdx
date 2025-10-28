@@ -1,0 +1,170 @@
+﻿---
+title: "Authentication & API keys"
+description: "Manage JWT tokens, invite users, and provision programmatic access."
+---
+
+## JWT lifecycle
+
+<Columns cols={3}>
+  <Card title="Login" icon="arrow-right-circle">
+    `POST /api/v1/auth/login` accepts credentials and returns a task handle that yields access + refresh tokens on completion.
+  </Card>
+  <Card title="Refresh" icon="arrow-path">
+    `POST /api/v1/auth/refresh` exchanges a refresh token for a new access token pair. Use before tokens expire.
+  </Card>
+  <Card title="Logout" icon="arrow-left-circle">
+    `POST /api/v1/auth/logout` revokes the active session and refresh token.
+  </Card>
+</Columns>
+
+### `POST /api/v1/auth/login`
+
+- **Auth**: Public  
+- **Purpose**: Queue a login attempt; tokens are delivered once background validation finishes.  
+- **Response**: `202 Accepted` with `status_url` pointing to the login task.
+
+**Body parameters**
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `email` | `string(email)` | Yes | User's login email. |
+| `password` | `string` | Yes | Password (minimum 8 characters). |
+
+<Callout icon="information-circle">
+  Poll the provided <code>status_url</code> to retrieve tokens. Successful completion returns access token, refresh token, expiration timestamps, and the authenticated user + company context.
+</Callout>
+
+### `POST /api/v1/auth/refresh`
+
+- **Auth**: Bearer token (refresh token)  
+- **Purpose**: Exchange a valid refresh token for a new access token pair.  
+- **Response**: `200 OK` with fresh `access_token`, `refresh_token`, and expiry metadata.
+
+**Body parameters**
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `refresh_token` | `string` | Yes | Refresh token issued during login. |
+
+### `POST /api/v1/auth/logout`
+
+- **Auth**: Bearer token  
+- **Purpose**: Invalidate the current access token and associated refresh token.  
+- **Response**: `200 OK` with a confirmation message.
+
+### `POST /api/v1/auth/register`
+
+- **Auth**: Public  
+- **Purpose**: Seed a brand-new tenant and administrator.  
+- **Response**: `202 Accepted` with task metadata.  
+- **Body**: `first_name`, `last_name`, `email`, `password`, `company_name`, `accept_terms` (boolean).
+
+## User management
+
+| Endpoint | Auth | Notes |
+| --- | --- | --- |
+| `POST /api/v1/auth/user` | Bearer token or API key (`write`) | Asynchronous invite flow. Requires admin privileges. |
+| `GET /api/v1/auth/user/me` | Bearer token or API key | Returns details for the current principal, including roles and feature flags. |
+| `GET /api/v1/user/{user_id}` | Bearer token or API key | Admin-only lookup for any user in scope. |
+
+### Invite a user - `POST /api/v1/auth/user`
+
+**Body parameters**
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `email` | `string(email)` | Yes | Invitation email address. |
+| `username` | `string` | Yes | Unique username (min 3, max 50 characters). |
+| `password` | `string` | Yes | Temporary password (min 8 characters). |
+| `first_name` | `string` | Yes | User's first name. |
+| `last_name` | `string` | Yes | User's last name. |
+
+<Tabs>
+  <Tab title="cURL">
+```bash
+curl -X POST https://{env}/api/v1/auth/user \
+  -H "Authorization: Bearer <admin_token>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "newuser@example.com",
+    "username": "jane_smith",
+    "password": "SecurePass123!",
+    "first_name": "Jane",
+    "last_name": "Smith"
+  }'
+```
+  </Tab>
+  <Tab title="Response">
+```json
+{
+  "status": "accepted",
+  "status_url": "/v1/tasks/7d6f1c20-9c32-4f6b-b967-f0b7b0ff5b8d/status",
+  "message": "Request accepted and queued for processing."
+}
+```
+  </Tab>
+</Tabs>
+
+## Profile
+
+- `GET /api/v1/user/profile` - Return the authenticated user's profile, preferences, and localization choices.  
+- `PUT /api/v1/user/profile` - Update profile metadata.
+
+**Update payload**
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `first_name` | `string` | No | New first name (1-100 characters). |
+| `last_name` | `string` | No | New last name (1-100 characters). |
+| `timezone` | `string` | No | Olson timezone identifier (default `UTC`). |
+| `language` | `string` | No | Language code (default `en`). |
+| `preferences` | `object` | No | Arbitrary preference blob (notifications, theme, etc.). |
+
+## API key management
+
+| Endpoint | Auth | Description |
+| --- | --- | --- |
+| `GET /api/v1/auth/api-keys` | Bearer token | List active API keys for the current user. |
+| `POST /api/v1/auth/api-keys` | Bearer token | Create a new API key + secret. |
+| `DELETE /api/v1/auth/api-keys/{api_key_id}` | Bearer token | Revoke an existing key. |
+| `GET /api/v1/auth/validate` | Bearer token or API key | Validate supplied credentials and return company context. |
+
+### Create an API key - `POST /api/v1/auth/api-keys`
+
+**Body parameters**
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `name` | `string` | No | Friendly label (max 100 characters). |
+| `scopes` | `array<string>` | No | Defaults to `["read","write"]`. Allowed: `read`, `write`, `update`, `delete`, `admin`, `full_access`. |
+| `permissions` | `object` | No | Fine-grained feature toggles (e.g., `{ "can_manage_users": true }`). |
+| `expires_in_days` | `integer` | No | Expiration window (1-365 days). Omit for non-expiring keys. |
+
+<Callout icon="key">
+  The full `api_key` and `api_secret` are only returned once, so store them securely. You will receive the key prefix (`ak_xxxxxxxx`) in subsequent listings.
+</Callout>
+
+### Validate credentials - `GET /api/v1/auth/validate`
+
+- Accepts either bearer token or API key headers.  
+- Returns user, company, scopes, and rate-limit ceilings.  
+- Useful for runtime health checks or CLI tooling before executing privileged operations.
+
+## Error handling
+
+All authentication endpoints share the standard error envelope:
+
+```json
+{
+  "error": "Validation failed",
+  "code": "AUTH_001",
+  "details": {
+    "email": ["Email already registered"]
+  }
+}
+```
+
+- `401` - Missing or invalid credentials.  
+- `403` - Authenticated but lacking the required role or scope.  
+- `429` - Guardrail triggered (login throttling, invite rate limit).  
+- `500` - Unexpected server error; capture `request_id` from headers when contacting support.

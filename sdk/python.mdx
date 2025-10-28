@@ -1,0 +1,179 @@
+---
+title: "Python SDK"
+description: "Install, configure, and extend the official Knowrithm Python SDK."
+---
+
+Knowrithm maintains a first-class Python SDK that mirrors every public API route, adds typed helpers, and smooths over the asynchronous task model used throughout the platform. This guide expands on the project README with additional context, usage patterns, and best practices for production deployments.
+
+## Installation & project setup
+
+### Supported environments
+
+- Python **3.8+**
+- Works on macOS, Linux, and Windows (WSL recommended)
+- Compatible with `pip`, `poetry`, and `pipenv`
+
+### Install from PyPI
+
+```bash
+pip install knowrithm-py
+```
+
+The package exposes everything under the `knowrithm_py` namespace. For local development, clone the repository and install it in editable mode:
+
+```bash
+git clone https://github.com/Knowrithm/knowrithm-py.git
+cd knowrithm-py
+pip install -e .
+```
+
+> **Tip.** Add `knowrithm_py` to your `pyproject.toml` or `requirements.txt` to pin SDK versions and guarantee reproducible builds.
+
+## Client initialization
+
+```python
+from knowrithm_py.knowrithm.client import KnowrithmClient
+
+client = KnowrithmClient(
+    api_key="your-api-key",
+    api_secret="your-api-secret",
+    # Optional: override defaults via KnowrithmConfig
+)
+```
+
+- **API key + secret** is the simplest authentication path for server-to-server automation.
+- For JWT-protected flows, supply bearer headers per request (`headers={"Authorization": "Bearer ... "}`).
+- Override the API base URL (for example staging vs production) via `KnowrithmConfig(base_url="https://staging.knowrithm.org/api")`.
+
+## Quick start workflow
+
+```python
+from pathlib import Path
+
+agent = client.agents.create_agent(
+    {"name": "Support Bot", "status": "active"},
+    settings={
+        "llm_provider": "openai",
+        "llm_model": "gpt-4o",
+        "embedding_provider": "openai",
+        "embedding_model": "text-embedding-3-large",
+        "llm_temperature": 0.6,
+    },
+)
+
+# Upload supporting files (async tasks resolve automatically)
+client.documents.upload_documents(
+    agent_id=agent["agent"]["id"],
+    file_paths=[Path("knowledge-base.pdf")],
+)
+
+conversation = client.conversations.create_conversation(agent_id=agent["agent"]["id"])
+reply = client.messages.send_message(
+    conversation_id=conversation["conversation"]["id"],
+    message="Hello there!",
+)
+print(reply)
+```
+
+The SDK waits for asynchronous tasks (agent provisioning, document ingestion, chat generation) and only returns once the task reaches a terminal state. Disable this behaviour via `KnowrithmConfig(auto_resolve_async_tasks=False)` if you prefer manual polling.
+
+## Handling asynchronous tasks
+
+Many Knowrithm routes enqueue work and respond with a `status_url`. The SDK wraps this by:
+
+- Polling the `status_url` at configurable intervals (`task_poll_interval`, default 1.5 seconds).
+- Timing out after `task_poll_timeout` seconds (default 5 minutes).
+- Raising `KnowrithmTaskTimeoutError` if the task never completes.
+
+Manual resolution example:
+
+```python
+ack = client.agents.create_agent(..., auto_resolve=False)
+result = client.tasks.wait_for_completion(ack["status_url"], timeout=120)
+```
+
+## Services overview
+
+| Service attribute | Primary responsibilities |
+| --- | --- |
+| `client.auth` | Login, refresh, logout, user registration helpers. |
+| `client.api_keys` | Create, list, and revoke API keys. |
+| `client.agents` | Create/update/clone agents, fetch stats, manage SDK endpoints. |
+| `client.documents` | Upload files or URLs, manage document chunks, bulk delete/restore. |
+| `client.databases` | Register SQL connections, run semantic search, export datasets. |
+| `client.conversations` & `client.messages` | Manage conversations, send messages, stream events. |
+| `client.analytics` | Dashboard metrics, usage trends, top endpoints. |
+| `client.settings` & `client.providers` | LLM and embedding configuration, provider catalog management. |
+| `client.leads` | Register widget leads, manage CRM-style records. |
+| `client.websites` | Register domains, trigger crawls, manage widget handshakes. |
+
+Each service method maps one-to-one with an API route and accepts both typed arguments and transparent `headers` overrides for advanced scenarios.
+
+## File uploads & multipart handling
+
+`client.documents.upload_documents` accepts file system paths or remote URLs. The SDK automatically:
+
+- Detects MIME types and constructs multipart boundaries.
+- Streams large files to avoid loading them entirely into memory.
+- Retries transient failures using exponential backoff (configurable via `KnowrithmConfig.retry_strategy`).
+
+```python
+client.documents.upload_documents(
+    agent_id=agent_id,
+    file_paths=[Path("docs/reference.pdf")],
+    urls=["https://docs.example.com/sla"],
+    metadata={"confidence_threshold": 0.8},
+)
+```
+
+## Streaming conversations
+
+Set `stream=True` to receive live Server-Sent Events:
+
+```python
+stream = client.messages.send_message(
+    conversation_id,
+    message="Summarise today's insights",
+    stream=True,
+)
+for event in stream:
+    print(event.type, event.data)
+```
+
+Events arrive as typed `ChatEvent` objects (`chat_status`, `chat_response`, `heartbeat`). Close the stream explicitly when finished.
+
+## Error handling
+
+All service calls raise subclasses of `KnowrithmAPIError`. Useful attributes:
+
+- `status_code` — HTTP status returned by the API.
+- `message` — High-level description, often derived from the `error` field in the response.
+- `response_data` — Deserialized JSON body for additional diagnostics.
+
+```python
+from knowrithm_py.dataclass.error import KnowrithmAPIError
+
+try:
+    client.messages.send_message(conversation_id, "ping")
+except KnowrithmAPIError as exc:
+    print(exc.status_code, exc.message)
+    print(exc.response_data)
+```
+
+## Advanced configuration
+
+`KnowrithmConfig` supports deep customisation:
+
+- `base_url` — point to staging or on-prem deployments.
+- `timeout` — tuple of connect/read timeouts.
+- `proxy` — HTTP/S proxy dict.
+- `retry_strategy` — configure retries (total attempts, status codes, backoff).
+- `user_agent` — supply a custom identifier for analytics.
+
+Instantiate once and reuse the client across your application. The SDK is thread-safe for read-heavy workloads; create separate clients per worker when mutating shared configuration.
+
+## Next steps
+
+- Explore the full API reference for payload shapes.
+- Pair the SDK with background tasks (Celery, Dramatiq, RQ) for long-running imports.
+- Use the TypeScript SDK in tandem for browser integrations or typed Node.js services.

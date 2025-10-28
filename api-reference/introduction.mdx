@@ -1,0 +1,100 @@
+﻿---
+title: "API overview"
+description: "Understand authentication, task semantics, and common patterns before calling Knowrithm APIs."
+---
+
+## Base URL
+
+```text
+https://{your-environment}/api/v1
+```
+
+All paths in this documentation assume the `/api/v1` prefix.
+
+## Authentication at a glance
+
+<Columns cols={3}>
+  <Card title="Bearer tokens" icon="credit-card">
+    Interactive dashboards and delegated access. Send <code>Authorization: Bearer {"<token>"}</code> on every request. Roles (`user`, `admin`, `super_admin`, `lead`) still enforce fine-grained permissions.
+  </Card>
+  <Card title="API keys" icon="key">
+    Server-to-server workloads. Supply both <code>X-API-Key</code> and <code>X-API-Secret</code>. Keys can be scoped (`read`, `write`, `admin`) and are rate limited per tenant.
+  </Card>
+  <Card title="Public endpoints" icon="shield-check">
+    A small set of routes (for example `GET /api/v1/agent/{agent_id}` and `POST /api/v1/website/handshake`) are explicitly marked **Public**. Everything else requires one of the headers above.
+  </Card>
+</Columns>
+
+<Callout icon="exclamation-triangle">
+  Unless the reference labels an endpoint as <strong>Public</strong>, be ready to authenticate with either a bearer token or paired API key headers. Administrative routes may still enforce super-admin roles even with valid credentials.
+</Callout>
+
+### Security schemes
+
+| Scheme | Header | Typical use |
+| --- | --- | --- |
+| `bearerAuth` | `Authorization: Bearer <token>` | Dashboard users, delegated access, and interactive flows. |
+| `ApiKeyAuth` | `X-API-Key: <key>` | Programmatic integrations in tandem with `X-API-Secret`. |
+| `ApiSecretAuth` | `X-API-Secret: <secret>` | Second header required when authenticating via API keys. |
+
+See the dedicated [`Authentication & API keys`](authentication) guide for end-to-end flows.
+
+## Asynchronous workflows
+
+Many write-heavy endpoints enqueue background jobs and immediately return:
+
+```json
+{
+  "status": "accepted",
+  "task_id": "7d6f1c20-9c32-4f6b-b967-f0b7b0ff5b8d",
+  "status_url": "/v1/tasks/7d6f1c20-9c32-4f6b-b967-f0b7b0ff5b8d/status"
+}
+```
+
+- Poll `GET {status_url}` until the task reports `state: success`.  
+- Failed tasks surface `state: failure` and include a descriptive `error`.  
+- Document ingestion, analytics exports, website crawls, and some agent updates dispatch to the `slow` queue; scale workers to avoid backlogs.
+
+## Streaming conversations
+
+- POST messages with `POST /api/v1/conversation/{conversation_id}/chat`.  
+- Subscribe to `GET /api/v1/conversation/{conversation_id}/messages/stream` (Server-Sent Events) for live updates.  
+- Widget integrations should call `POST /api/v1/website/handshake` first so the platform can validate origin and refresh page context.
+
+## Error envelope
+
+Knowrithm returns machine-readable errors:
+
+```json
+{
+  "error": "Validation failed",
+  "code": "DOC_001",
+  "details": {
+    "files": ["File too large"]
+  }
+}
+```
+
+- Always inspect the `code` field-it maps directly to server-side guardrails.  
+- Many destructive routes are soft-delete first; call the matching `.../restore` endpoint if an action was accidental.  
+- Validation errors echo field-level detail under `details`.
+
+## Rate limiting
+
+- Document uploads: up to **20 per minute**.  
+- Database search: up to **30 requests per minute**.  
+- Document search: up to **60 requests per minute**.  
+- Widget handshakes: tuned per tenant, typically **5 per second**.
+
+Exceeding limits yields `429 Too Many Requests`. Inspect the `Retry-After` header for cooldown hints.
+
+## SDKs
+
+<CardGroup cols={2}>
+  <Card title="Python SDK" icon="code-bracket" href="https://pypi.org/project/knowrithm-py/">
+    Typed client that resolves asynchronous tasks automatically and exposes helpers for every documented route.
+  </Card>
+  <Card title="TypeScript SDK" icon="command-line" href="https://www.npmjs.com/package/@knowrithm/sdk">
+    Works in Node.js and browsers, provides automatic retries, SSE helpers, and multipart upload support.
+  </Card>
+</CardGroup>

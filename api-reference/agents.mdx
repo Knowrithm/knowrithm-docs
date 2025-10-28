@@ -1,0 +1,147 @@
+﻿---
+title: "Agents"
+description: "Create, manage, and observe Knowrithm agents."
+---
+
+## Agent lifecycle
+
+<Columns cols={2}>
+  <Card title="Admin workflow" icon="briefcase">
+    `POST /api/v1/agent` accepts provider and model <strong>IDs</strong>. Use when your application already stores the identifiers returned by the Providers and Models endpoints.
+  </Card>
+  <Card title="SDK workflow" icon="sparkles">
+    `POST /api/v1/sdk/agent` accepts human-readable provider/model <strong>names</strong>. It is ideal for CLI tools, SDKs, or quick-start scripts.
+  </Card>
+</Columns>
+
+Both creation routes queue a background job. You will receive a `202 Accepted` response with `status` and `status_url`. Poll the task until it reports `state: success` to obtain the newly created agent ID, LLM settings ID, and provisioning summary.
+
+### Create with provider/model IDs - `POST /api/v1/agent`
+
+- **Auth**: API key (`write`) or bearer token (`admin`).  
+- **Purpose**: Provision an agent and its dedicated LLM settings in one asynchronous call using provider/model IDs.  
+- **Body highlights**:
+
+| Field | Type | Required | Description |
+| --- | --- | --- | --- |
+| `name` | `string` | Yes | Agent display name. |
+| `status` | `string` | No | Defaults to `inactive`. Allowed: `active`, `inactive`, `training`, `maintenance`. |
+| `description` | `string` | No | Markdown-friendly description shown in admin UI. |
+| `llm_settings` | `object` | Yes | Embedding + LLM configuration referencing provider/model IDs, temperature, max tokens, and optional fallbacks. |
+| `capabilities` | `array<string>` | No | Feature toggles (for example `["conversations","analytics"]`). |
+| `company_id` | `uuid` | No | Target company (super admin only). |
+
+### Create with provider/model names - `POST /api/v1/sdk/agent`
+
+This variant accepts provider and model **names** instead of IDs.
+
+<Tabs>
+  <Tab title="cURL">
+```bash
+curl -X POST https://{env}/api/v1/sdk/agent \
+  -H "X-API-Key: <api_key>" \
+  -H "X-API-Secret: <api_secret>" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Support Bot",
+    "status": "active",
+    "settings": {
+      "llm_provider": "openai",
+      "llm_model": "gpt-4o",
+      "embedding_provider": "openai",
+      "embedding_model": "text-embedding-3-large",
+      "llm_temperature": 0.6
+    }
+  }'
+```
+  </Tab>
+  <Tab title="Python SDK">
+```python
+from knowrithm_py import KnowrithmClient
+
+client = KnowrithmClient(api_key=API_KEY, api_secret=API_SECRET)
+task = client.agents.create_agent(
+    {"name": "Support Bot", "status": "active"},
+    settings={
+        "llm_provider": "openai",
+        "llm_model": "gpt-4o",
+        "embedding_provider": "openai",
+        "embedding_model": "text-embedding-3-large",
+        "llm_temperature": 0.6,
+    },
+)
+task.wait_for_completion()  # polls status_url until the agent is ready
+print(task.result["agent"]["id"])
+```
+  </Tab>
+</Tabs>
+
+### Clone an agent - `POST /api/v1/agent/{agent_id}/clone`
+
+- **Auth**: API key (`write`) or bearer token (`admin`).  
+- **Purpose**: Create an inactive duplicate of an existing agent, including settings and associated knowledge sources.  
+- **Response**: `202 Accepted` with `clone_agent_id` once complete.
+
+## Discover agents
+
+### List agents - `GET /api/v1/agent`
+
+- **Auth**: API key or bearer token.  
+- **Query parameters**:
+
+| Param | Type | Description |
+| --- | --- | --- |
+| `status` | `string` | Filter by lifecycle state (`active`, `inactive`, `training`, `maintenance`). |
+| `search` | `string` | Case-insensitive match against name or description. |
+| `page` | `integer` | Page number (default `1`). |
+| `per_page` | `integer` | Results per page (default `25`, max `100`). |
+| `company_id` | `uuid` | Super-admin only: scope to a specific tenant. |
+
+### Search by name - `GET /api/v1/agent/by-name/{name}`
+
+Performs a case-insensitive match within the authenticated scope. Super admins can append `company_id` as a query parameter to bypass tenant isolation.
+
+### Public metadata - `GET /api/v1/agent/{agent_id}`
+
+This route is **Public** and returns safe-to-share metadata (name, description, status, default settings). It is typically used by the web widget during initialisation.
+
+## Update and archive
+
+| Operation | Endpoint | Mode | Notes |
+| --- | --- | --- | --- |
+| Update (async) | `PUT /api/v1/agent/{agent_id}` | Asynchronous | Accepts fields such as `name`, `status`, `llm_settings_id`, `capabilities`, `languages`. Returns task handle. |
+| Update (sync) | `PUT /api/v1/sdk/agent/{agent_id}` | Synchronous | Same shape as creation payload using provider/model names. Returns updated agent immediately. |
+| Soft delete (async) | `DELETE /api/v1/agent/{agent_id}` | Asynchronous | Queues deletion; agent must not have active conversations. |
+| Soft delete (sync) | `DELETE /api/v1/sdk/agent/{agent_id}` | Synchronous | Returns confirmation immediately. |
+| Restore | `PATCH /api/v1/agent/{agent_id}/restore` | Asynchronous | Re-activates a previously deleted agent. |
+
+<Callout icon="information-circle">
+  Most asynchronous operations share the standard response: `{"status":"accepted","status_url":"/v1/tasks/3f4033c0/status"}`. Poll the task to learn when the change takes effect.
+</Callout>
+
+## Testing and embedding
+
+- `POST /api/v1/agent/{agent_id}/test` - Queue a sample query (`{"query": "Hello..."}`) to validate prompt behaviour before going live.  
+- `GET /api/v1/agent/{agent_id}/stats` - Retrieve aggregated usage, conversation counts, and current LLM bindings.  
+- `GET /api/v1/agent/{agent_id}/embed-code` - Returns HTML + script tags for embedding the Knowrithm widget.  
+- `POST /api/v1/test` - Public endpoint that hosts a widget-ready test page; useful for smoke testing keys without building UI.
+
+## Endpoint catalog
+
+| Method | Endpoint | Auth | Summary |
+| --- | --- | --- | --- |
+| `GET` | `/api/v1/agent` | API key or bearer | List agents with pagination and filtering. |
+| `POST` | `/api/v1/agent` | API key or bearer | Create an agent using provider/model IDs (async). |
+| `GET` | `/api/v1/agent/by-name/{name}` | API key or bearer | Case-insensitive lookup; supports `company_id` for super admins. |
+| `GET` | `/api/v1/agent/{agent_id}` | Public | Retrieve public-facing metadata for an agent. |
+| `PUT` | `/api/v1/agent/{agent_id}` | API key or bearer | Update agent properties asynchronously. |
+| `DELETE` | `/api/v1/agent/{agent_id}` | API key or bearer | Soft delete an agent asynchronously. |
+| `POST` | `/api/v1/agent/{agent_id}/clone` | API key or bearer | Duplicate an agent in the inactive state. |
+| `PATCH` | `/api/v1/agent/{agent_id}/restore` | API key or bearer | Restore a soft-deleted agent. |
+| `GET` | `/api/v1/agent/{agent_id}/stats` | API key or bearer | Fetch usage statistics and provider bindings. |
+| `POST` | `/api/v1/agent/{agent_id}/test` | API key or bearer | Queue a test conversation and retrieve results via task polling. |
+| `GET` | `/api/v1/agent/{agent_id}/embed-code` | API key or bearer | Generate embeddable widget snippets. |
+| `POST` | `/api/v1/sdk/agent` | API key or bearer | Create an agent using provider/model names (async). |
+| `PUT` | `/api/v1/sdk/agent/{agent_id}` | API key or bearer | Update an agent synchronously using provider/model names. |
+| `DELETE` | `/api/v1/sdk/agent/{agent_id}` | API key or bearer | Delete an agent synchronously. |
+| `POST` | `/api/v1/test` | Public | Lightweight widget test page. |

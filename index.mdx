@@ -1,0 +1,65 @@
+---
+title: "Welcome to Knowrithm"
+description: "Build, train, and operate multi-agent AI assistants backed by enterprise-grade infrastructure."
+---
+
+<Hero
+  title="Knowrithm Platform Documentation"
+  subtitle="Everything you need to create production-ready AI agents, manage knowledge sources, and integrate with the Knowrithm API."
+  callToActionText="Launch Quickstart"
+  callToActionLink="/quickstart"
+  secondaryText="View the API reference"
+  secondaryLink="/api-reference/introduction"
+/>
+
+## Why Knowrithm
+
+<Columns cols={3}>
+  <Card title="Multi-agent orchestration" icon="users">
+    Run specialized assistants for support, sales, and operations while keeping their context, policies, and analytics separated per company tenant.
+  </Card>
+  <Card title="Unified knowledge fabric" icon="folder-open">
+    Blend documents, databases, and live websites into vectorized knowledge stores that stay in sync through scheduled crawls and asynchronous processing.
+  </Card>
+  <Card title="Enterprise guardrails" icon="shield-check">
+    Enforce role-aware authentication, audit every action, and operate with encryption, rate limiting, and reversible soft-delete workflows.
+  </Card>
+</Columns>
+
+## Start building
+
+<CardGroup cols={3}>
+  <Card title="Provision the stack" icon="rocket-launch" href="/quickstart">
+    Stand up PostgreSQL, Redis, Celery, and the Flask backend locally or with Docker in under ten minutes.
+  </Card>
+  <Card title="Understand the runtime" icon="cube" href="/platform/architecture">
+    Explore how background workers, task queues, and real-time channels collaborate to power conversations.
+  </Card>
+  <Card title="Connect knowledge" icon="cloud-arrow-up" href="/platform/data-sources">
+    Learn how to ingest documents, databases, and websites so every agent answers with current information.
+  </Card>
+</CardGroup>
+
+## Core capabilities at a glance
+
+<Columns cols={2}>
+  <Card title="Agent lifecycle" icon="user-circle">
+    Provision LLM + embedding settings, clone or restore agents safely, and run health checks before promoting changes.
+  </Card>
+  <Card title="Lead-to-conversation loop" icon="envelope-open">
+    Capture leads through widget registration, launch conversations instantly, and hand off with impersonation controls.
+  </Card>
+  <Card title="Observability" icon="chart-bar">
+    Inspect usage, satisfaction, and conversion metrics per agent or company. Export analytics or forward them to your data stack.
+  </Card>
+  <Card title="Async by design" icon="arrow-path">
+    Every heavy call returns a task token. Poll or stream SSE events to track ingestion, chat completions, and crawl jobs.
+  </Card>
+</Columns>
+
+## What's next?
+
+<Callout icon="arrow-trending-up">
+  Ready to dive deeper? Configure your environment with the <Link href="/quickstart">Quickstart</Link>, then learn how data pipelines stay fresh in <Link href="/platform/data-sources">Data sources &amp; ingestion</Link>. Finish by integrating with the <Link href="/api-reference/introduction">Knowrithm API</Link> to automate provisioning and analytics.
+</Callout>
+

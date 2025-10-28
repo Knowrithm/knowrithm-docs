@@ -1,0 +1,68 @@
+---
+title: "Platform architecture"
+description: "Understand how Knowrithm's services collaborate to deliver reliable multi-agent automation."
+---
+
+## High-level diagram
+
+<Columns cols={2}>
+  <Card title="Flask API" icon="server">
+    Handles synchronous reads, queues write-heavy operations, issues JWT tokens, and exposes a rich REST surface under `/api/v1`.
+  </Card>
+  <Card title="Celery & task routing" icon="bolt">
+    The shared dispatcher pushes work to priority queues (`critical`, `default`, `low`, `slow`, `dead_letter`). Workers can be scaled horizontally per queue.
+  </Card>
+  <Card title="Redis" icon="cloud">
+    Serves as the Celery broker, cache layer, and transient store for live conversation streaming.
+  </Card>
+  <Card title="PostgreSQL" icon="square-2-stack">
+    Stores multi-tenant domain models (companies, agents, leads, documents, analytics snapshots) with row-level relationships and soft-delete flags.
+  </Card>
+</Columns>
+
+<Callout icon="arrow-path">
+  Every asynchronous operation returns `{ "status": "accepted", "task_id": "...", "status_url": "/v1/tasks/<id>/status" }`. Poll the status endpoint or subscribe to `/messages/stream` for real-time updates.
+</Callout>
+
+## Opinionated layers
+
+<AccordionGroup>
+  <Accordion icon="users" title="Tenant isolation">
+    Company-scoped decorators protect every mutating route. Data fan-out (documents, conversations, analytics) always happens behind Celery tasks to avoid blocking requests.
+  </Accordion>
+  <Accordion icon="cog-6-tooth" title="LLM settings as first-class entities">
+    Agents reference an `llm_settings_id` that encapsulates provider IDs, API keys, temperature, max tokens, and embedding metadata. Updating or cloning settings emits background jobs that re-train embeddings and refresh widget configuration.
+  </Accordion>
+  <Accordion icon="chart-bar" title="Observability">
+    System metrics (`/api/v1/system-metric`, `/api/v1/analytic/usage`) flow into dedicated tables. Dashboards aggregate message counts, response times, satisfaction, converted leads, and storage trends per agent/company.
+  </Accordion>
+  <Accordion icon="arrow-path" title="Event streaming">
+    Conversations support SSE streams so widgets can receive `chat_status` and `chat_response` events without polling. Workers publish updates using Redis pub/sub channels.
+  </Accordion>
+</AccordionGroup>
+
+## Deploy topology
+
+<Columns cols={2}>
+  <Card title="Web tier" icon="globe-alt">
+    Deploy the Flask API behind a reverse proxy (NGINX, CloudFront) with TLS termination and WAF rules. Widget assets (`/api/widget.js`) can be CDN cached.
+  </Card>
+  <Card title="Workers" icon="command-line">
+    Run at least two worker pools: one pinned to `critical,default` for request fan-out, and another for `slow` ingestion tasks. Schedule `celery beat` on a dedicated instance.
+  </Card>
+  <Card title="Storage & networking" icon="cube-transparent">
+    Use managed PostgreSQL and Redis offerings when possible. Configure VPC peering for third-party databases that agents connect to.
+  </Card>
+  <Card title="Secrets & configuration" icon="lock">
+    Store API keys (provider, embedding) in secret management tooling and inject them via environment variables. Default providers can be bootstrapped by calling `/api/v1/settings/providers/seed`.
+  </Card>
+</Columns>
+
+## Release flow
+
+1. **Develop locally** with the Quickstart stack and ensure migrations are applied.  
+2. **Run automated tests** (`pytest`, `ruff`, widget build).  
+3. **Promote artifacts** (Docker images or Python packages).  
+4. **Run migrations** in staging and production using `flask db upgrade`.  
+5. **Monitor** `/api/v1/analytic/usage` and `/api/v1/admin/system-metric` after deploys.  
+6. **Update SDKs** (`knowrithm-py`, `@knowrithm/sdk`) to expose new endpoints.
