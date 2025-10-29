@@ -20,4 +20,3 @@ jobs:
       - name: Clean Up
         run: |
           docker system prune -f
-          
