@@ -1,6 +1,6 @@
 services:
   mintlify:
-    image: node:18
+    image: node:20
     container_name: mintlify
     working_dir: /docs
     ports:
