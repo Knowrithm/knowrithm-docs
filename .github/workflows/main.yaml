@@ -3,7 +3,7 @@ name: Deploy Mintilify
 on:
   push:
     branches: ["main"]
-    
+
 jobs:
   build:
     runs-on: knowrithm-backend
@@ -20,3 +20,4 @@ jobs:
       - name: Clean Up
         run: |
           docker system prune -f
+          
