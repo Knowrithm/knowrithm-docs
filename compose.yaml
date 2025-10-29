@@ -1,29 +1,28 @@
 services:
-  gitbook:
-    image: billryan/gitbook
-    container_name: gitbook
-    working_dir: /gitbook
+  mintlify:
+    image: node:18
+    container_name: mintlify
+    working_dir: /docs
     ports:
-      - "4000:4000"
-    # Remove port exposure - Traefik handles this
+      - "3030:3030"
     volumes:
-      - .:/gitbook
+      - .:/docs
     command: >
-      sh -c "gitbook install && gitbook serve"
+      sh -c "npm install -g mintlify && mintlify dev --noTelemetry --port 3030 --host 0.0.0.0"
     networks:
       - knowrithm_network  # Changed from traefik-backend
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.gitbook.rule=Host(`docs.knowrithm.org`)"
-      - "traefik.http.routers.gitbook.entrypoints=websecure"
-      - "traefik.http.routers.gitbook.tls=true"
-      - "traefik.http.routers.gitbook.tls.certresolver=cloudflare"
-      - "traefik.http.services.gitbook.loadbalancer.server.port=4000"
+      - "traefik.http.routers.mintlify.rule=Host(`docs.knowrithm.org`)"
+      - "traefik.http.routers.mintlify.entrypoints=websecure"
+      - "traefik.http.routers.mintlify.tls=true"
+      - "traefik.http.routers.mintlify.tls.certresolver=cloudflare"
+      - "traefik.http.services.mintlify.loadbalancer.server.port=3030"
       - "traefik.docker.network=knowrithm_network"  # Updated network
       # HTTP to HTTPS redirect
-      - "traefik.http.routers.gitbook-insecure.rule=Host(`docs.knowrithm.org`)"
-      - "traefik.http.routers.gitbook-insecure.entrypoints=web"
-      - "traefik.http.routers.gitbook-insecure.middlewares=redirect-to-https"
+      - "traefik.http.routers.mintlify-insecure.rule=Host(`docs.knowrithm.org`)"
+      - "traefik.http.routers.mintlify-insecure.entrypoints=web"
+      - "traefik.http.routers.mintlify-insecure.middlewares=redirect-to-https"
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
 networks:
   knowrithm_network:  # Changed from traefik-backend
