@@ -13,9 +13,7 @@ services:
       - knowrithm_network
     labels:
       - "traefik.enable=true"
-
-      # Main HTTPS router for both .org and .com
-      - "traefik.http.routers.mintlify.rule=Host(`docs.knowrithm.org`, `docs.knowrithm.com`)"
+      - "traefik.http.routers.mintlify.rule=Host(`docs.knowrithm.org`) || Host(`docs.knowrithm.com`)"
       - "traefik.http.routers.mintlify.entrypoints=websecure"
       - "traefik.http.routers.mintlify.tls=true"
       - "traefik.http.routers.mintlify.tls.certresolver=cloudflare"
