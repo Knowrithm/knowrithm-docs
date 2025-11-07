@@ -10,20 +10,30 @@ services:
     command: >
       sh -c "npm install -g mintlify && mintlify dev --noTelemetry --port 3030 --host 0.0.0.0"
     networks:
-      - knowrithm_network  # Changed from traefik-backend
+      - knowrithm_network
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.mintlify.rule=Host(`docs.knowrithm.org`)"
+
+      # Main HTTPS router for both .org and .com
+      - "traefik.http.routers.mintlify.rule=Host(`docs.knowrithm.org`, `docs.knowrithm.com`)"
       - "traefik.http.routers.mintlify.entrypoints=websecure"
       - "traefik.http.routers.mintlify.tls=true"
       - "traefik.http.routers.mintlify.tls.certresolver=cloudflare"
       - "traefik.http.services.mintlify.loadbalancer.server.port=3030"
-      - "traefik.docker.network=knowrithm_network"  # Updated network
+      - "traefik.docker.network=knowrithm_network"
+
       # HTTP to HTTPS redirect
-      - "traefik.http.routers.mintlify-insecure.rule=Host(`docs.knowrithm.org`)"
+      - "traefik.http.routers.mintlify-insecure.rule=Host(`docs.knowrithm.org`, `docs.knowrithm.com`)"
       - "traefik.http.routers.mintlify-insecure.entrypoints=web"
       - "traefik.http.routers.mintlify-insecure.middlewares=redirect-to-https"
       - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+
+      # Middleware: redirect all www/docs.knowrithm.com → docs.knowrithm.org
+      - "traefik.http.middlewares.docs-www-redirect.redirectregex.regex=^https://(www\\.)?docs\\.knowrithm\\.(org|com)/(.*)"
+      - "traefik.http.middlewares.docs-www-redirect.redirectregex.replacement=https://docs.knowrithm.org/$${3}"
+      - "traefik.http.middlewares.docs-www-redirect.redirectregex.permanent=true"
+      - "traefik.http.routers.mintlify.middlewares=docs-www-redirect@docker"
+
 networks:
-  knowrithm_network:  # Changed from traefik-backend
+  knowrithm_network:
     external: true
