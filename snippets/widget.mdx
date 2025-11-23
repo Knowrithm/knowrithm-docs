@@ -32,7 +32,7 @@ export function KnowrithmWidget() {
       },
       assets: {
         scriptUrl: "https://app.knowrithm.org/api/widget.js",
-        styleUrl: "https://minio.knowrithm.org/browser/knowrithm-bucket/chat-widget.css"
+        styleUrl: "https://minio.knowrithm.org/knowrithm-bucket/chat-widget.css"
       }
     };
 
@@ -46,7 +46,7 @@ export function KnowrithmWidget() {
 
     const link = document.createElement('link');
     link.rel = 'stylesheet';
-    link.href = 'https://minio.knowrithm.org/browser/knowrithm-bucket/chat-widget.css';
+    link.href = 'https://minio.knowrithm.org/knowrithm-bucket/chat-widget.css';
     document.head.appendChild(link);
   }, []);
   
