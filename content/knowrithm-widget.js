@@ -37,6 +37,10 @@
                 },
                 onMessage: null,
                 onClose: null
+            },
+            assets: {
+                scriptUrl: "https://app.knowrithm.org/api/widget.js",
+                styleUrl: "https://minio.knowrithm.org/knowrithm-bucket/chat-widget.css"
             }
         };
 
