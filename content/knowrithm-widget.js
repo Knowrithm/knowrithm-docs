@@ -1,0 +1,62 @@
+(function () {
+    // Only run in browser
+    if (typeof window === 'undefined') return;
+
+    // Prevent duplicate loads
+    if (window.__knowrithmWidgetLoaded) return;
+    window.__knowrithmWidgetLoaded = true;
+
+    // Configure the widget
+    window.AIChatWidget = {
+        agentId: "2b041b45-a585-47e9-abaf-ebaad766bce9",
+        apiUrl: "https://app.knowrithm.org/api/v1",
+        color: "#0972A3",
+        position: "right",
+        appearance: {
+            theme: "light",
+            primaryColor: "#0972A3",
+            placement: "bottom-right",
+            buttonText: "Chat with us",
+            showBranding: true
+        },
+        behavior: {
+            autoOpen: false,
+            initialDelay: 0,
+            persistSession: true,
+            pollingInterval: 10000,
+            enableSounds: false
+        },
+        callbacks: {
+            onLoad: null,
+            onError: null,
+            onMessage: null,
+            onClose: null
+        },
+        assets: {
+            scriptUrl: "https://app.knowrithm.org/api/widget.js",
+            styleUrl: "https://minio.knowrithm.org/browser/knowrithm-bucket/chat-widget.css"
+        }
+    };
+
+    // Load the widget script
+    var script = document.createElement('script');
+    script.src = 'https://app.knowrithm.org/api/widget.js';
+    script.type = 'text/javascript';
+    script.async = true;
+    script.onload = function () {
+        console.log('Knowrithm widget loaded successfully');
+    };
+    script.onerror = function (error) {
+        console.error('Failed to load Knowrithm widget:', error);
+    };
+    document.head.appendChild(script);
+
+    // Load the widget CSS
+    var link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.href = 'https://minio.knowrithm.org/browser/knowrithm-bucket/chat-widget.css';
+    link.onload = function () {
+        console.log('Knowrithm widget CSS loaded');
+    };
+    document.head.appendChild(link);
+})();
