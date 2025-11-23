@@ -34,7 +34,8 @@ export function KnowrithmWidget() {
           },
           assets: {
             scriptUrl: "https://app.knowrithm.org/api/widget.js",
-            styleUrl: "https://minio.knowrithm.org/knowrithm-bucket/chat-widget.css"
+            // Use custom CSS that scopes widget styles and avoids global overrides
+            styleUrl: "/styles/chat-widget-custom.css"
           }
         };
 
