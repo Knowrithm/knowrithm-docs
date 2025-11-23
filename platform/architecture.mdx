@@ -7,16 +7,16 @@ description: "Understand how Knowrithm's services collaborate to deliver reliabl
 
 <Columns cols={2}>
   <Card title="Flask API" icon="server">
-    Handles synchronous reads, queues write-heavy operations, issues JWT tokens, and exposes a rich REST surface under `/api/v1`.
+    **Python 3.11+**. Handles synchronous reads, queues write-heavy operations, issues JWT tokens, and exposes a rich REST surface under `/api/v1`.
   </Card>
   <Card title="Celery & task routing" icon="bolt">
-    The shared dispatcher pushes work to priority queues (`critical`, `default`, `low`, `slow`, `dead_letter`). Workers can be scaled horizontally per queue.
+    **Celery 5+**. The shared dispatcher pushes work to priority queues (`critical`, `default`, `low`, `slow`, `dead_letter`). Workers can be scaled horizontally per queue.
   </Card>
   <Card title="Redis" icon="cloud">
-    Serves as the Celery broker, cache layer, and transient store for live conversation streaming.
+    **Redis 6+**. Serves as the Celery broker, cache layer, and transient store for live conversation streaming.
   </Card>
   <Card title="PostgreSQL" icon="square-2-stack">
-    Stores multi-tenant domain models (companies, agents, leads, documents, analytics snapshots) with row-level relationships and soft-delete flags.
+    **PostgreSQL 13+**. Stores multi-tenant domain models with **SQLAlchemy ORM**. Handles row-level relationships and soft-delete flags.
   </Card>
 </Columns>
 
