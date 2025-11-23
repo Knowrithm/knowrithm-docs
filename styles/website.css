@@ -56,6 +56,117 @@
   --content-max-width: 800px;
 }
 
+/* Dark mode overrides */
+html.dark {
+  --primary: #818cf8;
+  --primary-hover: #a5b4fc;
+  --text-primary: #f9fafb;
+  --text-secondary: #d1d5db;
+  --text-muted: #9ca3af;
+  --background: #0f1117;
+  --surface: #1f2937;
+  --border: #374151;
+  --sidebar-bg: #0f1117;
+  --sidebar-border: #374151;
+  
+  /* Re-map grays for dark mode context */
+  --gray-50: #1f2937;
+  --gray-100: #374151;
+  --gray-200: #4b5563;
+  --gray-300: #9ca3af;
+  --gray-400: #d1d5db;
+}
+
+/* Dark mode specific element styles */
+html.dark body {
+  color: var(--text-primary) !important;
+  background: var(--background) !important;
+}
+
+html.dark .book-summary {
+  background: var(--sidebar-bg) !important;
+  border-right: 1px solid var(--sidebar-border) !important;
+}
+
+html.dark .book-summary .summary li a {
+  color: var(--text-secondary) !important;
+}
+
+html.dark .book-summary .summary li a:hover {
+  color: var(--text-primary) !important;
+  background: var(--surface) !important;
+}
+
+html.dark .book-summary .summary li.active > a {
+  color: var(--primary) !important;
+  background: rgba(129, 140, 248, 0.1) !important;
+}
+
+html.dark .book-summary .summary li a::before {
+  background: var(--gray-200);
+}
+
+html.dark table {
+  background: var(--surface) !important;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3) !important;
+}
+
+html.dark table th {
+  background: var(--gray-100) !important;
+  color: var(--text-primary) !important;
+  border-bottom-color: var(--border) !important;
+}
+
+html.dark table td {
+  border-bottom-color: var(--border) !important;
+  color: var(--text-secondary) !important;
+}
+
+html.dark table tr:hover {
+  background: var(--gray-100) !important;
+}
+
+html.dark pre {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+}
+
+html.dark code {
+  background: var(--gray-100) !important;
+  color: var(--primary) !important;
+}
+
+html.dark .navigation .navigation-prev,
+html.dark .navigation .navigation-next {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+  color: var(--text-primary) !important;
+}
+
+html.dark .navigation .navigation-next {
+  background: var(--primary) !important;
+  color: #ffffff !important;
+  border-color: var(--primary) !important;
+}
+
+html.dark .book-summary .book-search input {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+  color: var(--text-primary) !important;
+}
+
+html.dark .book-summary .book-search input:focus {
+  background: var(--background) !important;
+  border-color: var(--primary) !important;
+}
+
+/* Ensure images with transparent backgrounds are visible in dark mode */
+html.dark .book-body img {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 4px;
+}
+
 /* Base styles */
 body {
   font-family: var(--font-sans) !important;
