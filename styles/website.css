@@ -1,5 +1,5 @@
 /* ============================================
-   Knowrithm Documentation - Ultimate Theme Fix
+   Knowrithm Documentation - Refined Typography & Spacing
    ============================================ */
 
 /* Import fonts */
@@ -50,13 +50,19 @@
     --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
     --font-mono: 'JetBrains Mono', 'SF Mono', Monaco, Consolas, monospace;
 
-    /* Spacing */
+    /* Spacing Scale */
     --space-xs: 0.25rem;
+    /* 4px */
     --space-sm: 0.5rem;
+    /* 8px */
     --space-md: 1rem;
+    /* 16px */
     --space-lg: 1.5rem;
-    --space-xl: 2rem;
-    --space-2xl: 3rem;
+    /* 24px */
+    --space-xl: 2.5rem;
+    /* 40px */
+    --space-2xl: 4rem;
+    /* 64px */
 
     /* Border Radius */
     --radius-sm: 0.375rem;
@@ -102,7 +108,8 @@ html.dark {
     --border: #374151;
 
     /* Component Colors */
-    --code-bg: #374151;
+    --code-bg: #1e293b;
+    /* Darker for code blocks */
     --code-text: #a5b4fc;
     --table-header-bg: #1f2937;
     --callout-bg: #1e293b;
@@ -124,108 +131,190 @@ body {
     font-family: var(--font-sans) !important;
     color: var(--text-primary) !important;
     background: var(--background) !important;
-    line-height: 1.6 !important;
+    line-height: 1.75 !important;
+    /* Increased for better readability */
     font-size: 16px !important;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
 
 /* ============================================
-   Icons & SVGs - Critical Fixes
+   Typography & Vertical Rhythm
    ============================================ */
-svg,
-.icon,
-i[class*="icon"] {
-    display: inline-block;
-    vertical-align: middle;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: var(--text-primary) !important;
+    font-weight: 700 !important;
+    line-height: 1.3 !important;
+    letter-spacing: -0.01em !important;
 }
 
-/* Force icons to respect theme colors */
-.dark svg,
-.dark .icon {
-    fill: currentColor;
+h1 {
+    font-size: 2.75rem !important;
+    font-weight: 800 !important;
+    margin-top: 0 !important;
+    margin-bottom: var(--space-lg) !important;
+    letter-spacing: -0.025em !important;
 }
 
-/* Specific fix for Mintlify Card icons */
-.card svg,
-[class*="card"] svg {
-    color: var(--primary) !important;
-    width: 24px !important;
-    height: 24px !important;
+h2 {
+    font-size: 2rem !important;
+    margin-top: var(--space-2xl) !important;
+    margin-bottom: var(--space-md) !important;
+    border-bottom: 1px solid transparent;
+    /* Placeholder for potential underline */
 }
 
-.dark .card svg,
-.dark [class*="card"] svg {
-    color: var(--primary-light) !important;
+h3 {
+    font-size: 1.5rem !important;
+    margin-top: var(--space-xl) !important;
+    margin-bottom: var(--space-sm) !important;
 }
 
-/* Callout icons */
-.callout svg,
-[class*="callout"] svg {
-    color: var(--callout-border) !important;
+h4 {
+    font-size: 1.25rem !important;
+    margin-top: var(--space-lg) !important;
+    margin-bottom: var(--space-sm) !important;
 }
 
-/* Navbar icons */
-nav svg,
-.navbar svg {
+p {
     color: var(--text-secondary) !important;
+    margin-bottom: 1.25rem !important;
+    max-width: 80ch;
+    /* Optimal line length for reading */
 }
 
-.dark nav svg,
-.dark .navbar svg {
+/* Links */
+a {
+    color: var(--primary) !important;
+    text-decoration: none !important;
+    font-weight: 500 !important;
+    transition: color 0.2s ease !important;
+    border-bottom: 1px solid transparent;
+}
+
+a:hover {
+    color: var(--primary-hover) !important;
+    border-bottom-color: var(--primary-hover);
+}
+
+strong,
+b {
+    font-weight: 600 !important;
     color: var(--text-primary) !important;
 }
 
 /* ============================================
-   Buttons & Navigation - Position Fixes
+   Lists
    ============================================ */
-button,
-.button,
-a[class*="button"],
-[class*="btn"] {
-    display: inline-flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    padding: 0.625rem 1.25rem !important;
-    border-radius: var(--radius-md) !important;
-    font-weight: 600 !important;
-    transition: all 0.2s ease !important;
-    cursor: pointer !important;
-    line-height: 1.2 !important;
-    text-decoration: none !important;
+ul,
+ol {
+    margin-top: var(--space-sm) !important;
+    margin-bottom: var(--space-lg) !important;
+    padding-left: var(--space-lg) !important;
 }
 
-/* Primary Buttons */
-.button-primary,
-[class*="primary"] {
-    background: var(--primary) !important;
-    color: white !important;
-    border: 1px solid transparent !important;
+li {
+    margin-bottom: 0.5rem !important;
+    color: var(--text-secondary) !important;
+    line-height: 1.7 !important;
 }
 
-.button-primary:hover {
-    background: var(--primary-hover) !important;
-    transform: translateY(-1px);
-    box-shadow: var(--shadow-md);
+li::marker {
+    color: var(--primary) !important;
 }
 
-/* Navbar Buttons */
-.navbar .button,
-nav .button {
-    margin-left: var(--space-sm);
-}
-
-/* Sign In / CTA Buttons */
-a[href*="sign-in"],
-a[href*="login"] {
-    background: var(--primary) !important;
-    color: white !important;
-    padding: 0.5rem 1rem !important;
-    border-radius: var(--radius-md) !important;
+/* Nested lists */
+li>ul,
+li>ol {
+    margin-top: 0.5rem !important;
+    margin-bottom: 0.5rem !important;
 }
 
 /* ============================================
-   Cards & Layout
+   Code Blocks & Inline Code
+   ============================================ */
+code {
+    font-family: var(--font-mono) !important;
+    font-size: 0.9em !important;
+    background: var(--code-bg) !important;
+    color: var(--code-text) !important;
+    padding: 0.2em 0.4em !important;
+    border-radius: var(--radius-sm) !important;
+    font-weight: 500 !important;
+}
+
+pre {
+    background: var(--surface) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius-lg) !important;
+    padding: var(--space-lg) !important;
+    margin: var(--space-lg) 0 var(--space-xl) 0 !important;
+    overflow-x: auto !important;
+    box-shadow: var(--shadow-sm) !important;
+}
+
+pre code {
+    background: transparent !important;
+    padding: 0 !important;
+    color: var(--text-primary) !important;
+    font-size: 0.875rem !important;
+    font-weight: 400 !important;
+    line-height: 1.7 !important;
+}
+
+/* ============================================
+   Tables
+   ============================================ */
+table {
+    width: 100% !important;
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    margin: var(--space-xl) 0 !important;
+    background: var(--background) !important;
+    border: 1px solid var(--border) !important;
+    border-radius: var(--radius-lg) !important;
+    overflow: hidden !important;
+    box-shadow: var(--shadow-sm) !important;
+}
+
+thead {
+    background: var(--table-header-bg) !important;
+}
+
+th {
+    color: var(--text-primary) !important;
+    font-weight: 600 !important;
+    padding: 1rem 1.25rem !important;
+    text-align: left !important;
+    font-size: 0.875rem !important;
+    border-bottom: 1px solid var(--border) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.05em !important;
+}
+
+td {
+    padding: 1rem 1.25rem !important;
+    border-bottom: 1px solid var(--border) !important;
+    color: var(--text-secondary) !important;
+    font-size: 0.9rem !important;
+    vertical-align: top !important;
+}
+
+tr:last-child td {
+    border-bottom: none !important;
+}
+
+tbody tr:hover {
+    background: var(--surface) !important;
+}
+
+/* ============================================
+   Components (Cards, Callouts)
    ============================================ */
 .card,
 [class*="card"] {
@@ -233,7 +322,7 @@ a[href*="login"] {
     border: 1px solid var(--border) !important;
     border-radius: var(--radius-lg) !important;
     padding: var(--space-lg) !important;
-    margin-bottom: var(--space-md) !important;
+    margin-bottom: var(--space-lg) !important;
     transition: all 0.2s ease !important;
     display: flex !important;
     flex-direction: column !important;
@@ -246,42 +335,89 @@ a[href*="login"] {
     transform: translateY(-2px) !important;
 }
 
-/* Card Titles */
 .card h2,
 .card h3,
-.card h4,
-[class*="card"] h3 {
+.card h4 {
     margin-top: 0 !important;
     margin-bottom: var(--space-sm) !important;
+}
+
+.callout,
+[class*="callout"] {
+    background: var(--callout-bg) !important;
+    border-left: 4px solid var(--callout-border) !important;
+    border-radius: var(--radius-md) !important;
+    padding: var(--space-lg) !important;
+    margin: var(--space-xl) 0 !important;
+}
+
+.callout p {
+    margin: 0 !important;
     color: var(--text-primary) !important;
 }
 
 /* ============================================
-   Dark Mode Specific Overrides
+   Icons & SVGs
    ============================================ */
-html.dark .card,
-html.dark [class*="card"] {
-    background: var(--surface) !important;
-    border-color: var(--border) !important;
+svg,
+.icon {
+    display: inline-block;
+    vertical-align: middle;
 }
 
-html.dark .card:hover {
-    border-color: var(--primary-light) !important;
-    background: var(--gray-800) !important;
+/* Mintlify Card Icons */
+.card svg,
+[class*="card"] svg {
+    color: var(--primary) !important;
+    width: 24px !important;
+    height: 24px !important;
+    margin-bottom: var(--space-sm) !important;
 }
 
-html.dark code {
-    background: var(--gray-800) !important;
+.dark .card svg {
     color: var(--primary-light) !important;
-    border: 1px solid var(--border) !important;
 }
 
-html.dark pre {
-    background: var(--gray-900) !important;
-    border: 1px solid var(--border) !important;
+/* ============================================
+   Buttons & Navigation
+   ============================================ */
+button,
+.button,
+a[class*="button"] {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0.625rem 1.25rem !important;
+    border-radius: var(--radius-md) !important;
+    font-weight: 600 !important;
+    transition: all 0.2s ease !important;
+    cursor: pointer !important;
+    line-height: 1.2 !important;
+    text-decoration: none !important;
 }
 
-/* Fix for invisible text in some components */
+.button-primary {
+    background: var(--primary) !important;
+    color: white !important;
+}
+
+.button-primary:hover {
+    background: var(--primary-hover) !important;
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+}
+
+/* Navbar specific */
+nav,
+.navbar {
+    z-index: 1000 !important;
+    background: var(--background) !important;
+    border-bottom: 1px solid var(--border) !important;
+}
+
+/* ============================================
+   Dark Mode Overrides
+   ============================================ */
 html.dark h1,
 html.dark h2,
 html.dark h3,
@@ -299,14 +435,15 @@ html.dark td {
     color: var(--gray-400) !important;
 }
 
-/* ============================================
-   Image Visibility in Dark Mode
-   ============================================ */
+html.dark th {
+    background: var(--surface) !important;
+    color: var(--white) !important;
+}
+
 html.dark img {
     opacity: 0.95;
 }
 
-/* Add background to transparent images */
 html.dark img[src$=".svg"],
 html.dark img[src$=".png"] {
     background: rgba(255, 255, 255, 0.03);
@@ -315,77 +452,18 @@ html.dark img[src$=".png"] {
 }
 
 /* ============================================
-   Navigation & Sidebar
+   Layout & Utility
    ============================================ */
-.sidebar,
-[class*="sidebar"] {
-    background: var(--background) !important;
-    border-right: 1px solid var(--border) !important;
-}
-
-html.dark .sidebar,
-html.dark [class*="sidebar"] {
-    background: var(--background) !important;
-    border-right: 1px solid var(--border) !important;
-}
-
-.nav-item.active,
-.sidebar-item.active {
-    color: var(--primary) !important;
-    background: rgba(99, 102, 241, 0.1) !important;
-    border-right: 2px solid var(--primary) !important;
-}
-
-/* ============================================
-   Tables
-   ============================================ */
-table {
-    width: 100% !important;
-    border-collapse: separate !important;
-    border-spacing: 0 !important;
-    margin: var(--space-lg) 0 !important;
-    border: 1px solid var(--border) !important;
-    border-radius: var(--radius-lg) !important;
-    overflow: hidden !important;
-}
-
-th {
-    background: var(--table-header-bg) !important;
-    color: var(--text-primary) !important;
-    font-weight: 600 !important;
-    padding: 12px 16px !important;
-    border-bottom: 1px solid var(--border) !important;
-}
-
-td {
-    padding: 12px 16px !important;
-    border-bottom: 1px solid var(--border) !important;
-    color: var(--text-secondary) !important;
-}
-
-tr:last-child td {
-    border-bottom: none !important;
-}
-
-html.dark th {
-    background: var(--surface) !important;
-    color: var(--white) !important;
-}
-
-html.dark td {
-    color: var(--gray-300) !important;
-}
-
-/* ============================================
-   Utility & Fixes
-   ============================================ */
-/* Ensure content isn't hidden behind fixed headers */
 main {
     padding-top: var(--space-xl);
+    max-width: 900px !important;
+    /* Optimal reading width */
+    margin: 0 auto !important;
 }
 
-/* Fix z-index issues */
-nav,
-.navbar {
-    z-index: 1000 !important;
+/* Ensure images don't overflow */
+img {
+    max-width: 100% !important;
+    height: auto !important;
+    border-radius: var(--radius-md) !important;
 }
