@@ -19,7 +19,8 @@
               "index",
               "quickstart",
               "development",
-              "platform/architecture"
+              "platform/architecture",
+              "changelog"
             ]
           },
           {
@@ -66,11 +67,6 @@
           "anchor": "Status",
           "href": "https://status.knowrithm.org",
           "icon": "chart-bar"
-        },
-        {
-          "anchor": "Changelog",
-          "href": "https://docs.knowrithm.org/changelog",
-          "icon": "sparkles"
         }
       ]
     }

@@ -444,11 +444,19 @@ html.dark img {
     opacity: 0.95;
 }
 
-html.dark img[src$=".svg"],
-html.dark img[src$=".png"] {
+/* Add background to transparent images (excluding logo) */
+html.dark img[src$=".svg"]:not([src*="logo"]),
+html.dark img[src$=".png"]:not([src*="logo"]) {
     background: rgba(255, 255, 255, 0.03);
     border-radius: var(--radius-md);
     padding: 4px;
+}
+
+/* Explicitly clear logo background */
+html.dark img[src*="logo"] {
+    background: transparent !important;
+    padding: 0 !important;
+    border-radius: 0 !important;
 }
 
 /* ============================================
@@ -459,6 +467,14 @@ main {
     max-width: 900px !important;
     /* Optimal reading width */
     margin: 0 auto !important;
+}
+
+/* Navbar Alignment Fixes */
+header,
+.sticky,
+nav {
+    display: flex !important;
+    align-items: center !important;
 }
 
 /* Ensure images don't overflow */

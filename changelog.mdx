@@ -1,0 +1,55 @@
+---
+title: "Changelog"
+description: "Latest updates, improvements, and fixes to the Knowrithm platform."
+---
+
+<Update label="2025-11-20" description="v1.2.0 - Multi-agent Orchestration">
+  ## Multi-agent Orchestration
+  
+  We've released a major update to how agents coordinate. You can now define "supervisor" agents that delegate tasks to specialized sub-agents.
+
+  ### Features
+  - **Supervisor Mode**: New agent type that routes queries to other agents based on intent.
+  - **Shared Memory**: Agents in the same workspace now share a short-term memory context.
+  - **Debug Console**: Inspect the reasoning trace of multi-agent handoffs in real-time.
+
+  ### Improvements
+  - Reduced latency for agent-to-agent communication by 40%.
+  - Added `X-Agent-Trace-Id` header to all API responses for better observability.
+</Update>
+
+<Update label="2025-11-05" description="v1.1.5 - Knowledge Base Enhancements">
+  ## Vector Search Upgrades
+  
+  Improved the accuracy of document retrieval and added support for more file types.
+
+  ### Features
+  - **Hybrid Search**: Combine keyword search with semantic search for better precision.
+  - **New File Types**: Added native support for `.pptx` and `.xlsx` ingestion.
+  - **Re-ranking**: Optional re-ranking step using Cohere or BGE models.
+
+  ### Fixes
+  - Fixed an issue where PDF tables were sometimes parsed incorrectly.
+  - Resolved a timeout bug when uploading files larger than 50MB.
+</Update>
+
+<Update label="2025-10-22" description="v1.1.0 - Enterprise Security">
+  ## SSO & Audit Logs
+  
+  Launched comprehensive security features for enterprise tenants.
+
+  ### Features
+  - **SAML 2.0 / OIDC**: Connect your own identity provider (Okta, Azure AD).
+  - **Audit Trail**: Download CSV logs of every administrative action.
+  - **IP Allowlisting**: Restrict API access to specific IP ranges.
+</Update>
+
+<Update label="2025-10-01" description="v1.0.0 - General Availability">
+  ## Platform Launch
+  
+  Knowrithm is now generally available!
+  
+  - **Core API**: Stable release of all v1 endpoints.
+  - **SDKs**: Python and TypeScript SDKs are now 1.0.
+  - **Documentation**: Complete reference guides and tutorials.
+</Update>
