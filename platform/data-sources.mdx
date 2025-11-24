@@ -1,1 +1,60 @@
--NoNewline
+---
+title: "Data Sources"
+description: "Connect your knowledge base to Knowrithm."
+---
+
+Knowrithm acts as a central intelligence layer by ingesting data from various sources. Once connected, this data is indexed, embedded, and made available to your AI agents for retrieval-augmented generation (RAG).
+
+## Supported Sources
+
+We support a wide range of data sources to ensure your agents have access to the most relevant information.
+
+### Web Crawler
+
+The web crawler allows you to index public websites. This is useful for adding documentation, blog posts, and company information to your knowledge base.
+
+- **Single Page:** Index a specific URL.
+- **Site Map:** Index an entire site using its `sitemap.xml`.
+- **Crawl Depth:** Configure how deep the crawler should go (e.g., follow links up to 2 levels).
+
+### Files
+
+Upload documents directly to the platform. We support the following file formats:
+
+- **PDF** (`.pdf`)
+- **Word** (`.docx`)
+- **Text** (`.txt`)
+- **Markdown** (`.md`, `.mdx`)
+- **CSV** (`.csv`) - *Best for structured data*
+
+### Integrations
+
+Connect directly to your existing tools. (Coming soon)
+
+- **Notion:** Sync pages and databases.
+- **Google Drive:** Index Docs, Sheets, and Slides.
+- **Slack:** Ingest public channels for internal knowledge.
+
+## Managing Sources
+
+You can manage your data sources from the **Knowledge Base** section of the dashboard.
+
+1. **Add Source:** Click "New Data Source" and select the type (Web, File, etc.).
+2. **Configure:** Enter the necessary details (URL, upload file, or authenticate integration).
+3. **Index:** The system will automatically start processing the data.
+
+### Status
+
+Each source has a status indicator:
+
+- **Indexing:** The system is currently processing the data.
+- **Ready:** The data is indexed and ready for use.
+- **Error:** There was a problem processing the source. Check the logs for details.
+
+## Syncing
+
+Data sources can be configured to sync automatically.
+
+- **Web Sources:** Can be scheduled to re-crawl daily or weekly.
+- **Integrations:** typically use webhooks to sync changes in real-time or near real-time.
+- **Files:** Must be manually updated by uploading a new version.
