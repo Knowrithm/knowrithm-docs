@@ -217,7 +217,7 @@
 }
 
 .ai-chat-widget-send:disabled {
-    background: #D1D5DB;
+    background: #636363;
     cursor: not-allowed;
 }
 
