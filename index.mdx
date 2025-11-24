@@ -28,12 +28,15 @@ The platform is built to help organizations:
 <Columns cols={3}>
   <Card title="Multi-agent orchestration" icon="users">
     Run specialized assistants for support, sales, and operations while keeping their context, policies, and analytics separated per company tenant.
+    <Badge icon="check" color="green" size="sm">Production Ready</Badge>
   </Card>
   <Card title="Unified knowledge fabric" icon="folder-open">
     Blend documents, databases, and live websites into vectorized knowledge stores that stay in sync through scheduled crawls and asynchronous processing.
+    <Badge icon="sparkles" color="blue" size="sm">AI-Powered</Badge>
   </Card>
   <Card title="Enterprise guardrails" icon="shield-check">
     Enforce role-aware authentication, audit every action, and operate with encryption, rate limiting, and reversible soft-delete workflows.
+    <Badge icon="shield" color="purple" size="sm">Enterprise Grade</Badge>
   </Card>
 </Columns>
 
@@ -55,7 +58,7 @@ The platform is built to help organizations:
 
 <Columns cols={2}>
   <Card title="Agent lifecycle" icon="user-circle">
-    Provision LLM + embedding settings, clone or restore agents safely, and run health checks before promoting changes.
+    Provision <Tooltip tip="Large Language Model - AI model trained on vast amounts of text data">LLM</Tooltip> + embedding settings, clone or restore agents safely, and run health checks before promoting changes.
   </Card>
   <Card title="Lead-to-conversation loop" icon="envelope-open">
     Capture leads through widget registration, launch conversations instantly, and hand off with impersonation controls.
@@ -64,13 +67,49 @@ The platform is built to help organizations:
     Inspect usage, satisfaction, and conversion metrics per agent or company. Export analytics or forward them to your data stack.
   </Card>
   <Card title="Async by design" icon="arrow-path">
-    Every heavy call returns a task token. Poll or stream SSE events to track ingestion, chat completions, and crawl jobs.
+    Every heavy call returns a task token. Poll or stream <Tooltip tip="Server-Sent Events - HTTP standard for server push notifications">SSE</Tooltip> events to track ingestion, chat completions, and crawl jobs.
   </Card>
 </Columns>
 
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="How do I get started with Knowrithm?" icon="rocket">
+    Follow our [Quickstart guide](/quickstart) to deploy your first agent in under 10 minutes. You'll need Docker or Python 3.11+ with PostgreSQL and Redis.
+  </Accordion>
+  
+  <Accordion title="What databases are supported?" icon="database">
+    Knowrithm supports PostgreSQL and MySQL for live database connections. You can also ingest data from any database by uploading CSV exports or connecting via custom connectors. See our [Data Sources documentation](/platform/data-sources) for details.
+  </Accordion>
+  
+  <Accordion title="Can I use my own LLM provider?" icon="brain">
+    Yes! Knowrithm supports OpenAI, Anthropic, and any OpenAI-compatible endpoint. Configure your preferred model and provider in the agent settings. You can even use different models for different agents.
+  </Accordion>
+  
+  <Accordion title="Is there a free tier or pricing?" icon="dollar-sign">
+    Knowrithm is open-source and self-hosted, so you only pay for your infrastructure (cloud hosting, databases) and <Tooltip tip="Large Language Model">LLM</Tooltip> API costs. There are no platform fees or usage limits.
+  </Accordion>
+  
+  <Accordion title="How do I handle authentication and security?" icon="lock">
+    Knowrithm uses <Tooltip tip="JSON Web Tokens - secure method for transmitting information between parties">JWT</Tooltip> tokens for user authentication and scoped <Tooltip tip="Application Programming Interface">API</Tooltip> keys for programmatic access. All endpoints support role-based access control and tenant isolation. See our [Authentication guide](/api-reference/authentication) for implementation details.
+  </Accordion>
+  
+  <Accordion title="Can I customize the chat widget?" icon="palette">
+    Absolutely! The chat widget is fully customizable with your brand colors, logo, and messaging. You can also modify the widget's behavior, position, and styling through configuration options.
+  </Accordion>
+  
+  <Accordion title="What file formats are supported for knowledge bases?" icon="file">
+    Knowrithm supports PDF, DOCX, TXT, HTML, and Markdown files. The platform automatically extracts text, handles OCR for scanned documents, and chunks content for optimal retrieval.
+  </Accordion>
+  
+  <Accordion title="How does the platform handle scaling?" icon="chart-line">
+    Knowrithm uses Celery for distributed task processing, Redis for caching and queuing, and PostgreSQL for data persistence. You can scale horizontally by adding more worker nodes and vertically by increasing database resources.
+  </Accordion>
+</AccordionGroup>
+
 ## What's next?
 
-<Callout icon="arrow-trending-up">
-  Ready to dive deeper? Configure your environment with the <Link href="/quickstart">Quickstart</Link>, then learn how data pipelines stay fresh in <Link href="/platform/data-sources">Data sources &amp; ingestion</Link>. Finish by integrating with the <Link href="/api-reference/introduction">Knowrithm API</Link> to automate provisioning and analytics.
-</Callout>
+<Info>
+  Ready to dive deeper? Configure your environment with the [Quickstart](/quickstart), then learn how data pipelines stay fresh in [Data sources & ingestion](/platform/data-sources). Finish by integrating with the [Knowrithm API](/api-reference/introduction) to automate provisioning and analytics.
+</Info>
 

@@ -20,13 +20,14 @@
 /* Widget Container */
 .ai-chat-widget-container {
     position: fixed;
-    z-index: 10;
-    /* ensure widget stays behind navigation bars */
+    z-index: 50;
+    /* ensure widget stays below navbar (90), sidebar (80), and TOC (70) but above content */
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
 }
 
 .ai-chat-widget-container.position-right {
-    bottom: 24px;
+    bottom: 100px;
+    /* increased from 24px to avoid overlap with "On this page" section */
     right: 24px;
 }
 

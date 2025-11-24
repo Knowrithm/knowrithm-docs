@@ -3,7 +3,9 @@ title: "Python SDK"
 description: "Install, configure, and extend the official Knowrithm Python SDK."
 ---
 
-Knowrithm maintains a first-class Python SDK that mirrors every public API route, adds typed helpers, and smooths over the asynchronous task model used throughout the platform. This guide expands on the project README with additional context, usage patterns, and best practices for production deployments.
+# Python SDK <Badge icon="python" color="blue" stroke>v2.1.0</Badge> <Badge icon="check" color="green" size="sm">Stable</Badge>
+
+Knowrithm maintains a first-class Python SDK that mirrors every public <Tooltip tip="Application Programming Interface - set of protocols for software communication">API</Tooltip> route, adds typed helpers, and smooths over the asynchronous task model used throughout the platform. This guide expands on the project README with additional context, usage patterns, and best practices for production deployments.
 
 ## Installation & project setup
 
@@ -15,23 +17,25 @@ Knowrithm maintains a first-class Python SDK that mirrors every public API route
 
 ### Install from PyPI
 
-```bash
+```bash title="Install via pip"
 pip install knowrithm-py
 ```
 
 The package exposes everything under the `knowrithm_py` namespace. For local development, clone the repository and install it in editable mode:
 
-```bash
+```bash title="Install in editable mode"
 git clone https://github.com/Knowrithm/knowrithm-py.git
 cd knowrithm-py
 pip install -e .
 ```
 
-> **Tip.** Add `knowrithm_py` to your `pyproject.toml` or `requirements.txt` to pin SDK versions and guarantee reproducible builds.
+<Tip>
+Add `knowrithm_py` to your `pyproject.toml` or `requirements.txt` to pin SDK versions and guarantee reproducible builds.
+</Tip>
 
 ## Client initialization
 
-```python
+```python title="Initialize the client"
 from knowrithm_py.knowrithm.client import KnowrithmClient
 
 client = KnowrithmClient(
@@ -41,15 +45,16 @@ client = KnowrithmClient(
 )
 ```
 
-- **API key + secret** is the simplest authentication path for server-to-server automation.
-- For JWT-protected flows, supply bearer headers per request (`headers={"Authorization": "Bearer ... "}`).
+- **<Tooltip tip="Application Programming Interface">API</Tooltip> key + secret** is the simplest authentication path for server-to-server automation.
+- For <Tooltip tip="JSON Web Token - secure method for transmitting information">JWT</Tooltip>-protected flows, supply bearer headers per request (`headers={"Authorization": "Bearer ... "}`).
 - Override the API base URL (for example staging vs production) via `KnowrithmConfig(base_url="https://staging.knowrithm.org/api")`.
 
 ## Quick start workflow
 
-```python
+```python title="Quick start example" {4-12}
 from pathlib import Path
 
+# Create an agent with LLM settings
 agent = client.agents.create_agent(
     {"name": "Support Bot", "status": "active"},
     settings={
@@ -67,6 +72,7 @@ client.documents.upload_documents(
     file_paths=[Path("knowledge-base.pdf")],
 )
 
+# Start a conversation
 conversation = client.conversations.create_conversation(agent_id=agent["agent"]["id"])
 reply = client.messages.send_message(
     conversation_id=conversation["conversation"]["id"],

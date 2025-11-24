@@ -12,9 +12,11 @@
     "tabs": [
       {
         "tab": "Guides",
+        "icon": "book-open",
         "groups": [
           {
             "group": "Start here",
+            "icon": "rocket",
             "pages": [
               "index",
               "quickstart",
@@ -25,12 +27,14 @@
           },
           {
             "group": "Data & Knowledge",
+            "icon": "database",
             "pages": [
               "platform/data-sources"
             ]
           },
           {
             "group": "SDKs",
+            "icon": "code",
             "pages": [
               "sdk/python",
               "sdk/typescript"
@@ -40,15 +44,18 @@
       },
       {
         "tab": "API reference",
+        "icon": "terminal",
         "groups": [
           {
             "group": "Overview",
+            "icon": "info",
             "pages": [
               "api-reference/introduction"
             ]
           },
           {
             "group": "Core services",
+            "icon": "server",
             "pages": [
               "api-reference/authentication",
               "api-reference/agents",

@@ -3,6 +3,8 @@ title: "TypeScript SDK"
 description: "Build web and Node.js integrations with the official Knowrithm TypeScript SDK."
 ---
 
+# TypeScript SDK <Badge icon="code" color="blue" stroke>v1.0.0</Badge> <Badge icon="check" color="green" size="sm">Stable</Badge>
+
 The TypeScript SDK offers a fully typed interface to the Knowrithm platform for both Node.js and browser environments. Beyond thin REST wrappers it delivers automatic task polling, streaming helpers, and ergonomic file upload utilities. This guide expands on the repository README with extra commentary, examples, and production tips.
 
 ## Installation & compatibility
@@ -11,7 +13,7 @@ The TypeScript SDK offers a fully typed interface to the Knowrithm platform for 
 - TypeScript **5.0+** (ships first-party type declarations)
 - Works with npm, Yarn, or pnpm
 
-```bash
+```bash title="Install with npm/yarn/pnpm"
 npm install @knowrithm/sdk
 # or
 yarn add @knowrithm/sdk
@@ -21,7 +23,7 @@ pnpm add @knowrithm/sdk
 
 For local development of the SDK itself:
 
-```bash
+```bash title="Local development setup"
 git clone https://github.com/Knowrithm/knowrithm-typescript-sdk.git
 cd knowrithm-typescript-sdk
 npm install
@@ -30,7 +32,7 @@ npm run build
 
 ## Client bootstrap
 
-```typescript
+```typescript title="Initialize the client"
 import { KnowrithmClient } from '@knowrithm/sdk';
 
 const client = new KnowrithmClient({
@@ -40,13 +42,13 @@ const client = new KnowrithmClient({
 });
 ```
 
-- For browser usage, swap to JWT authentication (`headers: { Authorization: 'Bearer …' }`) and omit the API secret.
+- For browser usage, swap to <Tooltip tip="JSON Web Token - secure authentication method">JWT</Tooltip> authentication (`headers: { Authorization: 'Bearer …' }`) and omit the <Tooltip tip="Application Programming Interface">API</Tooltip> secret.
 - Supply `autoResolveTasks: false` to opt out of automatic task polling (you can await `client.tasks.waitForCompletion` manually).
 - HTTP requests rely on `fetch`; in Node.js the SDK ships with a ponyfill so no extra dependency is required.
 
 ## Quick start scenario
 
-```typescript
+```typescript title="Quick start example" {4-10,13-15}
 // Provision an agent with name-based model lookups
 const { agent, settings } = await client.agents.createSdkAgent({
   name: 'Support Bot',

@@ -10,10 +10,10 @@
    CSS Variables - Light Mode
    ============================================ */
 :root {
-    /* Brand Colors */
-    --primary: #6366f1;
-    --primary-hover: #4f46e5;
-    --primary-light: #818cf8;
+    /* Brand Colors - Matching chatbot widget blue */
+    --primary: #0ea5e9;
+    --primary-hover: #0284c7;
+    --primary-light: #38bdf8;
 
     /* Semantic Colors */
     --text-primary: #111827;
@@ -33,9 +33,9 @@
 [data-theme="dark"],
 .dark,
 html.dark {
-    /* Brand Colors */
-    --primary: #818cf8;
-    --primary-hover: #a5b4fc;
+    /* Brand Colors - Lighter blue for dark mode */
+    --primary: #38bdf8;
+    --primary-hover: #7dd3fc;
 
     /* Semantic Colors */
     --text-primary: #f9fafb;
@@ -147,8 +147,9 @@ a[class*="button"] {
 /* ============================================
    Chat Widget Overrides
    ============================================ */
-.ai-chat-widget {
-    z-index: 60 !important;
+.ai-chat-widget-container {
+    z-index: 50 !important;
+    /* Widget stays below navbar (90), sidebar (80), and TOC (70) */
 }
 
 .ai-chat-widget .ai-chat-message.assistant .ai-chat-message-content,
@@ -175,6 +176,7 @@ a[class*="button"] {
 }
 
 @media (min-width: 1280px) {
+
     #content-side-layout,
     #table-of-contents-layout {
         display: flex !important;
