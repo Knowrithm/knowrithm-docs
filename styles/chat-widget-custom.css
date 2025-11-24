@@ -1,172 +1,148 @@
-/* Custom Chat Widget CSS - overrides to prevent global style conflicts */
+/* Knowrithm chat widget overrides
+   - Keep navigation layers independent from the floating widget
+   - Constrain the widget hit-area so it never masks navbar icons
+   - Ensure assistant responses stay high-contrast in both themes */
 
-/* Copy of original widget CSS with problematic generic selectors removed */
-
-/* ============================================================= */
-/* Begin original widget CSS (truncated for brevity) */
-
-/* Knowrithm AI Chat Widget Styles */
 :root {
-    --widget-primary-color: #0EA5E9;
-    --widget-hover-color: #0284C7;
-    --widget-text-primary: #1A1D1F;
-    --widget-text-secondary: #6C757D;
-    --widget-bg-light: #FFFFFF;
-    --widget-bg-dark: #1F2937;
-    --widget-border: #E5E7EB;
-    --widget-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --knowrithm-nav-layer: 120;
+    --knowrithm-widget-layer: 40;
+    --knowrithm-widget-layer-active: 180;
 }
 
-/* Widget Container */
-.ai-chat-widget-container {
-    position: fixed;
-    z-index: 50;
-    /* ensure widget stays below navbar (90), sidebar (80), and TOC (70) but above content */
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+#table-of-contents,
+#table-of-contents-layout,
+#table-of-contents-content,
+.table-of-contents {
+    z-index: calc(var(--knowrithm-widget-layer) - 20) !important;
 }
 
-.ai-chat-widget-container.position-right {
-    bottom: 100px;
-    /* increased from 24px to avoid overlap with "On this page" section */
-    right: 24px;
+#navbar {
+    z-index: var(--knowrithm-nav-layer) !important;
+    isolation: isolate;
 }
 
-.ai-chat-widget-container.position-left {
-    bottom: 24px;
-    left: 24px;
+#navbar .nav-logo,
+#navbar nav,
+#navbar button,
+#navbar a,
+#navbar svg {
+    position: relative;
+    z-index: 1;
 }
 
-/* Chat Button */
-.ai-chat-widget-button {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: var(--widget-primary-color);
-    border: none;
-    cursor: pointer;
-    box-shadow: var(--widget-shadow);
+#navbar nav ul {
     display: flex;
     align-items: center;
-    justify-content: center;
-    transition: all 0.3s ease;
-    color: white;
-    font-size: 24px;
+    gap: 1.5rem;
 }
 
-.ai-chat-widget-button:hover {
-    background: var(--widget-hover-color);
-    transform: scale(1.05);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+#navbar .flex.items-center {
+    gap: 0.75rem;
 }
 
-.ai-chat-widget-button:active {
-    transform: scale(0.95);
+html:not(.dark) #navbar img.nav-logo.dark\:hidden {
+    display: block !important;
 }
 
-/* Chat Window - Light Theme */
-.ai-chat-widget-window {
-    position: fixed;
-    width: 400px;
-    height: 600px;
-    max-height: 85vh;
-    background: var(--widget-bg-light);
-    border-radius: 16px;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-    display: none;
-    flex-direction: column;
-    overflow: hidden;
-    border: 1px solid var(--widget-border);
+html:not(.dark) #navbar img.nav-logo.dark\:block {
+    display: none !important;
 }
 
-.ai-chat-widget-window.visible {
-    display: flex;
+html.dark #navbar img.nav-logo.dark\:hidden {
+    display: none !important;
 }
 
-.ai-chat-widget-window.theme-dark {
-    background: var(--widget-bg-dark);
-    border-color: #374151;
+html.dark #navbar img.nav-logo.dark\:block {
+    display: block !important;
 }
 
-/* Header */
-.ai-chat-widget-header {
-    background: var(--widget-primary-color);
-    color: white;
-    padding: 16px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: 600;
+html:not(.dark) #navbar button[aria-label="Toggle dark mode"] .dark\:hidden {
+    display: inline-flex !important;
 }
 
-.ai-chat-widget-close {
-    background: transparent;
-    border: none;
-    color: white;
-    font-size: 24px;
-    cursor: pointer;
-    padding: 0;
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 4px;
-    transition: background 0.2s;
+html:not(.dark) #navbar button[aria-label="Toggle dark mode"] .dark\:block {
+    display: none !important;
 }
 
-.ai-chat-widget-close:hover {
-    background: rgba(255, 255, 255, 0.1);
+html.dark #navbar button[aria-label="Toggle dark mode"] .dark\:hidden {
+    display: none !important;
 }
 
-/* Messages Area */
-.ai-chat-widget-messages {
-    flex: 1;
-    overflow-y: auto;
-    padding: 20px;
-    background: #F8F9FA;
+html.dark #navbar button[aria-label="Toggle dark mode"] .dark\:block {
+    display: inline-flex !important;
 }
 
-.ai-chat-widget-window.theme-dark .ai-chat-widget-messages {
-    background: #111827;
+.ai-chat-widget {
+    pointer-events: none;
+    width: max-content;
+    max-width: min(420px, calc(100vw - 32px));
+    z-index: var(--knowrithm-widget-layer) !important;
 }
 
-.ai-chat-widget-message {
-    margin-bottom: 16px;
-    display: flex;
-    gap: 8px;
+.ai-chat-widget .ai-chat-button,
+.ai-chat-widget .ai-chat-window,
+.ai-chat-widget .ai-chat-modal-overlay {
+    pointer-events: auto;
 }
 
-.ai-chat-widget-message.user {
-    flex-direction: row-reverse;
+.ai-chat-widget .ai-chat-window {
+    z-index: calc(var(--knowrithm-widget-layer) + 1) !important;
 }
 
-.ai-chat-widget-message-content {
-    max-width: 75%;
-    padding: 12px 16px;
-    border-radius: 12px;
-    background: white;
-    color: var(--widget-text-primary);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-    word-wrap: break-word;
+.ai-chat-modal-overlay {
+    z-index: calc(var(--knowrithm-widget-layer) + 5) !important;
+    background: rgba(15, 23, 42, 0.78) !important;
+    backdrop-filter: blur(10px);
 }
 
-/* Ensure bot responses have high-contrast body text */
-.ai-chat-widget-message:not(.user) .ai-chat-widget-message-content {
-    color: #1A1A1A;
+.ai-chat-widget.ai-chat-open {
+    z-index: var(--knowrithm-widget-layer-active) !important;
 }
 
-@keyframes slideUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
+.ai-chat-widget.ai-chat-open .ai-chat-button {
+    z-index: calc(var(--knowrithm-widget-layer-active) + 1) !important;
+}
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
+.ai-chat-widget.ai-chat-open .ai-chat-window {
+    z-index: calc(var(--knowrithm-widget-layer-active) + 2) !important;
+}
+
+.ai-chat-widget.ai-chat-open .ai-chat-modal-overlay {
+    z-index: calc(var(--knowrithm-widget-layer-active) + 5) !important;
+}
+
+.ai-chat-widget .ai-chat-message.assistant {
+    color: #0f172a !important;
+    background: #ffffff !important;
+}
+
+.ai-chat-widget .ai-chat-message.user {
+    color: #ffffff !important;
+}
+
+.ai-chat-widget.ai-chat-theme-dark .ai-chat-message.assistant,
+.ai-chat-widget[data-theme="dark"] .ai-chat-message.assistant {
+    color: #f8fafc !important;
+    background: #1f2937 !important;
+}
+
+.ai-chat-widget .ai-chat-message.assistant a {
+    color: #0369a1 !important;
+    text-decoration-color: rgba(3, 105, 161, 0.4);
+}
+
+.ai-chat-widget .ai-chat-messages {
+    color: #0f172a;
+}
+
+.ai-chat-widget .ai-chat-input,
+.ai-chat-widget .ai-chat-button,
+.ai-chat-widget .ai-chat-branding {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+@media (max-width: 640px) {
+    .ai-chat-widget {
+        max-width: calc(100vw - 24px);
     }
 }
-
-/* NOTE: The generic ".button" selector from the original widget CSS has been removed to avoid overriding site-wide button styles. */
-
-/* End of custom widget CSS */

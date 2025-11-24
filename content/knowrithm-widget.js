@@ -10,144 +10,130 @@
 
     var WIDGET_STYLE_ID = 'knowrithm-widget-style';
     var WIDGET_STYLE_HREF = '/styles/chat-widget-custom.css';
-    var NAV_ELEMENTS = [
-        { id: 'navbar', minWidth: 0, display: 'block', zIndex: 90 },
-        { id: 'sidebar', minWidth: 1024, display: 'block', zIndex: 80 },
-        { id: 'content-side-layout', minWidth: 1280, display: 'flex', zIndex: 70 },
-        { id: 'table-of-contents-layout', minWidth: 1280, display: 'flex', zIndex: 70 },
-        { id: 'table-of-contents', minWidth: 1280, display: 'block', zIndex: 70 }
-    ];
-    var navVisibilityGuardAttached = false;
-    var navMutationObserver = null;
-    var navElementObservers = {};
 
-    function observeNavElement(ruleId, element) {
-        if (typeof MutationObserver === 'undefined' || !element) {
+    function ensureWidgetOverridesLoaded() {
+        if (typeof document === 'undefined') {
+            return;
+        }
+        if (document.getElementById(WIDGET_STYLE_ID)) {
             return;
         }
 
-        var existing = navElementObservers[ruleId];
-        if (existing && existing.element === element) {
-            return;
-        }
+        var link = document.createElement('link');
+        link.id = WIDGET_STYLE_ID;
+        link.rel = 'stylesheet';
+        link.href = WIDGET_STYLE_HREF;
+        link.type = 'text/css';
+        link.media = 'all';
+        link.onerror = function (error) {
+            console.error('Failed to load Knowrithm widget override styles:', error);
+        };
 
-        if (existing && existing.observer) {
-            existing.observer.disconnect();
-        }
-
-        var observer = new MutationObserver(function () {
-            applyAllNavigationRules();
-        });
-
-        observer.observe(element, { attributes: true, attributeFilter: ['class', 'style', 'hidden'] });
-        navElementObservers[ruleId] = { observer: observer, element: element };
+        (document.head || document.body).appendChild(link);
     }
 
-    function applyNavigationRule(rule) {
-        var element = document.getElementById(rule.id);
-        if (!element) return;
+    var NAV_GUARD_TARGETS = [
+        { selector: '#navbar', minWidth: 0, display: 'block', zIndex: 120 },
+        { selector: '#sidebar', minWidth: 1024, display: 'block', zIndex: 80 },
+        { selector: '#content-side-layout', minWidth: 1280, display: 'flex', zIndex: 70 },
+        { selector: '#table-of-contents-layout', minWidth: 1280, display: 'flex', zIndex: 70 },
+        { selector: '#table-of-contents', minWidth: 1280, display: 'block', zIndex: 70 },
+        { selector: '#navbar .relative.hidden.lg\\:flex.items-center.flex-1.justify-center', minWidth: 1024, display: 'flex', zIndex: 110 },
+        { selector: '#navbar .flex-1.relative.hidden.lg\\:flex.items-center.ml-auto.justify-end', minWidth: 1024, display: 'flex', zIndex: 110 },
+        { selector: '#navbar .hidden.lg\\:flex.px-12.h-12', minWidth: 1024, display: 'flex', zIndex: 110 },
+        { selector: '#topbar-cta-button.hidden.lg\\:flex', minWidth: 1024, display: 'flex', zIndex: 110 }
+    ];
+    var navGuardAttached = false;
+    var navMutationObserver = null;
+    var pendingNavFrame = null;
 
-        var meetsBreakpoint = true;
-        if (rule.minWidth) {
-            if (typeof window.matchMedia === 'function') {
-                meetsBreakpoint = window.matchMedia('(min-width: ' + rule.minWidth + 'px)').matches;
-            } else {
-                meetsBreakpoint = window.innerWidth >= rule.minWidth;
-            }
+    function matchesMinWidth(rule) {
+        if (!rule.minWidth) {
+            return true;
+        }
+        if (typeof window === 'undefined') {
+            return false;
+        }
+        if (typeof window.matchMedia === 'function') {
+            return window.matchMedia('(min-width: ' + rule.minWidth + 'px)').matches;
+        }
+        return window.innerWidth >= rule.minWidth;
+    }
+
+    function applyNavGuardRule(rule) {
+        if (typeof document === 'undefined') {
+            return;
+        }
+        var element = document.querySelector(rule.selector);
+        if (!element) {
+            return;
         }
 
-        if (meetsBreakpoint) {
-            var displayValue = rule.display || 'block';
-            element.style.setProperty('display', displayValue, 'important');
-            element.style.setProperty('visibility', 'visible', 'important');
-            element.style.setProperty('opacity', '1', 'important');
-            element.style.setProperty('pointer-events', 'auto', 'important');
-            if (typeof rule.zIndex === 'number') {
-                element.style.setProperty('z-index', String(rule.zIndex), 'important');
-            }
-            if (element.hasAttribute('hidden')) {
-                element.removeAttribute('hidden');
-            }
-
-            // Special handling for navbar removed to ensure layout independence
-            // and prevent interfering with existing styles (e.g. SVG strokes).
-        } else {
+        if (!matchesMinWidth(rule)) {
             ['display', 'visibility', 'opacity', 'pointer-events', 'z-index'].forEach(function (prop) {
                 element.style.removeProperty(prop);
             });
-        }
-
-        observeNavElement(rule.id, element);
-    }
-
-    function applyAllNavigationRules() {
-        NAV_ELEMENTS.forEach(applyNavigationRule);
-    }
-
-    function maintainNavigationVisibility() {
-        if (typeof window === 'undefined' || typeof document === 'undefined') return;
-
-        applyAllNavigationRules();
-
-        if (navVisibilityGuardAttached) {
             return;
         }
-        navVisibilityGuardAttached = true;
 
-        var queries = NAV_ELEMENTS
-            .filter(function (rule) { return rule.minWidth; })
-            .map(function (rule) { return '(min-width: ' + rule.minWidth + 'px)'; })
-            .filter(function (query, index, self) { return self.indexOf(query) === index; });
+        if (rule.display) {
+            element.style.setProperty('display', rule.display, 'important');
+        }
+        element.style.setProperty('visibility', 'visible', 'important');
+        element.style.setProperty('opacity', '1', 'important');
+        element.style.setProperty('pointer-events', 'auto', 'important');
+        if (typeof rule.zIndex === 'number') {
+            element.style.setProperty('z-index', String(rule.zIndex), 'important');
+        }
+        if (element.hasAttribute('hidden')) {
+            element.removeAttribute('hidden');
+        }
+    }
 
-        function handleViewportChange() {
-            applyAllNavigationRules();
+    function enforceNavigationGuards() {
+        NAV_GUARD_TARGETS.forEach(applyNavGuardRule);
+    }
+
+    function scheduleNavigationGuard() {
+        if (pendingNavFrame || typeof window === 'undefined') {
+            return;
+        }
+        pendingNavFrame = window.requestAnimationFrame(function () {
+            pendingNavFrame = null;
+            enforceNavigationGuards();
+        });
+    }
+
+    function attachNavigationGuards() {
+        if (navGuardAttached || typeof document === 'undefined') {
+            return;
+        }
+        navGuardAttached = true;
+        enforceNavigationGuards();
+
+        if (typeof window !== 'undefined') {
+            window.addEventListener('resize', scheduleNavigationGuard, { passive: true });
         }
 
-        if (queries.length && typeof window.matchMedia === 'function') {
-            queries.forEach(function (query) {
-                var mediaQuery = window.matchMedia(query);
-                if (typeof mediaQuery.addEventListener === 'function') {
-                    mediaQuery.addEventListener('change', handleViewportChange);
-                } else if (typeof mediaQuery.addListener === 'function') {
-                    mediaQuery.addListener(handleViewportChange);
-                }
-            });
-        } else {
-            window.addEventListener('resize', handleViewportChange, { passive: true });
-        }
-
-        if (typeof MutationObserver !== 'undefined') {
-            NAV_ELEMENTS.forEach(function (rule) {
-                var target = document.getElementById(rule.id);
-                if (target) {
-                    var observer = new MutationObserver(handleViewportChange);
-                    // For navbar, we need to watch subtree attributes to catch icon style changes
-                    if (rule.id === 'navbar') {
-                        observer.observe(target, {
-                            attributes: true,
-                            attributeFilter: ['class', 'style', 'fill', 'stroke', 'color'],
-                            subtree: true
-                        });
-                    } else {
-                        observer.observe(target, { attributes: true, attributeFilter: ['class', 'style'] });
+        if (typeof MutationObserver !== 'undefined' && document.body) {
+            navMutationObserver = new MutationObserver(function (mutations) {
+                for (var i = 0; i < mutations.length; i++) {
+                    var target = mutations[i].target;
+                    for (var j = 0; j < NAV_GUARD_TARGETS.length; j++) {
+                        var rule = NAV_GUARD_TARGETS[j];
+                        var element = document.querySelector(rule.selector);
+                        if (element && (target === element || element.contains(target))) {
+                            scheduleNavigationGuard();
+                            return;
+                        }
                     }
                 }
             });
-
-            if (!navMutationObserver) {
-                navMutationObserver = new MutationObserver(function () {
-                    applyAllNavigationRules();
-                });
-
-                if (document.body) {
-                    navMutationObserver.observe(document.body, { childList: true, subtree: true });
-                } else {
-                    document.addEventListener('DOMContentLoaded', function () {
-                        if (!navMutationObserver) return;
-                        navMutationObserver.observe(document.body, { childList: true, subtree: true });
-                    });
-                }
-            }
+            navMutationObserver.observe(document.body, {
+                attributes: true,
+                attributeFilter: ['style', 'hidden', 'class'],
+                subtree: true
+            });
         }
     }
 
@@ -250,7 +236,8 @@
 
     // Wait for DOM to be ready
     function initWidget() {
-        maintainNavigationVisibility();
+        ensureWidgetOverridesLoaded();
+        attachNavigationGuards();
 
         // Fix form autofill issues on initial load
         fixFormAutofillIssues();
@@ -306,21 +293,6 @@
             }
         }
 
-        // Ensure the scoped widget stylesheet is loaded once
-        if (!document.getElementById(WIDGET_STYLE_ID)) {
-            var link = document.createElement('link');
-            link.id = WIDGET_STYLE_ID;
-            link.rel = 'stylesheet';
-            link.href = WIDGET_STYLE_HREF;
-            link.type = 'text/css';
-            link.media = 'all';
-            link.onerror = function (error) {
-                console.error('Failed to load Knowrithm widget styles:', error);
-            };
-
-            (document.head || document.body).appendChild(link);
-        }
-
         // Configure the widget BEFORE loading the script
         window.AIChatWidget = {
             agentId: "2b041b45-a585-47e9-abaf-ebaad766bce9",
@@ -364,8 +336,10 @@
         script.async = true;
         script.defer = true; // Defer to avoid blocking page load
 
+        script.onload = ensureWidgetOverridesLoaded;
         script.onerror = function (error) {
             console.error('Failed to load Knowrithm widget script:', error);
+            ensureWidgetOverridesLoaded();
         };
 
         // Append to body instead of head to avoid interfering with page initialization
