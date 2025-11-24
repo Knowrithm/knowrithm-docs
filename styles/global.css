@@ -143,3 +143,52 @@ a[class*="button"] {
     align-items: center !important;
     justify-content: center !important;
 }
+
+/* ============================================
+   Chat Widget Overrides
+   ============================================ */
+.ai-chat-widget {
+    z-index: 60 !important;
+}
+
+.ai-chat-widget .ai-chat-message.assistant .ai-chat-message-content,
+.ai-chat-widget .ai-chat-message.assistant .ai-chat-message-content :is(p, li, span, strong, em, a, code, ul, ol) {
+    color: #1A1A1A !important;
+}
+
+@media (min-width: 1024px) {
+    #sidebar {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        z-index: 80 !important;
+    }
+}
+
+#navbar {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    pointer-events: auto !important;
+    z-index: 90 !important;
+}
+
+@media (min-width: 1280px) {
+    #content-side-layout,
+    #table-of-contents-layout {
+        display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        z-index: 70 !important;
+    }
+
+    #table-of-contents {
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        z-index: 70 !important;
+    }
+}

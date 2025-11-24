@@ -3,9 +3,9 @@
   "theme": "mint",
   "name": "Knowrithm Documentation",
   "colors": {
-    "primary": "#6366f1",
-    "light": "#818cf8",
-    "dark": "#4f46e5"
+    "primary": "#0ea5e9",
+    "light": "#38bdf8",
+    "dark": "#0369a1"
   },
   "favicon": "/favicon.svg",
   "navigation": {

@@ -149,6 +149,11 @@
     word-wrap: break-word;
 }
 
+/* Ensure bot responses have high-contrast body text */
+.ai-chat-widget-message:not(.user) .ai-chat-widget-message-content {
+    color: #1A1A1A;
+}
+
 .ai-chat-widget-message.user .ai-chat-widget-message-content {
     background: var(--widget-primary-color);
     color: white;

@@ -3,9 +3,9 @@
   "theme": "mint",
   "name": "knowrithm-docs",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#0ea5e9",
+    "light": "#38bdf8",
+    "dark": "#0369a1"
   },
   "favicon": "/favicon.svg",
   "navigation": {
