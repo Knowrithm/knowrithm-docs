@@ -15,7 +15,7 @@ description: "Understand how Knowrithm's services collaborate to deliver reliabl
   <Card title="Redis" icon="cloud">
     **Redis 6+**. Serves as the Celery broker, cache layer, and transient store for live conversation streaming.
   </Card>
-  <Card title="PostgreSQL" icon="square-2-stack">
+  <Card title="PostgreSQL" icon="layer-group">
     **PostgreSQL 13+**. Stores multi-tenant domain models with **SQLAlchemy ORM**. Handles row-level relationships and soft-delete flags.
   </Card>
 </Columns>
@@ -30,7 +30,7 @@ description: "Understand how Knowrithm's services collaborate to deliver reliabl
   <Accordion icon="users" title="Tenant isolation">
     Company-scoped decorators protect every mutating route. Data fan-out (documents, conversations, analytics) always happens behind Celery tasks to avoid blocking requests.
   </Accordion>
-  <Accordion icon="cog-6-tooth" title="LLM settings as first-class entities">
+  <Accordion icon="gear" title="LLM settings as first-class entities">
     Agents reference an `llm_settings_id` that encapsulates provider IDs, API keys, temperature, max tokens, and embedding metadata. Updating or cloning settings emits background jobs that re-train embeddings and refresh widget configuration.
   </Accordion>
   <Accordion icon="chart-bar" title="Observability">
@@ -44,13 +44,13 @@ description: "Understand how Knowrithm's services collaborate to deliver reliabl
 ## Deploy topology
 
 <Columns cols={2}>
-  <Card title="Web tier" icon="globe-alt">
+  <Card title="Web tier" icon="globe">
     Deploy the Flask API behind a reverse proxy (NGINX, CloudFront) with TLS termination and WAF rules. Widget assets (`/api/widget.js`) can be CDN cached.
   </Card>
-  <Card title="Workers" icon="command-line">
+  <Card title="Workers" icon="terminal">
     Run at least two worker pools: one pinned to `critical,default` for request fan-out, and another for `slow` ingestion tasks. Schedule `celery beat` on a dedicated instance.
   </Card>
-  <Card title="Storage & networking" icon="cube-transparent">
+  <Card title="Storage & networking" icon="cubes">
     Use managed PostgreSQL and Redis offerings when possible. Configure VPC peering for third-party databases that agents connect to.
   </Card>
   <Card title="Secrets & configuration" icon="lock">

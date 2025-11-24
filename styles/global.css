@@ -152,45 +152,166 @@ a[class*="button"] {
     /* Widget stays below navbar (90), sidebar (80), and TOC (70) */
 }
 
+/* ============================================
+   Knowrithm Documentation - Safe Theme
+   ============================================ */
+
+/* Import fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+/* ============================================
+   CSS Variables - Light Mode
+   ============================================ */
+:root {
+    /* Brand Colors - Matching chatbot widget blue */
+    --primary: #0ea5e9;
+    --primary-hover: #0284c7;
+    --primary-light: #38bdf8;
+
+    /* Semantic Colors */
+    --text-primary: #111827;
+    --text-secondary: #4b5563;
+    --background: #ffffff;
+    --surface: #f9fafb;
+    --border: #e5e7eb;
+
+    /* Typography */
+    --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', 'SF Mono', Monaco, Consolas, monospace;
+}
+
+/* ============================================
+   CSS Variables - Dark Mode
+   ============================================ */
+[data-theme="dark"],
+.dark,
+html.dark {
+    /* Brand Colors - Lighter blue for dark mode */
+    --primary: #38bdf8;
+    --primary-hover: #7dd3fc;
+
+    /* Semantic Colors */
+    --text-primary: #f9fafb;
+    --text-secondary: #d1d5db;
+    --background: #0f1117;
+    --surface: #1f2937;
+    --border: #374151;
+}
+
+/* ============================================
+   Base Styles
+   ============================================ */
+body {
+    font-family: var(--font-sans) !important;
+    color: var(--text-primary) !important;
+    background: var(--background) !important;
+    -webkit-font-smoothing: antialiased;
+}
+
+/* ============================================
+   Dark Mode Overrides
+   ============================================ */
+html.dark h1,
+html.dark h2,
+html.dark h3,
+html.dark h4,
+html.dark h5,
+html.dark h6,
+html.dark strong,
+html.dark b {
+    color: var(--text-primary) !important;
+}
+
+html.dark p,
+html.dark li,
+html.dark td {
+    color: var(--text-secondary) !important;
+}
+
+html.dark table {
+    background: var(--surface) !important;
+    border-color: var(--border) !important;
+}
+
+html.dark th {
+    background: var(--surface) !important;
+    color: var(--text-primary) !important;
+    border-bottom-color: var(--border) !important;
+}
+
+html.dark td {
+    border-bottom-color: var(--border) !important;
+}
+
+html.dark code {
+    background: var(--surface) !important;
+    color: var(--primary) !important;
+    border: 1px solid var(--border) !important;
+}
+
+/* ============================================
+   Component Fixes
+   ============================================ */
+/* Fix Icons in Dark Mode */
+html.dark svg,
+html.dark .icon {
+    fill: currentColor;
+}
+
+/* Fix Logo Background in Dark Mode */
+html.dark img[src*="logo"] {
+    background: transparent !important;
+    padding: 0 !important;
+}
+
+/* Ensure other images are visible */
+html.dark img:not([src*="logo"]) {
+    opacity: 0.9;
+}
+
+/* ============================================
+   Typography Tweaks (Safe)
+   ============================================ */
+h1 {
+    font-weight: 800 !important;
+    letter-spacing: -0.025em !important;
+}
+
+a {
+    color: var(--primary) !important;
+    text-decoration: none !important;
+}
+
+a:hover {
+    color: var(--primary-hover) !important;
+}
+
+/* ============================================
+   Button Fixes (Scoped)
+   ============================================ */
+/* Only target specific button classes to avoid breaking layout */
+.button,
+a[class*="button"] {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+/* ============================================
+   Chat Widget Overrides
+   ============================================ */
+.ai-chat-widget-container {
+    z-index: 50 !important;
+    /* Widget stays below navbar (90), sidebar (80), and TOC (70) */
+}
+
 .ai-chat-widget .ai-chat-message.assistant .ai-chat-message-content,
 .ai-chat-widget .ai-chat-message.assistant .ai-chat-message-content :is(p, li, span, strong, em, a, code, ul, ol) {
     color: #1A1A1A !important;
 }
 
-@media (min-width: 1024px) {
-    #sidebar {
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-        pointer-events: auto !important;
-        z-index: 80 !important;
-    }
-}
-
-#navbar {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    pointer-events: auto !important;
-    z-index: 90 !important;
-}
-
-@media (min-width: 1280px) {
-
-    #content-side-layout,
-    #table-of-contents-layout {
-        display: flex !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-        pointer-events: auto !important;
-        z-index: 70 !important;
-    }
-
-    #table-of-contents {
-        display: block !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-        pointer-events: auto !important;
-        z-index: 70 !important;
-    }
-}
+/* ============================================
+   Navigation Element Visibility - CRITICAL FIX
+   ============================================ */
+/* Removed aggressive overrides to restore native layout behavior */

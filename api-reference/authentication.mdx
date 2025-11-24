@@ -6,13 +6,13 @@ description: "Manage JWT tokens, invite users, and provision programmatic access
 ## JWT lifecycle
 
 <Columns cols={3}>
-  <Card title="Login" icon="arrow-right-circle">
+  <Card title="Login" icon="arrow-right">
     `POST /api/v1/auth/login` accepts credentials and returns a task handle that yields access + refresh tokens on completion.
   </Card>
-  <Card title="Refresh" icon="arrow-path">
+  <Card title="Refresh" icon="arrows-rotate">
     `POST /api/v1/auth/refresh` exchanges a refresh token for a new access token pair. Use before tokens expire.
   </Card>
-  <Card title="Logout" icon="arrow-left-circle">
+  <Card title="Logout" icon="arrow-left">
     `POST /api/v1/auth/logout` revokes the active session and refresh token.
   </Card>
 </Columns>
@@ -30,7 +30,7 @@ description: "Manage JWT tokens, invite users, and provision programmatic access
 | `email` | `string(email)` | Yes | User's login email. |
 | `password` | `string` | Yes | Password (minimum 8 characters). |
 
-<Callout icon="information-circle">
+<Callout icon="circle-info">
   Poll the provided <code>status_url</code> to retrieve tokens. Successful completion returns access token, refresh token, expiration timestamps, and the authenticated user + company context.
 </Callout>
 

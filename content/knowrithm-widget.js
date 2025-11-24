@@ -6,6 +6,8 @@
     if (window.__knowrithmWidgetLoaded) return;
     window.__knowrithmWidgetLoaded = true;
 
+    console.log('[Knowrithm] Widget script loaded');
+
     var WIDGET_STYLE_ID = 'knowrithm-widget-style';
     var WIDGET_STYLE_HREF = '/styles/chat-widget-custom.css';
     var NAV_ELEMENTS = [
@@ -66,6 +68,9 @@
             if (element.hasAttribute('hidden')) {
                 element.removeAttribute('hidden');
             }
+
+            // Special handling for navbar removed to ensure layout independence
+            // and prevent interfering with existing styles (e.g. SVG strokes).
         } else {
             ['display', 'visibility', 'opacity', 'pointer-events', 'z-index'].forEach(function (prop) {
                 element.style.removeProperty(prop);
@@ -116,7 +121,16 @@
                 var target = document.getElementById(rule.id);
                 if (target) {
                     var observer = new MutationObserver(handleViewportChange);
-                    observer.observe(target, { attributes: true, attributeFilter: ['class', 'style'] });
+                    // For navbar, we need to watch subtree attributes to catch icon style changes
+                    if (rule.id === 'navbar') {
+                        observer.observe(target, {
+                            attributes: true,
+                            attributeFilter: ['class', 'style', 'fill', 'stroke', 'color'],
+                            subtree: true
+                        });
+                    } else {
+                        observer.observe(target, { attributes: true, attributeFilter: ['class', 'style'] });
+                    }
                 }
             });
 
@@ -137,9 +151,160 @@
         }
     }
 
+    // Fix form autofill issues
+    var processedElements = new WeakSet();
+
+    function fixFormAutofillIssues() {
+        if (typeof window === 'undefined' || typeof document === 'undefined') return;
+
+        var idCounter = Date.now(); // Use timestamp for more unique IDs
+        var usedIds = {};
+        var fixedCount = 0;
+
+        // Find all input, select, and textarea elements
+        var formElements = document.querySelectorAll('input, select, textarea');
+
+        formElements.forEach(function (element) {
+            // Skip if already processed
+            if (processedElements.has(element)) {
+                return;
+            }
+
+            // Skip if element is hidden or has type="hidden"
+            if (element.type === 'hidden' || element.style.display === 'none') {
+                return;
+            }
+
+            var elementType = element.tagName.toLowerCase();
+            var inputType = element.type || 'text';
+            var needsFix = false;
+
+            // Fix 1: Add id and name if missing
+            if (!element.id && !element.name) {
+                var baseId = elementType + '-' + inputType + '-' + (++idCounter);
+                element.id = baseId;
+                element.name = baseId;
+                needsFix = true;
+            } else if (!element.id) {
+                element.id = element.name || (elementType + '-' + inputType + '-' + (++idCounter));
+                needsFix = true;
+            } else if (!element.name) {
+                element.name = element.id;
+                needsFix = true;
+            }
+
+            // Fix 2: Handle duplicate IDs
+            if (element.id && usedIds[element.id]) {
+                var newId = element.id + '-' + (++idCounter);
+                element.id = newId;
+                if (element.name === usedIds[element.id]) {
+                    element.name = newId;
+                }
+                needsFix = true;
+            }
+            if (element.id) {
+                usedIds[element.id] = true;
+            }
+
+            // Fix 3: Add autocomplete attribute if missing
+            if (!element.hasAttribute('autocomplete')) {
+                var autocompleteValue = 'off'; // Default to off for safety
+
+                // Determine appropriate autocomplete value based on input type and context
+                if (inputType === 'search' || element.getAttribute('role') === 'search') {
+                    autocompleteValue = 'off';
+                } else if (inputType === 'email') {
+                    autocompleteValue = 'email';
+                } else if (inputType === 'tel') {
+                    autocompleteValue = 'tel';
+                } else if (inputType === 'url') {
+                    autocompleteValue = 'url';
+                } else if (inputType === 'text') {
+                    // Check for common name patterns
+                    var nameAttr = (element.name || element.id || '').toLowerCase();
+                    if (nameAttr.includes('name')) {
+                        autocompleteValue = 'name';
+                    } else if (nameAttr.includes('email')) {
+                        autocompleteValue = 'email';
+                    } else if (nameAttr.includes('search') || nameAttr.includes('query')) {
+                        autocompleteValue = 'off';
+                    } else {
+                        autocompleteValue = 'off';
+                    }
+                }
+
+                element.setAttribute('autocomplete', autocompleteValue);
+                needsFix = true;
+            }
+
+            if (needsFix) {
+                fixedCount++;
+                processedElements.add(element);
+            }
+        });
+
+        if (fixedCount > 0) {
+            console.log('[Knowrithm] Fixed ' + fixedCount + ' form field(s) for autofill compatibility');
+        }
+    }
+
     // Wait for DOM to be ready
     function initWidget() {
         maintainNavigationVisibility();
+
+        // Fix form autofill issues on initial load
+        fixFormAutofillIssues();
+
+        // Run again after a short delay to catch elements created by other scripts
+        setTimeout(function () {
+            fixFormAutofillIssues();
+        }, 500);
+
+        // Run again after a longer delay for late-loading elements
+        setTimeout(function () {
+            fixFormAutofillIssues();
+        }, 2000);
+
+        // Periodic check for the first 10 seconds to catch all dynamic elements
+        var checkCount = 0;
+        var periodicCheck = setInterval(function () {
+            fixFormAutofillIssues();
+            checkCount++;
+            if (checkCount >= 5) { // Run 5 times over 10 seconds
+                clearInterval(periodicCheck);
+            }
+        }, 2000);
+
+        // Set up observer to fix dynamically added form elements
+        if (typeof MutationObserver !== 'undefined') {
+            var formObserver = new MutationObserver(function (mutations) {
+                var shouldFix = false;
+                mutations.forEach(function (mutation) {
+                    if (mutation.addedNodes.length > 0) {
+                        mutation.addedNodes.forEach(function (node) {
+                            if (node.nodeType === 1) { // Element node
+                                var tagName = node.tagName ? node.tagName.toLowerCase() : '';
+                                if (tagName === 'input' || tagName === 'select' || tagName === 'textarea' || tagName === 'form') {
+                                    shouldFix = true;
+                                } else if (node.querySelector && node.querySelector('input, select, textarea')) {
+                                    shouldFix = true;
+                                }
+                            }
+                        });
+                    }
+                });
+                if (shouldFix) {
+                    // Debounce the fix to avoid excessive calls
+                    setTimeout(function () {
+                        fixFormAutofillIssues();
+                    }, 100);
+                }
+            });
+
+            if (document.body) {
+                formObserver.observe(document.body, { childList: true, subtree: true });
+            }
+        }
 
         // Ensure the scoped widget stylesheet is loaded once
         if (!document.getElementById(WIDGET_STYLE_ID)) {

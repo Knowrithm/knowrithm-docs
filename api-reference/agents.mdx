@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Agents"
 description: "Create, manage, and observe Knowrithm agents."
 ---
@@ -115,7 +115,7 @@ This route is **Public** and returns safe-to-share metadata (name, description, 
 | Soft delete (sync) | `DELETE /api/v1/sdk/agent/{agent_id}` | Synchronous | Returns confirmation immediately. |
 | Restore | `PATCH /api/v1/agent/{agent_id}/restore` | Asynchronous | Re-activates a previously deleted agent. |
 
-<Callout icon="information-circle">
+<Callout icon="circle-info">
   Most asynchronous operations share the standard response: `{"status":"accepted","status_url":"/v1/tasks/3f4033c0/status"}`. Poll the task to learn when the change takes effect.
 </Callout>
 

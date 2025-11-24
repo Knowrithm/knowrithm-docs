@@ -6,7 +6,7 @@ description: "Understand authentication, task semantics, and common patterns bef
 ## Base URL
 
 ```text
-https://{your-environment}/api/v1
+https://app.knowrithm.org/api/v1
 ```
 
 All paths in this documentation assume the `/api/v1` prefix.
@@ -91,10 +91,10 @@ Exceeding limits yields `429 Too Many Requests`. Inspect the `Retry-After` heade
 ## SDKs
 
 <CardGroup cols={2}>
-  <Card title="Python SDK" icon="code-bracket" href="https://pypi.org/project/knowrithm-py/">
+  <Card title="Python SDK" icon="code" href="https://pypi.org/project/knowrithm-py/">
     Typed client that resolves asynchronous tasks automatically and exposes helpers for every documented route.
   </Card>
-  <Card title="TypeScript SDK" icon="command-line" href="https://www.npmjs.com/package/@knowrithm/sdk">
+  <Card title="TypeScript SDK" icon="terminal" href="https://www.npmjs.com/package/@knowrithm/sdk">
     Works in Node.js and browsers, provides automatic retries, SSE helpers, and multipart upload support.
   </Card>
 </CardGroup>

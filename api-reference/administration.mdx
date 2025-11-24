@@ -1,4 +1,4 @@
-﻿---
+---
 title: "Administration & analytics"
 description: "Operate the platform: manage companies and users, govern locations, and monitor performance."
 ---
@@ -43,7 +43,7 @@ Identical filters plus a path parameter to scope results to a tenant when acting
 | `PATCH /api/v1/company/{company_id}` | Partial update (e.g., rename, change phone). |
 | `GET /api/v1/company/statistics` / `GET /api/v1/company/{company_id}/statistics` | Lead funnel, active agents, and usage breakdown for the current or specified company. |
 
-<Callout icon="information-circle">
+<Callout icon="circle-info">
   Company creation, update, and deletion routes return `{"status":"accepted","status_url":"/v1/tasks/123/status"}`. Poll the task to confirm completion before provisioning additional resources tied to the company.
 </Callout>
 
