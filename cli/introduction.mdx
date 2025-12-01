@@ -1,0 +1,40 @@
+---
+title: "CLI Introduction"
+description: "Manage your Knowrithm agents and resources directly from the command line."
+---
+
+# Knowrithm CLI
+
+The Knowrithm CLI is a powerful tool that allows you to interact with the Knowrithm platform directly from your terminal. It provides a comprehensive set of commands for managing agents, conversations, documents, databases, and more.
+
+## Key Features
+
+- **Interactive Agent Chat**: Chat with your agents directly from the terminal.
+- **Agent Management**: Create, update, test, and monitor agents.
+- **Resource Management**: Manage documents, databases, and other resources.
+- **Interactive Menus**: User-friendly interactive menus for complex selections like geographic data.
+- **Rich Output**: Beautifully formatted output with tables, JSON, and more.
+
+## Installation
+
+The CLI is available as a standalone package on GitHub.
+
+```bash
+git clone https://github.com/Knowrithm/knowrithm-cli.git
+cd knowrithm-cli
+pip install .
+```
+
+## Getting Started
+
+To start using the CLI, you first need to authenticate.
+
+```bash
+knowrithm auth login
+```
+
+Once authenticated, you can explore the available commands using the `--help` flag.
+
+```bash
+knowrithm --help
+```

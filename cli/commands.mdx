@@ -1,0 +1,467 @@
+---
+title: "Command Reference"
+description: "Complete reference for all Knowrithm CLI commands."
+---
+
+# Knowrithm CLI - Complete Command Reference
+
+This document provides detailed reference information for all Knowrithm CLI commands, including examples, parameters, and response formats.
+
+## Authentication Commands
+
+### `knowrithm auth login`
+
+Authenticate using email and password, storing JWT tokens locally.
+
+**Usage:**
+```bash
+knowrithm auth login [OPTIONS]
+```
+
+**Options:**
+- `--email TEXT` - User email address (prompted if not provided)
+- `--password TEXT` - Account password (prompted securely if not provided)
+- `--wait/--no-wait` - Wait for async task completion (default: True)
+
+### `knowrithm auth logout`
+
+Revoke the current session and clear locally stored tokens.
+
+**Usage:**
+```bash
+knowrithm auth logout
+```
+
+### `knowrithm auth refresh`
+
+Refresh the access token using the stored refresh token.
+
+**Usage:**
+```bash
+knowrithm auth refresh
+```
+
+### `knowrithm auth register`
+
+Register a new company admin account (public endpoint).
+
+**Usage:**
+```bash
+knowrithm auth register --payload PAYLOAD
+```
+
+### `knowrithm auth me`
+
+Get details for the currently authenticated user.
+
+**Usage:**
+```bash
+knowrithm auth me [OPTIONS]
+```
+
+**Options:**
+- `--auth [jwt|api-key|none|auto]` - Authentication method (default: auto)
+
+### `knowrithm auth set-api-key`
+
+Store API key and secret for future requests.
+
+**Usage:**
+```bash
+knowrithm auth set-api-key [OPTIONS]
+```
+
+**Options:**
+- `--key TEXT` - API key (prompted if not provided)
+- `--secret TEXT` - API secret (prompted securely if not provided)
+
+### `knowrithm auth clear`
+
+Clear cached authentication credentials.
+
+**Usage:**
+```bash
+knowrithm auth clear [OPTIONS]
+```
+
+**Options:**
+- `--all` - Clear both JWT tokens and API key credentials
+- `--tokens` - Clear only JWT tokens
+- `--api-key` - Clear only API key credentials
+
+### `knowrithm auth validate`
+
+Validate current credentials with the backend.
+
+**Usage:**
+```bash
+knowrithm auth validate [OPTIONS]
+```
+
+**Options:**
+- `--auth [jwt|api-key|none|auto]` - Authentication method
+
+## Agent Management
+
+### `knowrithm agent list`
+
+List agents for the authenticated company.
+
+**Usage:**
+```bash
+knowrithm agent list [OPTIONS]
+```
+
+**Options:**
+- `--auth [jwt|api-key|none|auto]` - Authentication method
+- `--company-id TEXT` - Filter by company ID (super admin only)
+- `--status TEXT` - Filter by agent status (active, inactive, training)
+- `--search TEXT` - Search string for name/description
+- `--page INTEGER` - Page number (default: 1)
+- `--per-page INTEGER` - Items per page (default: 20)
+
+### `knowrithm agent get`
+
+Retrieve a specific agent by ID or name.
+
+**Usage:**
+```bash
+knowrithm agent get AGENT_ID [OPTIONS]
+```
+
+**Options:**
+- `--auth [jwt|api-key|none|auto]` - Authentication method
+
+### `knowrithm agent create`
+
+Create a new agent.
+
+**Usage:**
+```bash
+knowrithm agent create [OPTIONS]
+```
+
+**Options:**
+- `--interactive` - Start interactive creation wizard
+- `--payload TEXT` - JSON string or @filepath (required if not interactive)
+
+### `knowrithm agent clone`
+
+Clone an existing agent with optional overrides.
+
+**Usage:**
+```bash
+knowrithm agent clone AGENT_ID [OPTIONS]
+```
+
+**Options:**
+- `--auth [jwt|api-key|none|auto]` - Authentication method
+- `--payload TEXT` - Optional JSON overrides for the cloned agent
+- `--wait/--no-wait` - Wait for async task completion (default: True)
+
+### `knowrithm agent update`
+
+Update an existing agent.
+
+**Usage:**
+```bash
+knowrithm agent update AGENT_ID [OPTIONS]
+```
+
+**Options:**
+- `--auth [jwt|api-key|none|auto]` - Authentication method
+- `--payload TEXT` - JSON string or @filepath with update fields (required)
+- `--wait/--no-wait` - Wait for async task completion (default: True)
+
+### `knowrithm agent delete`
+
+Soft delete an agent (can be restored later).
+
+**Usage:**
+```bash
+knowrithm agent delete AGENT_ID [OPTIONS]
+```
+
+**Options:**
+- `--auth [jwt|api-key|none|auto]` - Authentication method
+- `--wait/--no-wait` - Wait for async task completion (default: False)
+
+### `knowrithm agent restore`
+
+Restore a soft-deleted agent.
+
+**Usage:**
+```bash
+knowrithm agent restore AGENT_ID [OPTIONS]
+```
+
+**Options:**
+- `--auth [jwt|api-key|none|auto]` - Authentication method
+- `--wait/--no-wait` - Wait for async task completion (default: False)
+
+### `knowrithm agent stats`
+
+Retrieve statistics for an agent.
+
+**Usage:**
+```bash
+knowrithm agent stats AGENT_ID [OPTIONS]
+```
+
+**Options:**
+- `--auth [jwt|api-key|none|auto]` - Authentication method
+
+### `knowrithm agent test`
+
+Run a test query against an agent.
+
+**Usage:**
+```bash
+knowrithm agent test AGENT_ID [OPTIONS]
+```
+
+**Options:**
+- `--interactive` / `-i` - Start interactive chat after test
+- `--query` / `-q` - Test query
+- `--payload TEXT` - JSON test payload
+
+### `knowrithm agent embed-code`
+
+Fetch widget embed code for an agent.
+
+**Usage:**
+```bash
+knowrithm agent embed-code AGENT_ID [OPTIONS]
+```
+
+**Options:**
+- `--auth [jwt|api-key|none|auto]` - Authentication method
+
+## Conversation Management
+
+### `knowrithm conversation list`
+
+List conversations for the company.
+
+**Usage:**
+```bash
+knowrithm conversation list [OPTIONS]
+```
+
+**Options:**
+- `--auth [jwt|api-key|none|auto]` - Authentication method
+- `--page INTEGER` - Page number (default: 1)
+- `--per-page INTEGER` - Items per page (default: 20)
+
+### `knowrithm conversation chat`
+
+Send a chat message into a conversation.
+
+**Usage:**
+```bash
+knowrithm conversation chat CONVERSATION_ID [OPTIONS]
+```
+
+**Options:**
+- `--auth [jwt|api-key|none|auto]` - Authentication method
+- `--payload TEXT` - JSON string or @filepath with message (required)
+- `--wait/--no-wait` - Wait for async task completion (default: True)
+
+### `knowrithm conversation messages`
+
+Retrieve messages for a conversation.
+
+**Usage:**
+```bash
+knowrithm conversation messages CONVERSATION_ID [OPTIONS]
+```
+
+**Options:**
+- `--auth [jwt|api-key|none|auto]` - Authentication method
+- `--page INTEGER` - Page number (default: 1)
+- `--per-page INTEGER` - Items per page (default: 50)
+
+## Document Management
+
+### `knowrithm document list`
+
+List documents for the current company.
+
+**Usage:**
+```bash
+knowrithm document list [OPTIONS]
+```
+
+**Options:**
+- `--auth [jwt|api-key|none|auto]` - Authentication method
+- `--page INTEGER` - Page number (default: 1)
+- `--per-page INTEGER` - Items per page (default: 20)
+
+### `knowrithm document upload`
+
+Upload documents or initiate scraping tasks.
+
+**Usage:**
+```bash
+knowrithm document upload [OPTIONS]
+```
+
+**Options:**
+- `--agent-id TEXT` - Agent identifier to associate (required)
+- `--file PATH` - Path to file (can be used multiple times)
+- `--url TEXT` - URL to ingest (can be used multiple times)
+
+## Database Management
+
+### `knowrithm database list`
+
+List database connections owned by the user.
+
+**Usage:**
+```bash
+knowrithm database list [OPTIONS]
+```
+
+**Options:**
+- `--auth [jwt|api-key|none|auto]` - Authentication method
+
+### `knowrithm database create`
+
+Create a new database connection.
+
+**Usage:**
+```bash
+knowrithm database create [OPTIONS]
+```
+
+**Options:**
+- `--auth [jwt|api-key|none|auto]` - Authentication method
+- `--payload TEXT` - JSON payload describing the connection (required)
+
+### `knowrithm database analyze`
+
+Queue semantic analysis for a database connection.
+
+**Usage:**
+```bash
+knowrithm database analyze CONNECTION_ID [OPTIONS]
+```
+
+**Options:**
+- `--auth [jwt|api-key|none|auto]` - Authentication method
+- `--wait/--no-wait` - Wait for async task completion (default: False)
+
+## Analytics Commands
+
+### `knowrithm analytics dashboard`
+
+Retrieve the main analytics dashboard.
+
+**Usage:**
+```bash
+knowrithm analytics dashboard [OPTIONS]
+```
+
+**Options:**
+- `--auth [jwt|api-key|none|auto]` - Authentication method
+- `--company-id TEXT` - Optional company ID (super admin only)
+
+### `knowrithm analytics agent`
+
+Retrieve analytics for a single agent.
+
+**Usage:**
+```bash
+knowrithm analytics agent AGENT_ID [OPTIONS]
+```
+
+**Options:**
+- `--auth [jwt|api-key|none|auto]` - Authentication method
+- `--start-date TEXT` - ISO start date (e.g., 2024-01-01)
+- `--end-date TEXT` - ISO end date (e.g., 2024-12-31)
+
+## System Utilities
+
+### `knowrithm system health`
+
+Call the /api/health endpoint.
+
+**Usage:**
+```bash
+knowrithm system health
+```
+
+### `knowrithm system countries`
+
+List countries (interactive).
+
+**Usage:**
+```bash
+knowrithm system countries [OPTIONS]
+```
+
+**Options:**
+- `--auth [jwt|api-key|none|auto]` - Authentication method
+
+### `knowrithm system states`
+
+List states (interactive).
+
+**Usage:**
+```bash
+knowrithm system states [OPTIONS]
+```
+
+**Options:**
+- `--auth [jwt|api-key|none|auto]` - Authentication method
+
+### `knowrithm system cities`
+
+List cities (interactive).
+
+**Usage:**
+```bash
+knowrithm system cities [OPTIONS]
+```
+
+**Options:**
+- `--auth [jwt|api-key|none|auto]` - Authentication method
+
+## Configuration Commands
+
+### `knowrithm config show`
+
+Display the current configuration with sensitive values masked.
+
+**Usage:**
+```bash
+knowrithm config show
+```
+
+### `knowrithm config set-base-url`
+
+Persist the Knowrithm API base URL.
+
+**Usage:**
+```bash
+knowrithm config set-base-url URL
+```
+
+### `knowrithm config set-verify-ssl`
+
+Toggle TLS certificate verification.
+
+**Usage:**
+```bash
+knowrithm config set-verify-ssl [OPTIONS]
+```
+
+**Options:**
+- `--enable/--disable` - Enable or disable verification (default: enable)
+
+## Global Options
+
+All commands support the following global options:
+
+- `--help` - Display help information
+- `--format [json|table|yaml|csv]` - Output format

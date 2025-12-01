@@ -1,0 +1,115 @@
+---
+title: "Agent Testing"
+description: "Test your agents with beautiful output and interactive options."
+---
+
+# Agent Test Command
+
+The `knowrithm agent test` command provides a beautiful, user-friendly testing experience with rich formatting and interactive chat capabilities.
+
+## New Features
+
+### 1. Beautiful Output Formatting
+
+Instead of showing raw JSON in a table, the test results are now displayed in a clean, organized format:
+
+```
+🧪 Testing agent 'Knowrithm Support'...
+
+🤖 Agent: Knowrithm Support
+Model: google/gemini-2.5-flash
+
+❓ Query:
+╭─────────────────────────────────────────────────────────╮
+│ Hello, can you introduce yourself?                     │
+╰─────────────────────────────────────────────────────────╯
+
+💬 Response:
+╭─────────────────────────────────────────────────────────╮
+│ Hello! I'm Knowrithm Support, a professional AI        │
+│ assistant designed to provide accurate and helpful      │
+│ information.                                            │
+│                                                         │
+│ Knowrithm offers a platform where the same governance, │
+│ telemetry, and knowledge layer travel with you [Source │
+│ 1]...                                                   │
+╰─────────────────────────────────────────────────────────╯
+
+📚 Sources (1):
+  #   Source                                    Cited
+ ─────────────────────────────────────────────────────
+  1   https://www.knowrithm.org/                 ✓
+
+ℹ️  Metadata:
+  Total Sources    1
+  Cited Sources    1
+
+✅ Test completed successfully!
+```
+
+### 2. Interactive Chat Session
+
+New `--interactive` (or `-i`) flag allows you to start a chat session immediately after testing:
+
+```bash
+# Test and automatically start chat
+knowrithm agent test --interactive
+
+# Or with short flag
+knowrithm agent test -i
+```
+
+After the test completes, you'll be prompted:
+```
+💬 Would you like to start an interactive chat session with this agent? (Y/n)
+```
+
+If you select "Yes", it will:
+1. Create a new conversation
+2. Launch the interactive chat interface
+3. Allow you to continue chatting with the agent
+
+### 3. Rich Spinner Animation
+
+While the agent is processing, you'll see an animated spinner:
+```
+⠋ Agent is thinking...
+```
+
+## Usage Examples
+
+### Basic Test
+```bash
+# Test with default query
+knowrithm agent test
+
+# Test with custom query
+knowrithm agent test --query "What are your pricing plans?"
+
+# Test specific agent
+knowrithm agent test "Support Bot" --query "Hello"
+```
+
+### Interactive Mode
+```bash
+# Test and start chat session
+knowrithm agent test --interactive
+
+# Test with custom query and start chat
+knowrithm agent test -q "Hello" -i
+
+# Test specific agent and start chat
+knowrithm agent test "Sales Bot" --interactive
+```
+
+### Different Output Formats
+```bash
+# JSON format (raw data)
+knowrithm agent test --format json
+
+# YAML format
+knowrithm agent test --format yaml
+
+# Table format (default, with beautiful formatting)
+knowrithm agent test --format table
+```

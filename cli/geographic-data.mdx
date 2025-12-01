@@ -1,0 +1,65 @@
+---
+title: "Geographic Data"
+description: "Interactive menus for selecting countries, states, and cities."
+---
+
+# Geographic Data Interactive Menu
+
+The CLI supports interactive menu selections for geographic data operations (countries, states, and cities), making it significantly more user-friendly than manually looking up IDs.
+
+## Interactive Commands
+
+You can run the following commands without arguments to trigger the interactive selection mode:
+
+```bash
+# Shows country selection menu
+knowrithm system country
+
+# Shows country selection menu, then lists states
+knowrithm system states
+
+# Shows state selection menu (via country → state)
+knowrithm system state
+
+# Shows state selection menu (via country → state), then lists cities
+knowrithm system cities
+
+# Shows city selection menu (via country → state → city)
+knowrithm system city
+```
+
+## User Experience Flow
+
+### Example: Viewing a City
+
+**Command:**
+```bash
+knowrithm system city
+```
+
+**Flow:**
+1. Shows "🗺️ First, select a state:"
+2. Shows "🌍 First, select a country:"
+3. Displays interactive menu of countries (e.g., "United States (US)")
+4. After country selection, displays menu of states (e.g., "California (CA)")
+5. After state selection, displays menu of cities (e.g., "San Francisco")
+6. Displays the selected city's details
+
+### Example: Listing States
+
+**Command:**
+```bash
+knowrithm system states
+```
+
+**Flow:**
+1. Shows "🌍 Select a country to view its states:"
+2. Displays interactive menu of countries
+3. After selection, displays the list of states in table format
+
+## Benefits
+
+- **No ID Memorization**: You don't need to know or look up IDs.
+- **Guided Navigation**: Natural hierarchical flow (country → state → city).
+- **Visual Feedback**: Emoji indicators and clear prompts guide you.
+- **Backward Compatible**: Still accepts IDs directly for scripting/automation.

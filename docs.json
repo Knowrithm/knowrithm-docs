@@ -66,6 +66,32 @@
             ]
           }
         ]
+      },
+      {
+        "tab": "CLI",
+        "icon": "command-line",
+        "groups": [
+          {
+            "group": "Getting Started",
+            "pages": [
+              "cli/introduction"
+            ]
+          },
+          {
+            "group": "Features",
+            "pages": [
+              "cli/interactive-chat",
+              "cli/agent-testing",
+              "cli/geographic-data"
+            ]
+          },
+          {
+            "group": "Reference",
+            "pages": [
+              "cli/commands"
+            ]
+          }
+        ]
       }
     ],
     "global": {
