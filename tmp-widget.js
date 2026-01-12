@@ -22,7 +22,7 @@
             return 'https://app.knowrithm.org/api';
         }
     };
-
+ 
     const DEFAULT_API_URL = inferDefaultApiUrl();
     const KNOWN_MARKETING_DOMAINS = new Set([
         'knowrithm.com',
